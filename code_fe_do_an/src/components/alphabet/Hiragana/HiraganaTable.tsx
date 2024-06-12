@@ -4,7 +4,7 @@ import CharacterCard from "../CharacterCard";
 import axios from "axios";
 // import { hiragana } from "./HiraganaData";
 
-interface HiraganaItem 
+interface AlphabetItem 
   {
     alphabet_id: number,
     type_id: number,
@@ -22,7 +22,7 @@ export default function HiraganaTable() {
   // const fetchData = useAuthAPI()
   useEffect(() => {
     const handleFetchData = async () => {
-      const request = await axios.get("/alphabet");
+      const request = await axios.get("/alphabet/1");
       const response = request.data;
       if (response.statusCode === 200) {
         setHiraganaList(response.data);
@@ -37,7 +37,7 @@ export default function HiraganaTable() {
       <div className="w-full h-[1180px] p-8 rounded-2xl">
         <div className="w-full h-[1130px] ">
           <div className="grid grid-cols-5 gap-4">
-            {hiraganaList.map((charData: HiraganaItem, index) => {
+            {hiraganaList.map((charData: AlphabetItem, index) => {
               if (charData.japanese_character.trim() !== "") {
                 return (
                   <CharacterCard

@@ -57,7 +57,7 @@ export function Nav() {
             <NavigationMenuContent>
               <ul className="gap-3 p-6 w-60">
                 <ListItem href="/alphabet" title="Học bảng chữ cái" />
-                <ListItem href="/" title="Học theo mã môn" />
+                <ListItem href="/course" title="Học theo mã môn" />
               </ul>
             </NavigationMenuContent>
           ) : (
