@@ -11,12 +11,12 @@ const {
 } = require("../handlers/response_handler");
 
 const {
-	QUIZTYPE_GET_FAILED,
-	QUIZTYPE_CREATED,
-	QUIZTYPE_CREATED_FAILED,
-	QUIZTYPE_UPDATED_FAILED,
-	QUIZTYPE_DELETED,
-	QUIZTYPE_UPDATED,
+	QUIZ_TYPE_GET_FAILED,
+	QUIZ_TYPE_CREATED,
+	QUIZ_TYPE_CREATED_FAILED,
+	QUIZ_TYPE_UPDATED_FAILED,
+	QUIZ_TYPE_DELETED,
+	QUIZ_TYPE_UPDATED,
 } = require("../messages/quiz_type");
 
 async function getAllQuizTypes(req, res) {
@@ -33,10 +33,10 @@ async function getQuizTypeById(req, res) {
 	try {
 		const { quiz_type_id } = req.params;
 		const quiz_types = await QuizType.findAll({ where: { quiz_types_id } });
-		if (quizzes) {
+		if (quiz_types) {
 			return responseWithData(res, 200, quiz_types);
 		} else {
-			return badRequest(res, QUIZTYPE_GET_FAILED);
+			return badRequest(res, QUIZ_TYPE_GET_FAILED);
 		}
 	} catch (er) {
 		console.error("getQuizById:", error);
@@ -53,11 +53,11 @@ async function createNewQuizType(req, res) {
 			return forbidden(res);
 		}
 
-		const quiz_types = await QuizType.create(req.body);
-		if (quiz) {
-			return created(res, QUIZTYPE_CREATED);
+		const quiz_type = await QuizType.create(req.body);
+		if (quiz_type) {
+			return created(res, QUIZ_TYPE_CREATED);
 		} else {
-			return badRequest(res, QUIZTYPE_CREATED_FAILED);
+			return badRequest(res, QUIZ_TYPE_CREATED_FAILED);
 		}
 	} catch (e) {
 		console.log("createNewQuizType", e);
@@ -80,14 +80,14 @@ async function updateQuizTypeById(req, res) {
 				quiz_type_id,
 			},
 		});
-		if (quiz) {
+		if (quiz_types) {
 			const [updatedQuizType] = await QuizType.update(req.body, {
 				where: { quiz_type_id },
 			});
 			if (updatedQuizType) {
-				return ok(res, QUIZTYPE_UPDATED);
+				return ok(res, QUIZ_TYPE_UPDATED);
 			} else {
-				return badRequest(res, QUIZTYPE_UPDATED_FAILED);
+				return badRequest(res, QUIZ_TYPE_UPDATED_FAILED);
 			}
 		} else {
 			return notfound(res);
@@ -107,7 +107,7 @@ async function deleteQuizTypeById(req, res) {
 		}
 		quiz_type.quiz_type_status_id = 3;
 		await quiz.save();
-		return ok(res, QUIZTYPE_DELETED);
+		return ok(res, QUIZ_TYPE_DELETED);
 	} catch (err) {
 		console.error("deleteQuizTypeById:", err);
 		return error(res);

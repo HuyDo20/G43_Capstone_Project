@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
 					model: "account",
 					key: "account_id",
 				},
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
 			},
 			course_id: {
 				type: DataTypes.INTEGER,
@@ -23,21 +25,17 @@ module.exports = (sequelize, DataTypes) => {
 				references: {
 					model: "course",
 					key: "course_id",
+					onUpdate: "CASCADE",
+					onDelete: "CASCADE",
 				},
 			},
 			enrolled_date: {
 				type: DataTypes.DATE,
+				allowNull: true,
 			},
 			deadline: {
 				type: DataTypes.DATE,
-			},
-			enroll_status_id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				references: {
-					model: "status",
-					key: "status_id",
-				},
+				allowNull: true,
 			},
 		},
 		{
