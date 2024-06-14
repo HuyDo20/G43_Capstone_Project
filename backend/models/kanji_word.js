@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
-					model: "kanji_word",
-					key: "kanji_word_id",
+					model: "kanji",
+					key: "kanji_id",
 				},
 				onUpdate: "CASCADE",
 				onDelete: "CASCADE",
