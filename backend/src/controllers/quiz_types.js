@@ -17,7 +17,7 @@ const {
 	QUIZ_TYPE_UPDATED_FAILED,
 	QUIZ_TYPE_DELETED,
 	QUIZ_TYPE_UPDATED,
-} = require("../messages/quiz_type");
+} = require("../messages/quiz_types");
 
 async function getAllQuizTypes(req, res) {
 	try {
@@ -106,7 +106,7 @@ async function deleteQuizTypeById(req, res) {
 			return notfound(res);
 		}
 		quiz_type.quiz_type_status_id = 3;
-		await quiz.save();
+		await quiz_type.save();
 		return ok(res, QUIZ_TYPE_DELETED);
 	} catch (err) {
 		console.error("deleteQuizTypeById:", err);
