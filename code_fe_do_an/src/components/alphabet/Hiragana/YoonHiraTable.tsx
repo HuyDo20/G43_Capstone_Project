@@ -1,16 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import CharacterCard from '../CharacterCard';
+import { AlphabetResponse } from '@/type';
 
-interface AlphabetItem 
-  {
-    alphabet_id: number,
-    type_id: number,
-    japanese_character: string,
-    romaji_character: string,
-    alphabet_audio: string,
-    alphabet_image: string
-}
+
 
 export default function HiraganaAmGhepTable() {
   const [yoonHiraList, setYoonHiraList] = useState<[]>([]);
@@ -33,7 +26,7 @@ export default function HiraganaAmGhepTable() {
       <div className="w-full h-[1180px] p-1 rounded-2xl">
         <div className="w-full h-[1130px] ">
           <div className="grid grid-cols-3 gap-4">
-            {yoonHiraList.map((charData: AlphabetItem, index) => {
+            {yoonHiraList.map((charData: AlphabetResponse, index) => {
               if (charData.japanese_character.trim() !== "") {
                 return (
                   <CharacterCard

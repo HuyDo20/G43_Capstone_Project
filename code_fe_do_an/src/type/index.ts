@@ -7,3 +7,4 @@ export type AlphabetResponse =
         "alphabet_audio": string,
         "alphabet_image": string
     }
+    
