@@ -1,0 +1,20 @@
+const express = require("express");
+const {
+	getAllVideo,
+	getVideoById,
+	getAllVideoByDayId,
+	createNewVideo,
+	updateVideoById,
+	deleteVideoById,
+} = require("../controllers/video");
+const router = express.Router();
+const { checkAuthAndRole } = require("../middleware/auth");
+
+router.get("/video", getAllVideo);
+router.get("/video", checkAuthAndRole([1, 2, 3, 4]), getAllVideoByDayId);
+router.get("/video/:video_id", checkAuthAndRole([1, 2, 3, 4]), getVideoById);
+router.post("/video", checkAuthAndRole([1, 3]), createNewVideo);
+router.put("/video/:video_id", checkAuthAndRole([1, 2, 3]), updateVideoById);
+router.patch("/video/:video_id", checkAuthAndRole([1, 2, 3]), deleteVideoById);
+
+module.exports = router;

@@ -1,47 +1,45 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-	const Video = sequelize.define(
-		"Video",
+	const VideoQuestion = sequelize.define(
+		"VideoQuestion",
+
 		{
-			video_id: {
+			video_question_id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 			},
-			day_id: {
+			video_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
-					model: "day",
-					key: "day_id",
+					model: "video",
+					key: "video_id",
 				},
-				onUpdate: "CASCADE",
-				onDelete: "CASCADE",
 			},
-			video_name: {
+			question_content: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			video_link: {
+			question_answer: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			video_status_id: {
+			video_question_status_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
 					model: "status",
 					key: "status_id",
 				},
-				onUpdate: "CASCADE",
-				onDelete: "CASCADE",
 			},
 		},
 		{
-			tableName: "video",
+			tableName: "videoquestion",
 			timestamps: false,
 		},
 	);
-	return Video;
+
+	return VideoQuestion;
 };

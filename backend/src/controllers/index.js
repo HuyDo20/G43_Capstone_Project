@@ -7,6 +7,8 @@ const course = require("./course");
 const day = require("./day");
 const quiz_types = require("./quiz_types");
 const question_types = require("./question_types");
+const question = require("./question");
+const option = require("./option");
 const kanji = require("./kanji");
 const kanji_word = require("./kanji_word");
 const grammar = require("./grammar");
@@ -14,7 +16,8 @@ const grammar_example = require("./grammar_example");
 const quiz = require("./quiz");
 const enroll = require("./enroll");
 const lesson = require("./lesson");
-const vocab = require("./vocab");
+const vocab = require("./vocabulary");
+const video = require("./video");
 
 module.exports = {
 	role,
@@ -25,6 +28,8 @@ module.exports = {
 	course,
 	quiz_types,
 	question_types,
+	question,
+	option,
 	course,
 	day,
 	kanji,
@@ -35,4 +40,5 @@ module.exports = {
 	enroll,
 	lesson,
 	vocab,
+	video
 };
