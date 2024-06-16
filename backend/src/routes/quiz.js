@@ -12,7 +12,7 @@ const { checkAuthAndRole } = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/quiz", getAllQuiz);
-router.get("/quiz", checkAuthAndRole([1, 2, 3, 4]), getAllQuizByDayId);
+router.get("/quiz", checkAuthAndRole([1, 2, 3, 4]), getAllQuizByDayId);// re.query ...?day_id=1
 router.get("/quiz/:quiz_id", checkAuthAndRole([1, 2, 3, 4]), getQuizById);
 router.post("/quiz", checkAuthAndRole([1, 3]), createNewQuiz);
 router.put("/quiz/:quiz_id", checkAuthAndRole([1, 2, 3]), updateQuizById);

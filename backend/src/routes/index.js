@@ -13,7 +13,9 @@ module.exports = [
 	require("./grammar"),
 	require("./grammar_example"),
 	require("./quiz"),
+	require("./question"),
 	require("./enroll"),
 	require("./lesson"),
-	require("./vocab"),
+	require("./vocabulary"),
+	require("./video"),
 ];
