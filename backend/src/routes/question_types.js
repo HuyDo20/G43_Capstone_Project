@@ -9,7 +9,6 @@ const {
 const router = express.Router();
 
 const { checkAuthAndRole } = require("../middleware/auth");
-const { updateQuestionTypeById } = require("../controllers/question_types");
 
 router.get("/question_types", getAllQuestionTypes);
 router.get(

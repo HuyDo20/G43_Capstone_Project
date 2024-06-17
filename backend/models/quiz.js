@@ -9,16 +9,20 @@ module.exports = (sequelize, DataTypes) => {
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 			},
-			day_id: {
+			week_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
-					model: "day",
-					key: "day_id",
+					model: "week",
+					key: "week_id",
 				},
 			},
 			quiz_name: {
 				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			quiz_type_id: {
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 			quiz_status_id: {

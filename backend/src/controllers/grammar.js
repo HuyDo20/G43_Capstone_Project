@@ -17,17 +17,17 @@ const {
 	GRAMMAR_UPDATED,
 } = require("../messages/grammar");
 
-async function getAllGrammarByLessonId(req, res) {
+async function getAllGrammarByDayId(req, res) {
 	try {
-		const { lesson_id } = req.query;
-		const grammars = await Grammar.findAll({ where: { lesson_id } });
+		const { day_id } = req.query;
+		const grammars = await Grammar.findAll({ where: { day_id } });
 		if (grammars) {
 			return responseWithData(res, 200, grammars);
 		} else {
 			return badRequest(res, GRAMMAR_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("getAllGrammarByLessonId:", error);
+		console.error("getAllGrammarByDayId:", error);
 		return error(res);
 	}
 }
@@ -120,7 +120,7 @@ async function deleteGrammarById(req, res) {
 // async function
 
 module.exports = {
-	getAllGrammarByLessonId,
+	getAllGrammarByDayId,
 	getGrammarById,
 	createNewGrammar,
 	updateGrammarById,

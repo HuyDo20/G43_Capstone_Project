@@ -1,6 +1,5 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-
 	const Kanji = sequelize.define(
 		"Kanji",
 
@@ -11,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 			},
-			lesson_id: {
+			day_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
-					model: "lesson",
-					key: "lesson_id",
+					model: "day",
+					key: "day_id",
 				},
 				onUpdate: "CASCADE",
 				onDelete: "CASCADE",

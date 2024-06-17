@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-	getAllDayByCourseId,
+	getAllDayByWeekId,
 	createNewDay,
 	updateDayById,
 	deleteDayById,
@@ -8,7 +8,7 @@ const {
 const { checkAuthAndRole } = require("../middleware/auth");
 const router = express.Router();
 
-router.get("/day/:course_id", checkAuthAndRole([1, 2, 3, 4]), getAllDayByCourseId);
+router.get("/day", checkAuthAndRole([1, 2, 3, 4]), getAllDayByWeekId);
 router.post("/day", checkAuthAndRole([1, 3]), createNewDay);
 router.put("/day/:day_id", checkAuthAndRole([1, 2, 3]), updateDayById);
 router.patch("/day/:day_id", checkAuthAndRole([1, 2, 3]), deleteDayById);

@@ -5,6 +5,7 @@ module.exports = [
 	require("./alphabet_types"),
 	require("./alphabet"),
 	require("./course"),
+	require("./week"),
 	require("./day"),
 	require("./quiz_types"),
 	require("./question_types"),

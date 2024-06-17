@@ -1,26 +1,26 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-	const Day = sequelize.define(
-		"Day",
+	const Week = sequelize.define(
+		"Week",
 		{
-			day_id: {
+			week_id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 			},
-			day_name: {
+			week_name: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			week_id: {
+			course_id: {
 				type: DataTypes.INTEGER,
 				references: {
-					model: "week",
-					key: "week_id",
+					model: "course",
+					key: "course_id",
 				},
 			},
-			day_status_id: {
+			week_status_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
@@ -28,19 +28,16 @@ module.exports = (sequelize, DataTypes) => {
 					key: "status_id",
 				},
 			},
-			day_image: {
+			week_topic: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			day_deadline: {
-				type: DataTypes.DATE,
-			},
 		},
 		{
-			tableName: "day",
+			tableName: "week",
 			timestamps: false,
 		},
 	);
 
-	return Day;
+	return Week;
 };

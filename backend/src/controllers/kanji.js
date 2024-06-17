@@ -14,3 +14,5 @@ async function getAllKanji(req, res) {
 module.exports = {
 	getAllKanji,
 };
+
+
