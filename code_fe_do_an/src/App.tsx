@@ -8,7 +8,8 @@ import UserProfile from "./pages/userProfie/UserProfile";
 import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
 import AuthProvider from "./hook/AuthContext";
 import Alphabet from "./pages/alphabet/Alphabet";
-import Course from "./pages/learnByCourse/Course";
+import Course from "./pages/course/Course";
+import LearningByWeek from "./pages/course/LearningByWeek";
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/userProfile" element={<UserProfile />} />
           <Route path="/alphabet" element={<Alphabet />} />
           <Route path="/course" element={<Course />} />
+          <Route path="/learningByWeek" element={<LearningByWeek />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

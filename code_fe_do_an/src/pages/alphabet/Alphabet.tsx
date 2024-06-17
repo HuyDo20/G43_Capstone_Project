@@ -118,6 +118,7 @@ export default function Alphabet() {
         </div>
       </div>
       {/* Footer */}
+      
       <Footer />
     </div>
   );
