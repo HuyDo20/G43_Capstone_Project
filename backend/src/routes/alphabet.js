@@ -1,12 +1,9 @@
 const express = require("express");
-const { 
-    getAllAlphabet, 
-    getAllAlphabetByTypeId 
-} = require("../controllers/alphabet");
+const { getAllAlphabet, getAllAlphabetByTypeId } = require("../controllers/alphabet");
 
 const router = express.Router();
 
 router.get("/alphabet", getAllAlphabet);
-router.get("/alphabet/:type_id", getAllAlphabetByTypeId);
+router.get("/alphabet", getAllAlphabetByTypeId);
 
 module.exports = router;

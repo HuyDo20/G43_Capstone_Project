@@ -26,17 +26,17 @@ async function getAllQuiz(req, res) {
 	}
 }
 
-async function getAllQuizByDayId(req, res) {
+async function getAllQuizByWeekId(req, res) {
 	try {
-		const { day_id } = req.query;
-		const quizzes = await Quiz.findAll({ where: { day_id } });
+		const { week_id } = req.query;
+		const quizzes = await Quiz.findAll({ where: { week_id } });
 		if (quizzes) {
 			return responseWithData(res, 200, quizzes);
 		} else {
 			return badRequest(res, QUIZ_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("getAllQuizByDayId:", error);
+		console.error("getAllQuizByWeekId:", error);
 		return error(res);
 	}
 }
@@ -128,7 +128,7 @@ async function deleteQuizById(req, res) {
 
 module.exports = {
 	getAllQuiz,
-	getAllQuizByDayId,
+	getAllQuizByWeekId,
 	getQuizById,
 	createNewQuiz,
 	updateQuizById,

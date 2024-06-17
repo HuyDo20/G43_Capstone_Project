@@ -28,7 +28,7 @@ async function getAllAlphabet(req, res) {
 
 async function getAllAlphabetByTypeId(req, res) {
 	try {
-		const { type_id } = req.params;
+		const { type_id } = req.query;
 		const alphabets = await Alphabet.findAll({ where: { type_id } });
 		if (alphabets) {
 			return responseWithData(res, 200, alphabets);

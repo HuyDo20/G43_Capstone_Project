@@ -1,5 +1,12 @@
 const { Day } = require("../../models");
-const { responseWithData, badRequest, error, forbidden, created, ok } = require("../handlers/response_handler");
+const {
+	responseWithData,
+	badRequest,
+	error,
+	forbidden,
+	created,
+	ok,
+} = require("../handlers/response_handler");
 const {
 	DAY_GET_FAILED,
 	DAY_CREATED_FAILED,
@@ -9,10 +16,10 @@ const {
 	DAY_DELETED,
 } = require("../messages/day");
 
-async function getAllDayByCourseId(req, res) {
+async function getAllDayByWeekId(req, res) {
 	try {
-		const { course_id } = req.params;
-		const days = await Day.findAll({ where: { course_id } });
+		const { week_id } = req.query;
+		const days = await Day.findAll({ where: { week_id } });
 		if (days) {
 			return responseWithData(res, 200, days);
 		} else {
@@ -40,7 +47,7 @@ const createNewDay = async (req, res) => {
 			return badRequest(res, DAY_CREATED_FAILED);
 		}
 	} catch (e) {
-		console.log("createNewCourse", e);
+		console.log("createNewDay", e);
 		return error(res);
 	}
 };
@@ -48,7 +55,7 @@ const createNewDay = async (req, res) => {
 const updateDayById = async (req, res) => {
 	try {
 		const { accountId } = req;
-		const { account_id, day_status_id, day_name, course_id, day_image, day_deadline } = req.body;
+		const { account_id, day_status_id, day_name, week_id, day_image, day_deadline } = req.body;
 		const { day_id } = req.params;
 
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
@@ -63,7 +70,7 @@ const updateDayById = async (req, res) => {
 		if (day) {
 			day.day_status_id = day_status_id;
 			day.day_name = day_name || day.day_name;
-			day.course_id = course_id || day.course_id;
+			day.week_id = week_id || day.week_id;
 			day.day_image = day_image || day.day_image;
 			day_deadline.day_deadline = day_deadline || day.day_deadline;
 
@@ -99,7 +106,7 @@ async function deleteDayById(req, res) {
 }
 
 module.exports = {
-	getAllDayByCourseId,
+	getAllDayByWeekId,
 	createNewDay,
 	updateDayById,
 	deleteDayById,
