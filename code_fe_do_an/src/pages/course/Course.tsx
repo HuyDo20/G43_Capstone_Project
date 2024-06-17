@@ -19,6 +19,7 @@ export default function Course() {
       }
     };
     handleFetchData();
+    
   }, []);
   
   return (
@@ -26,7 +27,7 @@ export default function Course() {
       <div className="bg-[#fff8e1]">
         <Header />
       </div>
-
+      
       <div className="container max-w-[1400px] w-full h-fit p-7">
         <div
           className="w-full h-full rounded-2xl"
