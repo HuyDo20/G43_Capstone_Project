@@ -28,13 +28,6 @@ module.exports = (sequelize, DataTypes) => {
 					key: "status_id",
 				},
 			},
-			day_image: {
-				type: DataTypes.STRING,
-				allowNull: false,
-			},
-			day_deadline: {
-				type: DataTypes.DATE,
-			},
 		},
 		{
 			tableName: "day",
