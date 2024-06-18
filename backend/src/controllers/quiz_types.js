@@ -32,14 +32,14 @@ async function getAllQuizTypes(req, res) {
 async function getQuizTypeById(req, res) {
 	try {
 		const { quiz_type_id } = req.params;
-		const quiz_types = await QuizType.findAll({ where: { quiz_types_id } });
-		if (quiz_types) {
-			return responseWithData(res, 200, quiz_types);
+		const quiz_type = await QuizType.findAll({ where: { quiz_type_id } });
+		if (quiz_type) {
+			return responseWithData(res, 200, quiz_type);
 		} else {
 			return badRequest(res, QUIZ_TYPE_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("getQuizById:", error);
+		console.error("get QuizType By Id:", error);
 		return error(res);
 	}
 }

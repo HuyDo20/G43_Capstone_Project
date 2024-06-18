@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 const { checkAuthAndRole } = require("../middleware/auth");
 
-router.get("/video", getAllVideo);
+router.get("/all_video", getAllVideo);
 router.get("/video", checkAuthAndRole([1, 2, 3, 4]), getAllVideoByDayId);
 router.get("/video/:video_id", checkAuthAndRole([1, 2, 3, 4]), getVideoById);
 router.post("/video", checkAuthAndRole([1, 3]), createNewVideo);

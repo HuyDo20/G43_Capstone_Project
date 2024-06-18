@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllAlphabetTypes } = require("../controllers").alphabet_types;
+const { getAllAlphabetTypes } = require("../controllers/alphabet_types");
 const router = express.Router();
 const { checkAuthAndRole } = require("../middleware/auth");
 
