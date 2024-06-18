@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 const { checkAuthAndRole } = require("../middleware/auth");
 
-router.get("/vocabulary", checkAuthAndRole([1, 2, 3, 4]), getAllVocab);
+router.get("/all_vocabulary", checkAuthAndRole([1, 2, 3, 4]), getAllVocab);
 router.get("/vocabulary", checkAuthAndRole([1, 2, 3, 4]), getAllVocabByDayId);
 router.get("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3, 4]), getVocabById);
 router.post("/vocabulary", checkAuthAndRole([1, 3]), createNewVocab);

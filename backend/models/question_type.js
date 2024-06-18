@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
+			question_type_status_id: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				references: {
+					model: "status",
+					key: "status_id",
+				},
+			},
 		},
 		{
 			tableName: "questiontype",
