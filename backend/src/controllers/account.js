@@ -54,7 +54,7 @@ async function loginAccount(req, res) {
 		});
 		userData.token = token;
 		const result = {
-			user: userData,
+			data: userData,
 			message: ACCOUNT_LOGIN,
 		};
 		return responseWithData(res, 200, result);
@@ -219,7 +219,7 @@ async function getUserById(req, res) {
 				return forbidden(res);
 			}
 		}
-
+			
 		const user = await Account.findOne({ where: { account_id } });
 		if (!user) {
 			return notfound(res);

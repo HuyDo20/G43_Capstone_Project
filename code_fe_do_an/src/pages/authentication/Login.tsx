@@ -69,7 +69,7 @@ export default function Login() {
       const response = request.data;
       if (response.statusCode === 200) {
         alert(response.data?.message);
-        const result = response.data;
+        const result = response.data.data;
         setUser(result);
       } else {
         alert(response.data?.message);

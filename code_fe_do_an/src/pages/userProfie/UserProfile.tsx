@@ -2,19 +2,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hook/AuthContext";
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { FaCamera } from "react-icons/fa";
 export default function UserProfile() {
 
-  const Account = {
-    name: "Nguyễn Đình Thành Quang",
-    email: "quanggk98@gmail.com",
-    phoneNumber: "0123456789",
-    dob: "03/05/2002",
-  }
+  const auth = useAuth();
+  const {user} = auth
 
+
+  
   return (
+    
     <div className="bg-[#fff8e1] h-full w-full">
       <div className="container h-full ">
         <Header />
@@ -57,19 +57,19 @@ export default function UserProfile() {
                 <div className="flex flex-col gap-5 pl-16">
                   <div className="flex flex-row items-center gap-7">
                     <Label className="w-1/6" htmlFor="email">Họ và tên</Label>
-                    <Input className="w-1/2" type="text" value={Account.name} id="name" readOnly/>
+                    <Input className="w-1/2" type="text" value={user?.full_name} id="name" readOnly/>
                   </div>
                   <div className="flex flex-row items-center gap-7">
                     <Label className="w-1/6" htmlFor="email">Email</Label>
-                    <Input className="w-1/2" type="text" value={Account.email} id="email" readOnly/>
+                    <Input className="w-1/2" type="text" value={user?.email} id="email" readOnly/>
                   </div>
                   <div className="flex flex-row items-center gap-7">
                     <Label className="w-1/6" htmlFor="email">Số điện thoại</Label>
-                    <Input className="w-1/2" type="text" value={Account.phoneNumber} id="phoneNumber" readOnly/>
+                    <Input className="w-1/2" type="text" value={user?.phone_number} id="phoneNumber" readOnly/>
                   </div>
                   <div className="flex flex-row items-center gap-7">
                     <Label className="w-1/6" htmlFor="email">Ngày sinh</Label>
-                    <Input className="w-1/2" type="text" value={Account.dob} id="dob" readOnly/>
+                    <Input className="w-1/2" type="text" value={user?.dob} id="dob" readOnly/>
                   </div>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-5 mt-2">

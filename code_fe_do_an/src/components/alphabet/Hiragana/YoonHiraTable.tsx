@@ -11,10 +11,32 @@ export default function HiraganaAmGhepTable() {
   // const fetchData = useAuthAPI()
   useEffect(() => {
     const handleFetchData = async () => {
-      const request = await axios.get("/alphabet/5");
-      const response = request.data;
-      if (response.statusCode === 200) {
-        setYoonHiraList(response.data);
+      try {
+        let token =""
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
+        const request = await axios.get("/alphabet", {
+          headers: {
+            Authorization: token
+          },
+          params: {
+            type_id: 5
+          }
+        });
+        const response = request.data;
+        if (response.statusCode === 200) {
+          setYoonHiraList(response.data);
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          const confirm = window.confirm("Bạn không có quyền truy cập và cần đăng nhập để xem");
+          if(confirm) {
+            window.location.href = "/";
+          }
+        }
       }
     };
     handleFetchData();
