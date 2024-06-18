@@ -34,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
 					key: "question_type_id",
 				},
 			},
+			question_status_id: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				references: {
+					model: "status",
+					key: "status_id",
+				},
+			},
 		},
 		{
 			tableName: "question",

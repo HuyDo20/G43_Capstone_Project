@@ -14,7 +14,7 @@ export default function HiraganaTable() {
   // const fetchData = useAuthAPI()
   useEffect(() => {
     const handleFetchData = async () => {
-      const request = await axios.get("/alphabet/1");
+      const request = await axios.get("/alphabet",type_id);
       const response = request.data;
       if (response.statusCode === 200) {
         setHiraganaList(response.data);

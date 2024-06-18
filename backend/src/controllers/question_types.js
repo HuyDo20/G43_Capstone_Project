@@ -30,14 +30,14 @@ async function getAllQuestionTypes(req, res) {
 async function getQuestionTypeById(req, res) {
 	try {
 		const { question_type_id } = req.params;
-		const question_type = await QuestionType.findAll({ where: { question_types_id } });
+		const question_type = await QuestionType.findAll({ where: { question_type_id } });
 		if (question_type) {
 			return responseWithData(res, 200, question_type);
 		} else {
 			return badRequest(res, QUESTION_TYPE_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("get Question By Id:", error);
+		console.error("get Question type By Id:", error);
 		return error(res);
 	}
 }
@@ -99,7 +99,7 @@ async function updateQuestionTypeById(req, res) {
 async function deleteQuestionTypeById(req, res) {
 	try {
 		const { question_type_id } = req.params;
-		const question_type = await QuizType.findOne({ where: { question_type_id } });
+		const question_type = await QuestionType.findOne({ where: { question_type_id } });
 		if (!question_type) {
 			return notfound(res);
 		}
