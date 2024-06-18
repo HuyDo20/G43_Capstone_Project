@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 
 export function Nav() {
-  // const isLogin = false;
+
   const auth = useAuth();
   function onNavChange() {
     setTimeout(() => {

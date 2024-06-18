@@ -17,7 +17,7 @@ const emailSchema = z
 
 const passwordSchema = z
   .string()
-  .min(8, { message: "Mật khẩu phải có ít nhất 8 kí tự" });
+  .min(6, { message: "Mật khẩu phải có ít nhất 8 kí tự" });
 
 const registerSchema = z
   .object({

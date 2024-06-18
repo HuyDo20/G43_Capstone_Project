@@ -14,3 +14,9 @@ export type CourseResponse = {
     course_image: string;
     week: number;
 };
+export type WeekResponse = {
+    week_id: number;
+    week_name: string;
+    week_topic: string;
+    course_id: number;
+};

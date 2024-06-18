@@ -1,5 +1,5 @@
 import { isEmptyObj } from "@/helper";
-import axios, { AxiosRequestConfig, Method } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import React, {
   Dispatch,
   ReactNode,
@@ -42,12 +42,24 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      const request = await axios.post("/logout", user);
+      try {
+        let token =""
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
+        const payload = {account_id: user?.account_id}
+        const request = await axios.post("/logout", payload,{
+          headers: {
+              'Authorization': token
+        },
+    }  );
       const response = request.data;
       if (response.statusCode === 200) {
         localStorage.removeItem("user");
         navigate("/");
+        setUser({});
       }
     } catch (e) {
       console.log(e);
