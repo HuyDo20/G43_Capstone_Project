@@ -47,7 +47,7 @@ async function createNewOption(req, res) {
 			return badRequest(res, OPTION_CREATED_FAILED);
 		}
 	} catch (e) {
-		console.log("createNewOPtion", e);
+		console.log("createNewOption", e);
 		return error(res);
 	}
 }
@@ -80,7 +80,7 @@ async function updateOptionById(req, res) {
 			return notfound(res);
 		}
 	} catch (e) {
-		console.log("updateoPtionById", e);
+		console.log("updateOptionById", e);
 		return error(res);
 	}
 }
