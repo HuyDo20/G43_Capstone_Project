@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 	const AccountWeek = sequelize.define(
 		"AccountWeek",
 		{
-			account_day_id: {
+			account_week_id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
@@ -16,15 +16,15 @@ module.exports = (sequelize, DataTypes) => {
 					key: "account_id",
 				},
 			},
-			day_id: {
+			week_id: {
 				type: DataTypes.INTEGER,
 				references: {
-					model: "day",
-					key: "day_id",
+					model: "week",
+					key: "week_id",
 				},
 			},
-			day_process: {
-				type: DataTypes.STRING,
+			finish_date: {
+				type: DataTypes.DATE,
 				allowNull: true,
 			},
 		},
@@ -34,9 +34,6 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	);
 
-	// Alphabet.associate = function (models) {
-	// 	Alphabet.hasMany(models.User, { foreignKey: "StatusId", as: "users" });
-	// };
 
 	return AccountWeek;
 };
