@@ -18,6 +18,8 @@ const enroll = require("./enroll");
 const lesson = require("./lesson");
 const vocab = require("./vocabulary");
 const video = require("./video");
+const account_day = require("./account_day");
+const account_week = require("./account_week");
 
 module.exports = {
 	role,
@@ -40,5 +42,7 @@ module.exports = {
 	enroll,
 	lesson,
 	vocab,
-	video
+	video,
+	account_day,
+	account_week,
 };

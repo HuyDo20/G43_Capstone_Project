@@ -19,4 +19,6 @@ module.exports = [
 	require("./lesson"),
 	require("./vocabulary"),
 	require("./video"),
+	require("./account_day"),
+	require("./account_week"),
 ];

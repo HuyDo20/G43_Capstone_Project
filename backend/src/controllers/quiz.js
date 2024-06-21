@@ -89,7 +89,7 @@ async function updateQuizById(req, res) {
 
 		const quiz = await Quiz.findOne({
 			where: {
-				Quiz_id,
+				quiz_id,
 			},
 		});
 		if (quiz) {

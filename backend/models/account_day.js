@@ -34,9 +34,5 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	);
 
-	// Alphabet.associate = function (models) {
-	// 	Alphabet.hasMany(models.User, { foreignKey: "StatusId", as: "users" });
-	// };
-
 	return AccountDay;
 };

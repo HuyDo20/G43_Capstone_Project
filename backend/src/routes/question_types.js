@@ -10,13 +10,9 @@ const router = express.Router();
 
 const { checkAuthAndRole } = require("../middleware/auth");
 
-router.get("/question_types", getAllQuestionTypes);
-router.get(
-	"/question_types/:question_type_id",
-	checkAuthAndRole([1, 2, 3, 4]),
-	getQuestionTypeById,
-);
-router.post("/question_types", checkAuthAndRole([1, 3]), createNewQuestionType);
-router.put("/question_types/:question_type_id", checkAuthAndRole([1, 3]), updateQuestionTypeById);
-router.patch("/question_types/:question_type_id", checkAuthAndRole([1, 3]), deleteQuestionTypeById);
+router.get("/question_type", checkAuthAndRole([1, 2, 3, 4]), getAllQuestionTypes);
+router.get("/question_type/:question_type_id", checkAuthAndRole([1, 2, 3, 4]), getQuestionTypeById);
+router.post("/question_type", checkAuthAndRole([1, 3]), createNewQuestionType);
+router.put("/question_type/:question_type_id", checkAuthAndRole([1, 3]), updateQuestionTypeById);
+router.patch("/question_type/:question_type_id", checkAuthAndRole([1, 3]), deleteQuestionTypeById);
 module.exports = router;
