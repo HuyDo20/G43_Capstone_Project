@@ -17,6 +17,7 @@ module.exports = {
       },
     },
     extend: {
+    
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -66,6 +67,7 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

@@ -1,40 +1,73 @@
+import { Button } from "@/components/ui/button";
 import Header from "@/layout/header/Header";
-import { FaCircle } from "react-icons/fa6";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { DaySchedule, ResetDeadline } from "@/components/course";
+
 
 export default function LearningByWeek() {
-  // const [weekList, setCourseList] = useState<[]>([]);
-  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // // const fetchData = useAuthAPI()
-  // useEffect(() => {
-  //   const handleFetchData = async () => {
-  //     const request = await axios.get("/week");
-  //     const response = request.data;
-  //     console.log(response)
-  //     if (response.statusCode === 200) {
-  //       setCourseList(response.data);
-  //     }
-  //   };
-  //   handleFetchData();
-  // }, []);
-
   return (
     <div>
       <div className="bg-[#fff8e1]">
         <Header />
       </div>
-      <div className="flex flex-row w-full h-fit">
-        <div className="basis-1/5 h-[600px] flex flex-col items-center p-5 shadow-lg gap-7">
+      <div className="container flex flex-row w-full h-fit">
+        <div className="basis-1/5 h-[900px] flex flex-col items-center p-5 shadow-lg gap-7">
           <div className="text-2xl text-[#56a251] font-semibold">Tuần học</div>
-          <div className="w-full h-full">
-            
-                <div className="w-full h-[45px] rounded-md hover:bg-[#8fd889] flex flex-row gap-2 justify-center items-center">
-                  <FaCircle size={20} />
-                  <div className="text-xl">Tuần 1</div>
-                </div>
-             
+          <div className="flex flex-col w-full h-full gap-3">
+            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
+              Tuần 1
+            </Button>
+            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
+              Tuần 2
+            </Button>
+            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
+              Tuần 3
+            </Button>
+            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
+              Tuần 4
+            </Button>
+            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
+              Tuần 5
+            </Button>
           </div>
         </div>
-        <div className="basis-4/5 h-[800px]">Day</div>
+        <div className="basis-4/5 h-[800px] pt-7 pl-11 flex flex-col">
+          <div>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    href="/course"
+                    className="text-2xl font-semibold"
+                  >
+                    Khóa học
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-2xl font-semibold">
+                    Tiếng Nhật cơ bản 1
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <div className="flex flex-col items-center gap-3 pt-10">
+            <div>
+              <ResetDeadline />
+            </div>
+            <div className="w-[800px]">
+              <DaySchedule/>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

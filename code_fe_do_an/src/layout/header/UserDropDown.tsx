@@ -19,7 +19,7 @@ export function UserDropDown() {
   };
   return (
     <div className="flex gap-5">
-      <FaBell className="size-9 text-[#56a251]" />
+      <FaBell className="size-9 text-[#7db660]" />
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
