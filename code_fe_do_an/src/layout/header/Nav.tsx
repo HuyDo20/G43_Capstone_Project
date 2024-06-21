@@ -42,16 +42,16 @@ export function Nav() {
             <NavigationMenuLink
               className={cn(
                 navigationMenuTriggerStyle(),
-                "bg-transparent w-36 text-[#56a251] text-[20px]"
+                "bg-transparent w-40 text-[#6bb347] font-semibold text-[20px]"
               )}
             >
-              Trang chủ
+              TRANG CHỦ
             </NavigationMenuLink>
           </NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent w-36 submenu-trigger text-[#56a251] text-[20px]">
-            Học tập
+          <NavigationMenuTrigger className="bg-transparent font-semibold w-40 submenu-trigger text-[#7db660] text-[20px]">
+            HỌC TẬP
           </NavigationMenuTrigger>
           {auth.token !== "" ? (
             <NavigationMenuContent>
@@ -69,8 +69,8 @@ export function Nav() {
           )}
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent w-36 submenu-trigger text-[#56a251] text-[20px]">
-            Trò chơi
+          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#7db660] text-[20px]">
+            TRÒ CHƠI
           </NavigationMenuTrigger>
           {auth.token !== "" ? (
             <NavigationMenuContent>
@@ -88,8 +88,8 @@ export function Nav() {
           )}
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent w-36 submenu-trigger text-[#56a251] text-[20px]">
-            Giới thiệu
+          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#7db660] text-[20px]">
+            GIỚI THIỆU
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="gap-3 p-6 w-60">

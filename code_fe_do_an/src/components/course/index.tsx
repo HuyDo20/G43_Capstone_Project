@@ -1,2 +1,4 @@
 import CourseItem from "./CourseItem";
-export {CourseItem}
+import ResetDeadline from "./ResetDeadline";
+import DaySchedule from "./DaySchedule";
+export {CourseItem, ResetDeadline, DaySchedule}

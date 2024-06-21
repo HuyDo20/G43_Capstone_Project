@@ -10,6 +10,8 @@ import AuthProvider from "./hook/AuthContext";
 import Alphabet from "./pages/alphabet/Alphabet";
 import Course from "./pages/course/Course";
 import LearningByWeek from "./pages/course/LearningByWeek";
+import Vocabulary from "./pages/course/Vocabulary";
+import Kanji from "./pages/course/Kanji";
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +30,8 @@ function App() {
           <Route path="/alphabet" element={<Alphabet />} />
           <Route path="/course" element={<Course />} />
           <Route path="/learningByWeek" element={<LearningByWeek />} />
+          <Route path="/vocabulary" element={<Vocabulary />} />
+          <Route path="/kanji" element={<Kanji />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
