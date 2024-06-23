@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 // Định nghĩa kiểu dữ liệu cho context
 
 interface User {
+  account_id: number;
   full_name: string;
   email: string;
   phone_number: string;
@@ -42,19 +43,19 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-      try {
-        let token =""
-        const userEncode = localStorage.getItem("user");
-        if (userEncode) {
-          const userDecode = JSON.parse(userEncode);
-          token = userDecode?.token;
-        }
-        const payload = {account_id: user?.account_id}
-        const request = await axios.post("/logout", payload,{
-          headers: {
-              'Authorization': token
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const payload = { account_id: user?.account_id };
+      const request = await axios.post("/logout", payload, {
+        headers: {
+          Authorization: token,
         },
-    }  );
+      });
       const response = request.data;
       if (response.statusCode === 200) {
         localStorage.removeItem("user");

@@ -12,7 +12,7 @@ export default function Course() {
   // const fetchData = useAuthAPI()
   useEffect(() => {
     const handleFetchData = async () => {
-      const request = await axios.get("/course");
+      const request = await axios.get("/all_course");
       const response = request.data;
       if (response.statusCode === 200) {
         setCourseList(response.data);
