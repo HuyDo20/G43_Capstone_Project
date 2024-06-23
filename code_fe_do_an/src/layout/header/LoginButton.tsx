@@ -6,26 +6,37 @@ import {
 } from "@/components/ui/dialog";
 import Login from "@/pages/authentication/Login";
 import Register from "@/pages/authentication/Register";
+import { useState } from "react";
 export default function LoginButton() {
+  const [isLogin, setIsLogin] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+  
+  const openLogin = () => {
+    console.log("open Login");
+    setIsLogin(true);
+    setIsRegister(false);
+  }
+  
   return (
     <div className="flex gap-x-3">
-      {/* <Button variant="default" className=" text-white  w-32" size={"sm"}>
-        <NavLink to={"/login"} className={"text-lg"}>Đăng nhập</NavLink>
-      </Button> */}
-      <Dialog>
+      <Dialog open={isLogin} onOpenChange={(isOpen)=>{
+        setIsLogin(isOpen);
+      }}>
       <DialogTrigger asChild>
         <Button variant="outline"  className=" text-white  w-32 bg-[#2dab59] text-lg"  size={"sm"}>Đăng nhập</Button>
       </DialogTrigger>
       <DialogContent >
         <Login/>
       </DialogContent>
-    </Dialog>
-      <Dialog>
+    </Dialog >
+      <Dialog open={isRegister} onOpenChange={(isOpen)=>{
+        setIsRegister(isOpen);
+      }}>
       <DialogTrigger asChild>
         <Button variant="outline"  className=" text-white  w-32 bg-[#2dab59] text-lg"  size={"sm"}>Đăng ký</Button>
       </DialogTrigger>
       <DialogContent >
-        <Register/>
+        <Register openLogin={()=>openLogin()}  />
       </DialogContent>
     </Dialog>
     </div>

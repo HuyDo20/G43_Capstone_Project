@@ -1,17 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/home/Home";
-import ForgotPassword from "./pages/authentication/ForgotPassword";
-import Admin from "./pages/admin/Admin";
-import GetAuthenticationCode from "./pages/authentication/GetAuthenticationCode";
-import GetNewPassword from "./pages/authentication/GetNewPassword";
-import UserProfile from "./pages/userProfie/UserProfile";
-import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
 import AuthProvider from "./hook/AuthContext";
+import Admin from "./pages/admin/Admin";
 import Alphabet from "./pages/alphabet/Alphabet";
+import ForgotPassword from "./pages/authentication/ForgotPassword";
+import GetAuthenticationCode from "./pages/authentication/GetAuthenticationCode";
+import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
+import GetNewPassword from "./pages/authentication/GetNewPassword";
 import Course from "./pages/course/Course";
+import Kanji from "./pages/course/Kanji";
 import LearningByWeek from "./pages/course/LearningByWeek";
 import Vocabulary from "./pages/course/Vocabulary";
-import Kanji from "./pages/course/Kanji";
+import Home from "./pages/home/Home";
+import UserProfile from "./pages/userProfie/UserProfile";
 function App() {
   return (
     <BrowserRouter>

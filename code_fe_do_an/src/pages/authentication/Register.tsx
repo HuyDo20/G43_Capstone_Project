@@ -8,6 +8,10 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
 
+type RegisterProps = {
+  openLogin: () => void;
+}
+
 const emailSchema = z
   .string()
   .email({ message: "Email không hợp lệ" })
@@ -31,7 +35,7 @@ const registerSchema = z
     path: ["rewritePassword"],
   });
 
-export default function Register() {
+export default function Register({openLogin}:RegisterProps) {
   const [Account, setAccount] = useState({
     full_name: "",
     email: "",
@@ -71,6 +75,7 @@ export default function Register() {
         // clear form
         // đóng modal
         // mở cửa sổ login
+        openLogin();
       } else {
         alert(response.data?.message);
       }
