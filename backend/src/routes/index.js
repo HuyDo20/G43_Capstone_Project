@@ -21,4 +21,6 @@ module.exports = [
 	require("./video"),
 	require("./account_day"),
 	require("./account_week"),
+	require("./video_question"),
+	require("./video_option"),
 ];

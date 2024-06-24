@@ -52,7 +52,7 @@ const createNewWeek = async (req, res) => {
 
 		const week = await Week.create(req.body);
 		if (week) {
-			return created(res, WEEK_CREATED);
+			return responseWithData(res, 201, { data: week, message: WEEK_CREATED });
 		} else {
 			return badRequest(res, WEEK_CREATED_FAILED);
 		}

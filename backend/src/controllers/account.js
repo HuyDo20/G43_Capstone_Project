@@ -161,7 +161,7 @@ async function getListUser(req, res) {
 }
 
 async function updateUserById(req, res) {
-	const { full_name, phone_number, dob, avatar, role_id, point, status_id } = req.body;
+	const { full_name, phone_number, dob, avatar, role_id, point, status_id, password } = req.body;
 	const { account_id } = req.params;
 	const { accountRole, accountId } = req;
 
@@ -177,6 +177,10 @@ async function updateUserById(req, res) {
 				return forbidden(res);
 			}
 		}
+		let hashedPassword
+		if (password) {
+			hashedPassword = await bcrypt.hash(password, 10);
+		}
 
 		user.full_name = full_name || user.full_name;
 		user.dob = dob || user.dob;
@@ -184,6 +188,7 @@ async function updateUserById(req, res) {
 		user.avatar = avatar || user.avatar;
 		user.point = point || user.point;
 		user.status_id = status_id || user.status_id;
+		user.password = hashedPassword || user.password;
 
 		await user.save();
 		return ok(res, ACCOUNT_UPDATED);

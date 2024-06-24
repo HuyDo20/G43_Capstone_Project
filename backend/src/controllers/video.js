@@ -68,7 +68,7 @@ async function createNewVideo(req, res) {
 
 		const video = await Video.create(req.body);
 		if (video) {
-			return created(res, VIDEO_CREATED);
+			return responseWithData(res, 201, { data: video, message: VIDEO_CREATED });
 		} else {
 			return badRequest(res, VIDEO_CREATED_FAILED);
 		}
