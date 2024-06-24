@@ -18,9 +18,10 @@ import axios from "axios";
 import { useAuth } from "@/hook/AuthContext";
 export default function UserProfile() {
   const { user } = useAuth();
-  const [input, setInput] = useState<any>();
+  const [input, setInput] = useState<File | null>(null);
 
   const handleOnSubmitFile = async () => {
+    
     const formData = new FormData();
     formData.append("userAvatar", input)
     try {
@@ -92,8 +93,8 @@ export default function UserProfile() {
                         Thay đổi mật khẩu
                       </TabsTrigger>
                       <TabsTrigger value="notification">Thông báo</TabsTrigger>
-                      <TabsTrigger value="learning">
-                        Lịch sử học tập
+                      <TabsTrigger value="learningProcess">
+                        Tiến độ học tập
                       </TabsTrigger>
                       <TabsTrigger value="game">Lịch sử trò chơi</TabsTrigger>
                     </TabsList>
@@ -112,7 +113,7 @@ export default function UserProfile() {
                     <TabsContent value="notification">
                       <Notification />
                     </TabsContent>
-                    <TabsContent value="learning">
+                    <TabsContent value="learningProcess">
                       <LearningProcess />
                     </TabsContent>
                     <TabsContent value="game">
