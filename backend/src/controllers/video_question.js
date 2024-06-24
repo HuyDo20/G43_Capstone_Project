@@ -26,7 +26,7 @@ async function getAllVideoQuestionByVideoId(req, res) {
 			return badRequest(res, VIDEO_QUESTION_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("getAllvIDEOQuestionByVideoId:", error);
+		console.error("getAllVideoQuestionByVideoId:", error);
 		return error(res);
 	}
 }
@@ -71,7 +71,7 @@ async function updateVideoQuestionById(req, res) {
 	try {
 		const { accountId } = req;
 		const { account_id } = req.body;
-		const { question_id } = req.params;
+		const { video_question_id } = req.params;
 
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
 			return forbidden(res);
