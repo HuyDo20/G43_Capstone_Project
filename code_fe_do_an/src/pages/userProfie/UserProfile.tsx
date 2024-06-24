@@ -1,21 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ChangePassword,
   DetailUserProfile,
   GameHistory,
-  LearningProcess,
-  Notification,
+  LearningProcess
 } from "@/components/userProfile";
+import { useAuth } from "@/hook/AuthContext";
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { FaCamera } from "react-icons/fa";
-import { useState } from "react";
 import axios from "axios";
-import { useAuth } from "@/hook/AuthContext";
+import { useState } from "react";
+import { FaCamera } from "react-icons/fa";
 export default function UserProfile() {
   const { user } = useAuth();
   const [input, setInput] = useState<File | null>(null);
@@ -92,7 +91,6 @@ export default function UserProfile() {
                       <TabsTrigger value="password">
                         Thay đổi mật khẩu
                       </TabsTrigger>
-                      <TabsTrigger value="notification">Thông báo</TabsTrigger>
                       <TabsTrigger value="learningProcess">
                         Tiến độ học tập
                       </TabsTrigger>
@@ -110,9 +108,7 @@ export default function UserProfile() {
                     <TabsContent value="password">
                       <ChangePassword />
                     </TabsContent>
-                    <TabsContent value="notification">
-                      <Notification />
-                    </TabsContent>
+                    
                     <TabsContent value="learningProcess">
                       <LearningProcess />
                     </TabsContent>
