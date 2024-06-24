@@ -153,7 +153,7 @@ export default function DetailUserProfile() {
             >
               Thay đổi thông tin
             </Button>
-            <div>{message}</div>
+            <div className="text-[#7db660]">{message}</div>
           </form>
         </Form>
       </div>

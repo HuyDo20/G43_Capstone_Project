@@ -16,12 +16,31 @@ export default function NumberDisplay() {
 
   useEffect(() => {
     const handleFetchData = async () => {
-      const request = await axios.get("/alphabet/7");
-      const response = request.data;
-      if (response.statusCode === 200) {
-        setNumberList(response.data);
-        if (response.data.length > 0) {
-          setSelectedNumber(response.data[0]);
+      try {
+        let token =""
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
+        const request = await axios.get("/alphabet", {
+          headers: {
+            Authorization: token
+          },
+          params: {
+            type_id: 7
+          }
+        });
+        const response = request.data;
+        if (response.statusCode === 200) {
+          setNumberList(response.data);
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          const confirm = window.confirm("Bạn không có quyền truy cập và cần đăng nhập để xem");
+          if(confirm) {
+            window.location.href = "/";
+          }
         }
       }
     };
