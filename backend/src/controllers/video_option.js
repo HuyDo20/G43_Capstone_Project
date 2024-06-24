@@ -42,7 +42,10 @@ async function createNewVideoOption(req, res) {
 
 		const video_option = await VideoOption.create(req.body);
 		if (video_option) {
-			return created(res, VIDEO_OPTION_CREATED);
+			return responseWithData(res, 201, {
+				data: video_option,
+				message: VIDEO_OPTION_CREATED,
+			});
 		} else {
 			return badRequest(res, VIDEO_OPTION_CREATED_FAILED);
 		}

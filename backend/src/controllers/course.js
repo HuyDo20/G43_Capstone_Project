@@ -62,7 +62,10 @@ const createNewCourse = async (req, res) => {
 
 		const course = await Course.create(req.body);
 		if (course) {
-			return created(res, COURSE_CREATED);
+			return responseWithData(res, 201, {
+				data: course,
+				message: COURSE_CREATED,
+			});
 		} else {
 			return badRequest(res, COURSE_CREATED_FAILED);
 		}

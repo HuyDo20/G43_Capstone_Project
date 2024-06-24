@@ -67,7 +67,10 @@ const createNewKanjiWord = async (req, res) => {
 
 		const kanji_word = await KanjiWord.create(req.body);
 		if (kanji_word) {
-			return created(res, KANJI_WORD_CREATED);
+			return responseWithData(res, 201, {
+				data: kanji_word,
+				message: KANJI_WORD_CREATED,
+			});
 		} else {
 			return badRequest(res, KANJI_WORD_CREATED_FAILED);
 		}

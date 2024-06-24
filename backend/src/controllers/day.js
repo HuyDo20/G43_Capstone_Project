@@ -42,7 +42,7 @@ const createNewDay = async (req, res) => {
 
 		const day = await Day.create(req.body);
 		if (day) {
-			return created(res, DAY_CREATED);
+			return responseWithData(res, 201, { data: day, message: DAY_CREATED });
 		} else {
 			return badRequest(res, DAY_CREATED_FAILED);
 		}
