@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hook/AuthContext";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { z } from "zod";
@@ -38,6 +38,15 @@ export default function Login() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+  const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const savedAccount = localStorage.getItem("rememberMe");
+    if (savedAccount) {
+      setAccount(JSON.parse(savedAccount));
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -58,6 +67,13 @@ export default function Login() {
     }
   };
 
+  const handleRememberMeChange = (checked: boolean) => {
+    setRememberMe(checked);
+    if (!checked) {
+      localStorage.removeItem("rememberMe");
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       LoginSchema.parse(Account);
@@ -68,9 +84,12 @@ export default function Login() {
       console.log(request);
       const response = request.data;
       if (response.statusCode === 200) {
-        alert(response.data?.message);
+        // alert(response.data?.message);
         const result = response.data.data;
         setUser(result);
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", JSON.stringify(Account));
+        }
       } else {
         alert(response.data?.message);
       }
@@ -140,9 +159,9 @@ export default function Login() {
           {/* Remember pw and forgot pw */}
           <div className="flex">
             <div className="flex items-center pr-4 space-x-2">
-              <Checkbox id="terms" />
+              <Checkbox id="rememberMe" checked={rememberMe} onCheckedChange={handleRememberMeChange} />
               <label
-                htmlFor="terms"
+                htmlFor="rememberMe"
                 className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Nhớ mật khẩu

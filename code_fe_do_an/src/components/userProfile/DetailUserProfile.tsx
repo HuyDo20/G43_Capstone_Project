@@ -1,78 +1,162 @@
-import { Label } from '@radix-ui/react-label';
-import React from 'react'
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { useAuth } from "@/hook/AuthContext";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
 
 export default function DetailUserProfile() {
-    const Account = {
-        name: "Nguyễn Đình Thành Quang",
-        email: "quanggk98@gmail.com",
-        phoneNumber: "0123456789",
-        dob: "03/05/2002",
-      };
+  const { user } = useAuth();
+
+  const [message,setMessage] = useState("");
+  const FormSchema = z.object({
+    full_name: z.string().trim().min(2, {
+      message: "Bạn cần nhập tên của mình!",
+    }),
+    phone_number: z
+      .string()
+      .trim()
+      .min(10, { message: "Bạn cần nhập số điện thoại" })
+      .max(11, { message: "Bạn cần nhập số điện thoại" }),
+    dob: z.string().optional(),
+    email: z.string().email().optional(),
+  });
+
+  const initialUserProfile = {
+    full_name: user.full_name,
+    phone_number: user.phone_number,
+    dob: user.dob,
+    email: user.email,
+  };
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    //@ts-ignore
+    defaultValues: initialUserProfile,
+  });
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      const hasChanged = Object.keys(initialUserProfile).some(
+        (key) => initialUserProfile[key] !== value[key]
+      );
+      setIsButtonDisabled(!hasChanged);
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, initialUserProfile]);
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const response = await axios.put(`/account/${user.account_id}`, data, {
+        headers: {
+          Authorization: user.token,
+        },
+      });
+      if (response.status == 200) {
+        setMessage(response.data.data.message);
+        // alert(response.data.data.message);
+      } else {
+        throw new Error("Somthing went wrong!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 3000); // Clear message after 3 seconds
+
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount or if message changes
+    }
+  }, [message]);
+
   return (
-    <div className="flex flex-col w-3/4 gap-10 p-10 bg-white shadow-sm h-3/5 rounded-3xl">
-            <div className="text-xl font-semibold text-center">
-              THÔNG TIN CÁ NHÂN
-            </div>
-            <div className="flex flex-col gap-5 pl-16">
-              <div className="flex flex-row items-center gap-7">
-                <Label className="w-1/6" htmlFor="name">
-                  Họ và tên
-                </Label>
-                <Input
-                  className="w-1/2"
-                  type="text"
-                  value={Account.name}
-                  id="name"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-row items-center gap-7">
-                <Label className="w-1/6" htmlFor="email">
-                  Email
-                </Label>
-                <Input
-                  className="w-1/2"
-                  type="text"
-                  value={Account.email}
-                  id="email"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-row items-center gap-7">
-                <Label className="w-1/6" htmlFor="phoneNumber">
-                  Số điện thoại
-                </Label>
-                <Input
-                  className="w-1/2"
-                  type="text"
-                  value={Account.phoneNumber}
-                  id="phoneNumber"
-                  readOnly
-                />
-              </div>
-              <div className="flex flex-row items-center gap-7">
-                <Label className="w-1/6" htmlFor="dob">
-                  Ngày sinh
-                </Label>
-                <Input
-                  className="w-1/2"
-                  type="text"
-                  value={Account.dob}
-                  id="dob"
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center gap-5 mt-2">
-              <Button className="w-1/3 bg-[#eeb55f] hover:bg-[#ff9800]">
-                Thay đổi thông tin
-              </Button>
-              <Button className="w-1/3 bg-[#eeb55f] hover:bg-[#ff9800]">
-                Thay đổi mật khẩu
-              </Button>
-            </div>
-          </div>
-  )
+    <div className="flex items-center justify-center w-full mt-24">
+      <div className="flex flex-col w-full h-full gap-10 p-10 bg-white shadow-sm rounded-3xl">
+        <div className="mt-5 text-xl font-semibold text-center">
+          THÔNG TIN CÁ NHÂN
+        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-5 pl-16"
+          >
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                  <FormLabel className="w-1/6">Họ và Tên</FormLabel>
+                  <FormControl>
+                    <Input className="w-1/2" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                  <FormLabel className="w-1/6">Email</FormLabel>
+                  <FormControl>
+                    <Input className="w-1/2" {...field} readOnly />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                  <FormLabel className="w-1/6">Số điện thoại</FormLabel>
+                  <FormControl>
+                    <Input className="w-1/2" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                  <FormLabel className="w-1/6">Ngày sinh</FormLabel>
+                  <FormControl>
+                    <Input className="w-1/2" type="date" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              className="w-1/3 bg-[#eeb55f] hover:bg-[#ff9800] mx-auto"
+              disabled={isButtonDisabled}
+            >
+              Thay đổi thông tin
+            </Button>
+            <div>{message}</div>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
 }
