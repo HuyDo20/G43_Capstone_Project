@@ -1,30 +1,26 @@
-import { DaySchedule } from "@/components/course";
+import { DaySchedule, Practice } from "@/components/course";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableRow
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Header from "@/layout/header/Header";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
-  
+
 export default function Kanji() {
   return (
     <div>
@@ -70,7 +66,7 @@ export default function Kanji() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          {/* Vocab Card*/}
+          {/* Kanji Card*/}
           <div className="flex justify-center w-full mt-7">
             <div className="">
               <Carousel className="w-[1200px]">
@@ -131,27 +127,30 @@ export default function Kanji() {
                                     <TableBody>
                                       <TableRow>
                                         <TableCell className="font-medium">
-                                        私
+                                          私
                                         </TableCell>
                                         <TableCell>わたし</TableCell>
-                                        <TableCell className="">
-                                        tôi
-                                        </TableCell>
+                                        <TableCell className="">tôi</TableCell>
                                       </TableRow>
                                       <TableRow>
                                         <TableCell className="font-medium">
-                                        私たち
+                                          私たち
                                         </TableCell>
                                         <TableCell>わたしたち</TableCell>
                                         <TableCell className="">
-                                        chúng tôi
+                                          chúng tôi
                                         </TableCell>
                                       </TableRow>
                                     </TableBody>
                                   </Table>
                                 </div>
                                 <Button className=" w-[140px] h-[40px] ">
-                                  Luyện tập
+                                  <Dialog>
+                                    <DialogTrigger>Luyện tập</DialogTrigger>
+                                    <DialogContent>
+                                      <Practice />
+                                    </DialogContent>
+                                  </Dialog>
                                 </Button>
                               </div>
                             </div>

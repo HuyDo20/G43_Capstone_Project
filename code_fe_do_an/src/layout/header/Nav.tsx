@@ -42,20 +42,20 @@ export function Nav() {
             <NavigationMenuLink
               className={cn(
                 navigationMenuTriggerStyle(),
-                "bg-transparent w-40 text-[#6bb347] font-semibold text-[20px]"
+                "bg-transparent w-40 text-[#6fb24d] font-semibold text-[20px] hover:bg-[#B6DA9F] hover:text-black"
               )}
             >
               TRANG CHỦ
             </NavigationMenuLink>
           </NavLink>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent font-semibold w-40 submenu-trigger text-[#7db660] text-[20px]">
+        <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+          <NavigationMenuTrigger className="bg-transparent font-semibold w-40 submenu-trigger text-[#6fb24d] text-[20px] ">
             HỌC TẬP
           </NavigationMenuTrigger>
           {auth.token !== "" ? (
             <NavigationMenuContent>
-              <ul className="gap-3 p-6 w-60">
+              <ul className="gap-3 p-6 text-xl w-60">
                 <ListItem href="/alphabet" title="Học bảng chữ cái" />
                 <ListItem href="/course" title="Học theo mã môn" />
               </ul>
@@ -68,8 +68,8 @@ export function Nav() {
             </NavigationMenuContent>
           )}
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#7db660] text-[20px]">
+        <NavigationMenuItem  className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#6fb24d] text-[20px]">
             TRÒ CHƠI
           </NavigationMenuTrigger>
           {auth.token !== "" ? (
@@ -87,8 +87,8 @@ export function Nav() {
             </NavigationMenuContent>
           )}
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#7db660] text-[20px]">
+        <NavigationMenuItem  className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+          <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#6fb24d] text-[20px]">
             GIỚI THIỆU
           </NavigationMenuTrigger>
           <NavigationMenuContent>
