@@ -20,3 +20,14 @@ export type WeekResponse = {
     week_topic: string;
     course_id: number;
 };
+
+export type ContentHomeProps = {
+  image: string;
+  title: string;
+  description: string;
+};
+
+export type GrammarItemList = {
+  grammar_name: string;
+  grammar_structure: string;
+};

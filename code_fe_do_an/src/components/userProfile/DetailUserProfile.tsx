@@ -16,9 +16,9 @@ import {
 import { Input } from "../ui/input";
 
 export default function DetailUserProfile() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth(); // Assuming setUser is a function to update the user in your auth context
 
-  const [message,setMessage] = useState("");
+  const [message, setMessage] = useState("");
   const FormSchema = z.object({
     full_name: z.string().trim().min(2, {
       message: "Bạn cần nhập tên của mình!",
@@ -64,16 +64,20 @@ export default function DetailUserProfile() {
           Authorization: user.token,
         },
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
+        const updatedUser = { ...user, ...data };
+        setUser(updatedUser); // Update the user in context
+        localStorage.setItem("user", JSON.stringify(updatedUser)); // Save the updated user to local storage
         setMessage(response.data.data.message);
         // alert(response.data.data.message);
       } else {
-        throw new Error("Somthing went wrong!");
+        throw new Error("Something went wrong!");
       }
     } catch (error) {
       console.log(error);
     }
   }
+
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {

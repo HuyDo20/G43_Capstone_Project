@@ -1,4 +1,4 @@
-import { DaySchedule } from "@/components/course";
+import { DaySchedule, Practice } from "@/components/course";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,6 +7,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,7 +16,7 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Header from "@/layout/header/Header";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
@@ -113,10 +115,17 @@ export default function Vocabulary() {
                                   <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                     Ví dụ
                                   </div>
-                                  <div>私はベトナム人です。(Tôi là người Việt Nam.)</div>
+                                  <div>
+                                    私はベトナム人です。(Tôi là người Việt Nam.)
+                                  </div>
                                 </div>
-                                <Button className=" w-[140px] h-[40px] ">
-                                  Luyện tập
+                                <Button className=" w-[140px] h-[40px] mt-8">
+                                  <Dialog>
+                                    <DialogTrigger>Luyện tập</DialogTrigger>
+                                    <DialogContent>
+                                      <Practice />
+                                    </DialogContent>
+                                  </Dialog>
                                 </Button>
                               </div>
                             </div>

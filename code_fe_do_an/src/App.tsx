@@ -2,13 +2,14 @@ import { Flex, Spin } from "antd";
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthProvider from "./hook/AuthContext";
-import Admin from "./pages/admin/Admin";
 import Alphabet from "./pages/alphabet/Alphabet";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import GetAuthenticationCode from "./pages/authentication/GetAuthenticationCode";
 import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
 import GetNewPassword from "./pages/authentication/GetNewPassword";
 import Course from "./pages/course/Course";
+import Grammar from "./pages/course/Grammar";
+import GrammarDetail from "./pages/course/GrammarDetail";
 import Kanji from "./pages/course/Kanji";
 import LearningByWeek from "./pages/course/LearningByWeek";
 import Vocabulary from "./pages/course/Vocabulary";
@@ -59,6 +60,8 @@ function App() {
             <Route path="/learningByWeek" element={<LearningByWeek />} />
             <Route path="/vocabulary" element={<Vocabulary />} />
             <Route path="/kanji" element={<Kanji />} />
+            <Route path="/grammar" element={<Grammar />} />
+            <Route path="/grammar/detail" element={<GrammarDetail />} />
             <Route path="/admin/*" element={<AdminRoutes />} />
           </Routes>
         </Suspense>
