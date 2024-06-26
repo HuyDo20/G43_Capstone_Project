@@ -18,6 +18,9 @@ export default function DaySchedule() {
   const handleClickGrammar = () => {
     navigate("/grammar");
   };
+  const handleClickVideo = () => {
+    navigate("/video/detail");
+  };
 
   
 
@@ -40,6 +43,9 @@ export default function DaySchedule() {
           </AccordionContent>
           <AccordionContent onClick={handleClickGrammar} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
             Ngữ pháp
+          </AccordionContent>
+          <AccordionContent onClick={handleClickVideo} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+            Video bổ trợ
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">

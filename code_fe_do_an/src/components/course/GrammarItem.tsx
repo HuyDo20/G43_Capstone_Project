@@ -1,7 +1,6 @@
 import { GrammarItemList } from "@/type";
-import { Button } from "antd";
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 export default function GrammarItem({
   grammar_name,
@@ -21,7 +20,7 @@ export default function GrammarItem({
       <div className="flex flex-row justify-between pl-28 pr-7 rounded-md basis-5/6 items-center bg-[#d1eeb0]">
         <div className="text-xl font-semibold">{grammar_structure}</div>
         <Button
-          className="bg-[#d1eeb0] border border-[#4b9c47] text-black"
+          className="bg-[#d1eeb0] border border-[#4b9c47] text-black hover:bg-[#b8e782] hover:text-black"
           onClick={handleClick}
         >
           Chi tiết

@@ -63,7 +63,7 @@ const handleBack = () => {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          {/* Grammar List*/}
+          {/* Grammar Detail*/}
           <div className="w-[1200px] h-[700px] ml-28 bg-[#d1eeb0] mt-5 rounded-lg flex flex-col gap-5 pb-5">
             <div className="basis-[10%] bg-[#4b9c47] rounded-t-md flex flex-row justify-between items-center px-10">
               <div className="flex items-center justify-center text-xl text-white ">Ngữ pháp 1</div>
