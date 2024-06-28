@@ -12,10 +12,10 @@ import Grammar from "./pages/course/Grammar";
 import GrammarDetail from "./pages/course/GrammarDetail";
 import Kanji from "./pages/course/Kanji";
 import LearningByWeek from "./pages/course/LearningByWeek";
+import Video from "./pages/course/Video";
 import Vocabulary from "./pages/course/Vocabulary";
 import Home from "./pages/home/Home";
 import UserProfile from "./pages/userProfie/UserProfile";
-import VideoDetail from "./pages/course/VideoDetail";
 
 const contentStyle = {
   padding: 50,
@@ -62,7 +62,7 @@ function App() {
             <Route path="/vocabulary" element={<Vocabulary />} />
             <Route path="/kanji" element={<Kanji />} />
             <Route path="/grammar" element={<Grammar />} />
-            <Route path="/video/detail" element={<VideoDetail />} />
+            <Route path="/video" element={<Video />} />
             <Route path="/grammar/detail" element={<GrammarDetail />} />
             <Route path="/admin/*" element={<AdminRoutes />} />
           </Routes>

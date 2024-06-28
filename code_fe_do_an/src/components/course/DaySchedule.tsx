@@ -19,7 +19,7 @@ export default function DaySchedule() {
     navigate("/grammar");
   };
   const handleClickVideo = () => {
-    navigate("/video/detail");
+    navigate("/video");
   };
 
   
