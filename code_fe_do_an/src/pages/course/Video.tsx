@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Header from "@/layout/header/Header";
-export default function VideoDetail() {
+export default function Video() {
   return (
     <div>
       {/* Header */}
