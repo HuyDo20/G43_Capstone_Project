@@ -68,7 +68,10 @@ async function createNewVocab(req, res) {
 
 		const vocab = await Vocabulary.create(req.body);
 		if (vocab) {
-			return created(res, VOCABULARY_CREATED);
+			return responseWithData(res, 201, {
+				data: vocab,
+				message: VOCABULARY_CREATED,
+			});
 		} else {
 			return badRequest(res, VOCABULARY_CREATED_FAILED);
 		}

@@ -26,7 +26,7 @@ async function getAllVideoQuestionByVideoId(req, res) {
 			return badRequest(res, VIDEO_QUESTION_GET_FAILED);
 		}
 	} catch (er) {
-		console.error("getAllVideoQuestionByVideoId:", error);
+		console.error("getAllvIDEOQuestionByVideoId:", error);
 		return error(res);
 	}
 }
@@ -57,7 +57,10 @@ async function createNewVideoQuestion(req, res) {
 
 		const video_question = await VideoQuestion.create(req.body);
 		if (video_question) {
-			return created(res, VIDEO_QUESTION_CREATED);
+			return responseWithData(res, 201, {
+				data: video_question,
+				message: VIDEO_QUESTION_CREATED,
+			});
 		} else {
 			return badRequest(res, VIDEO_QUESTION_CREATED_FAILED);
 		}
@@ -71,7 +74,7 @@ async function updateVideoQuestionById(req, res) {
 	try {
 		const { accountId } = req;
 		const { account_id } = req.body;
-		const { video_question_id } = req.params;
+		const { question_id } = req.params;
 
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
 			return forbidden(res);

@@ -7,7 +7,7 @@ import { useAuth } from "@/hook/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 // Định nghĩa schema với Zod
@@ -29,6 +29,7 @@ const LoginSchema = z.object({
 
 export default function Login() {
   const auth = useAuth();
+  const navigate = useNavigate()
   const { setUser } = auth;
   const [Account, setAccount] = useState({
     email: "",
@@ -79,9 +80,7 @@ export default function Login() {
       LoginSchema.parse(Account);
       setErrors({});
 
-      console.log(Account);
       const request = await axios.post("/login", Account);
-      console.log(request);
       const response = request.data;
       if (response.statusCode === 200) {
         // alert(response.data?.message);
@@ -90,9 +89,12 @@ export default function Login() {
         if (rememberMe) {
           localStorage.setItem("rememberMe", JSON.stringify(Account));
         }
+        if (result.role_id === 1) {
+          navigate("/admin")
       } else {
         alert(response.data?.message);
       }
+    }
     } catch (err) {
       if (err instanceof z.ZodError) {
         const validationErrors: { email?: string; password?: string } = {};

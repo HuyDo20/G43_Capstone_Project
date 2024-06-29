@@ -58,7 +58,10 @@ const createNewGrammar = async (req, res) => {
 
 		const grammar = await Grammar.create(req.body);
 		if (grammar) {
-			return created(res, GRAMMAR_CREATED);
+			return responseWithData(res, 201, {
+				data: grammar,
+				message: GRAMMAR_CREATED,
+			});
 		} else {
 			return badRequest(res, GRAMMAR_CREATED_FAILED);
 		}
