@@ -8,13 +8,21 @@ import { useNavigate } from "react-router-dom";
 export default function DaySchedule() {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClickVocab = () => {
     navigate("/vocabulary");
   };
 
   const handleClickKanji = () => {
     navigate("/kanji");
   };
+  const handleClickGrammar = () => {
+    navigate("/grammar");
+  };
+  const handleClickVideo = () => {
+    navigate("/video");
+  };
+
+  
 
   return (
     <div>
@@ -28,13 +36,16 @@ export default function DaySchedule() {
             Ngày 1
           </AccordionTrigger>
           <AccordionContent
-            onClick={handleClick}
+            onClick={handleClickVocab}
             className="bg-[#fff8e1] pt-4 pl-20 mt-1"
           >
             Từ mới
           </AccordionContent>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+          <AccordionContent onClick={handleClickGrammar} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
             Ngữ pháp
+          </AccordionContent>
+          <AccordionContent onClick={handleClickVideo} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+            Video bổ trợ
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
@@ -87,6 +98,14 @@ export default function DaySchedule() {
           </AccordionTrigger>
           <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
             Kanji
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-7">
+          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
+            Kiểm tra tổng hợp
+          </AccordionTrigger>
+          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+            Kiểm tra
           </AccordionContent>
         </AccordionItem>
       </Accordion>

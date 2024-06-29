@@ -17,8 +17,8 @@ export default function ContentHome1({
         src={image}
         className="size-24"
       />
-      <div className="text-3xl font-semibold text-[#7d9c64]">{title}</div>
-      <div className="text-center text-[#7d9c64]">{description}</div>
+      <div className="text-3xl font-semibold text-[#6fb24d]">{title}</div>
+      <div className="text-center text-[#6fb24d]">{description}</div>
     </div>
   );
 }
