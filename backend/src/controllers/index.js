@@ -18,6 +18,8 @@ const enroll = require("./enroll");
 const lesson = require("./lesson");
 const vocab = require("./vocabulary");
 const video = require("./video");
+const video_question = require("./video_question");
+const video_option = require("./video_option");
 const account_day = require("./account_day");
 const account_week = require("./account_week");
 
@@ -43,6 +45,8 @@ module.exports = {
 	lesson,
 	vocab,
 	video,
+	video_question,
+	video_option,
 	account_day,
 	account_week,
 };

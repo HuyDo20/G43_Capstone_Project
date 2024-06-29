@@ -19,6 +19,8 @@ module.exports = [
 	require("./lesson"),
 	require("./vocabulary"),
 	require("./video"),
+	require("./video_question"),
+	require("./video_option"),
 	require("./account_day"),
 	require("./account_week"),
 	require("./video_question"),

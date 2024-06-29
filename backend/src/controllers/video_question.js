@@ -120,7 +120,6 @@ async function deleteVideoQuestionById(req, res) {
 }
 
 module.exports = {
-	// getAllVideoQuestion,
 	getAllVideoQuestionByVideoId,
 	getVideoQuestionById,
 	createNewVideoQuestion,
