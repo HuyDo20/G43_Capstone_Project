@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Alphabet } = require("../../models");
 const {
 	responseWithData,
@@ -41,7 +42,41 @@ async function getAllAlphabetByTypeId(req, res) {
 	}
 }
 
+async function getAllHigaAlphabet(req, res) {
+	try {
+		const alphabets = await Alphabet.findAll({
+			where: { [Op.or]: [{ type_id: 1 }, { type_id: 3 }, { type_id: 5 }] },
+		});
+		if (alphabets) {
+			return responseWithData(res, 200, alphabets);
+		} else {
+			return badRequest(res, ALPHABET_GET_FAILED);
+		}
+	} catch (error) {
+		console.error("Error getting hira alphabets :", error);
+		throw error;
+	}
+}
+
+async function getAllKataAlphabet(req, res) {
+	try {
+		const alphabets = await Alphabet.findAll({
+			where: { [Op.or]: [{ type_id: 2 }, { type_id: 4 }, { type_id: 6 }] },
+		});
+		if (alphabets) {
+			return responseWithData(res, 200, alphabets);
+		} else {
+			return badRequest(res, ALPHABET_GET_FAILED);
+		}
+	} catch (error) {
+		console.error("Error getting all kata alphabets:", error);
+		throw error;
+	}
+}
+
 module.exports = {
 	getAllAlphabet,
 	getAllAlphabetByTypeId,
+	getAllHigaAlphabet,
+	getAllKataAlphabet,
 };
