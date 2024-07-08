@@ -30,4 +30,6 @@ export type ContentHomeProps = {
 export type GrammarItemList = {
   grammar_name: string;
   grammar_structure: string;
+  grammar_id: string;
+  checkIsRepeat: boolean;
 };

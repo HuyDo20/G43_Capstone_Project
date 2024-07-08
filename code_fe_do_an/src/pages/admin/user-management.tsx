@@ -15,22 +15,28 @@ import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 interface User {
   id: number;
-  userName: string;
+  full_name: string;
   email: string;
-  phone: string;
-  campus: string;
-  name?: string;
+  avatar?: string;
   password?: string;
-  phoneNumber?: string;
-  isActive?: boolean;
+  phone_number?: string;
+  status_id?: number;
+  role_id: number;
+  point: number;
+  dob: string;
 }
 
 const UserDefaultData: User = {
   id: 0,
-  userName: "",
+  full_name: "",
   email: "",
-  phone: "",
-  campus: "",
+  avatar: "",
+  role_id: 4,
+  dob: "",
+  point: 0,
+  password: "",
+  phone_number: "",
+  status_id: 1,
 };
 
 interface ModalEditProps {
@@ -61,31 +67,38 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     if (data) {
       setUserData({
         id: data.id,
-        name: data.name || "",
-        userName: data.userName,
+        full_name: data.full_name || "",
         password: "",
         email: data.email,
-        phoneNumber: data.phoneNumber || "",
-        campus: data.campus,
-        isActive: data.isActive,
+        phone_number: data.phone_number || "",
+        role_id: data.role_id || 4,
+        status_id: data.status_id || 2,
+        dob: data.dob || "",
+        point: data.point || 0,
       });
+    } else {
+      setUserData(UserDefaultData);
     }
   }, [data]);
 
   const handleUpdateUserData = async () => {
     if (
-      !userData.userName ||
-      !userData.name ||
+      !userData.full_name ||
+      !userData.avatar ||
       !userData.email ||
-      !userData.phoneNumber ||
-      !userData.password
+      !userData.phone_number ||
+      !userData.password ||
+      !userData.role_id ||
+      !userData.point ||
+      !userData.dob ||
+      !userData.status_id
     ) {
       alert("Please fill in all required fields");
       return;
     }
 
     const phoneRegex = /^0\d{9}$/;
-    if (!phoneRegex.test(userData.phoneNumber)) {
+    if (!phoneRegex.test(userData.phone_number)) {
       alert("Phone number is invalid");
       return;
     }
@@ -118,30 +131,10 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       <Form style={{ maxWidth: 600 }} layout="vertical" autoComplete="off">
         <Form.Item label="User Name">
           <Input
-            value={userData.userName}
+            value={userData.full_name}
             onChange={handleChangeInput}
-            name="userName"
+            name="full_name"
           />
-        </Form.Item>
-
-        <Form.Item label="Name">
-          <Input
-            value={userData.name}
-            onChange={handleChangeInput}
-            name="name"
-          />
-        </Form.Item>
-
-        <Form.Item label="Campus">
-          <Select
-            onChange={(value) => setUserData({ ...userData, campus: value })}
-            value={userData.campus}
-          >
-            <Select.Option value="HN">HN</Select.Option>
-            <Select.Option value="HCM">HCM</Select.Option>
-            <Select.Option value="CT">CT</Select.Option>
-            <Select.Option value="DN">DN</Select.Option>
-          </Select>
         </Form.Item>
 
         <Form.Item label="Email">
@@ -152,19 +145,59 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="Phone Number">
-          <Input
-            value={userData.phoneNumber}
-            onChange={handleChangeInput}
-            name="phoneNumber"
-          />
-        </Form.Item>
-
         <Form.Item label="Password">
           <Input.Password
             value={userData.password}
             onChange={handleChangeInput}
             name="password"
+          />
+        </Form.Item>
+
+        <Form.Item label="Status">
+          <Select
+            onChange={(value) => setUserData({ ...userData, status_id: value })}
+            value={userData.status_id}
+          >
+            <Select.Option value={2}>Active</Select.Option>
+            <Select.Option value={3}>Deactive</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Role">
+          <Select
+            onChange={(value) => setUserData({ ...userData, role_id: value })}
+            value={userData.role_id}
+            options={[
+              { label: "Admin", value: 1 },
+              { label: "Content Manager", value: 2 },
+              { label: "Content Creator", value: 3 },
+              { label: "User", value: 4 },
+            ]}
+          />
+        </Form.Item>
+
+        <Form.Item label="Phone Number">
+          <Input
+            value={userData.phone_number}
+            onChange={handleChangeInput}
+            name="phone_number"
+          />
+        </Form.Item>
+
+        <Form.Item label="DOB">
+          <Input
+            value={userData.dob}
+            onChange={handleChangeInput}
+            name="dob"
+            type="date"
+          />
+        </Form.Item>
+
+        <Form.Item label="Point">
+          <Input
+            value={userData.point}
+            onChange={handleChangeInput}
+            name="point"
           />
         </Form.Item>
       </Form>
@@ -375,7 +408,6 @@ const UserManagementPage: React.FC = () => {
         data={selectedItem}
         setReload={setReload}
       />
-      
     </>
   );
 };

@@ -9,7 +9,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 
 const { Header, Sider, Content } = Layout;
