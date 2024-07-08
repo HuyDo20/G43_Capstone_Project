@@ -177,7 +177,7 @@ async function updateUserById(req, res) {
 				return forbidden(res);
 			}
 		}
-		let hashedPassword
+		let hashedPassword;
 		if (password) {
 			hashedPassword = await bcrypt.hash(password, 10);
 		}
@@ -224,7 +224,7 @@ async function getUserById(req, res) {
 				return forbidden(res);
 			}
 		}
-			
+
 		const user = await Account.findOne({ where: { account_id } });
 		if (!user) {
 			return notfound(res);
