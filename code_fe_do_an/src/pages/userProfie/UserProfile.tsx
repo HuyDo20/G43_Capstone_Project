@@ -40,6 +40,7 @@ export default function UserProfile() {
     }
   };
   return (
+    
     <div className="bg-[#fff8e1] h-full w-full">
       <div className="container h-full ">
         <Header />

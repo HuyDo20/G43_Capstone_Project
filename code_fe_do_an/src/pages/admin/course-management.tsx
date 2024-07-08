@@ -16,7 +16,7 @@ const defaultCourseData: Course = {
   course_id: 0,
   course_name: "",
   description: "",
-  course_status_id: 2,
+  course_status_id: 1,
   course_image: "",
   week: 0,
 };
@@ -94,7 +94,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
 };
 
 const CoursesManagementPage: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [reload, setReload] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -134,6 +134,20 @@ const CoursesManagementPage: React.FC = () => {
       key: "course_name",
     },
     {
+      title: "Course Image",
+      dataIndex: "course_image",
+      key: "course_image",
+      render: (course_image) => (
+        <img
+          src={
+            course_image?.split(", ")[1] || course_image?.split(", ")[0] || ""
+          }
+          style={{ maxWidth: "120px", height: "200px" }}
+          alt="thumbnail course"
+        />
+      ),
+    },
+    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -149,8 +163,7 @@ const CoursesManagementPage: React.FC = () => {
       render: (_: any, record: Course) => (
         <Button
           onClick={() => {
-            setSelectedCourse(record);
-            setIsModalOpen(true);
+            navigate(`/admin/course-management/${record.course_id}`);
           }}
         >
           Edit

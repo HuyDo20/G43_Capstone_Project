@@ -30,6 +30,7 @@ type AuthContextType = {
   setUser: Dispatch<SetStateAction<boolean>>;
   // login: (email: string, password: string) => void;
   handleLogout: () => void;
+  handleFetch: any;
 };
 
 // Khởi tạo context với giá trị mặc định
@@ -41,6 +42,32 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const navigate = useNavigate();
+
+  const handleFetch = async ({
+    method: method,
+    url: url,
+    payload: payload,
+  }) => {
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const request = await axios({
+        method: method,
+        url: url,
+        headers: {
+          Authorization: token,
+        },
+        data: payload,
+      });
+      return request.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -72,7 +99,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, handleLogout }}>
+    <AuthContext.Provider value={{ user, setUser, handleLogout, handleFetch }}>
       {children}
     </AuthContext.Provider>
   );
@@ -96,27 +123,27 @@ interface RequestOptions<T> {
   token?: string;
 }
 
-export async function useAuthAPI<T, R>({
-  method,
-  url,
-  data,
-}: RequestOptions<T>): Promise<R> {
-  try {
-    const context = useAuth();
+// export async function useAuthAPI<T, R>({
+//   method,
+//   url,
+//   data,
+// }: RequestOptions<T>): Promise<R> {
+//   try {
+//     const context = useAuth();
 
-    const config: AxiosRequestConfig = {
-      method,
-      url,
-      data,
-      headers: context.user?.token
-        ? { Authorization: context.user.token }
-        : undefined,
-    };
+//     const config: AxiosRequestConfig = {
+//       method,
+//       url,
+//       data,
+//       headers: context.user?.token
+//         ? { Authorization: context.user.token }
+//         : undefined,
+//     };
 
-    const response = await axios(config);
-    return response.data;
-  } catch (error) {
-    console.error("Error making request", error);
-    throw error;
-  }
-}
+//     const response = await axios(config);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error making request", error);
+//     throw error;
+//   }
+// }

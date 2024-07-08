@@ -15,10 +15,13 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
+import AlphabetPracticeComponent from "@/Practice/AlphabetyPractice";
 export default function Alphabet() {
-
   return (
-    <div className="w-full h-full bg-center bg-cover" style={{backgroundImage: `url("/public/bg2.png")` }}>
+    <div
+      className="w-full h-full bg-center bg-cover"
+      style={{ backgroundImage: `url("/public/bg2.png")` }}
+    >
       {/* className="w-full h-full bg-center bg-cover" style={{backgroundImage: `url("/public/bg1.png")` }} */}
       {/* Header */}
       <div className="bg-[#fff8e1]">
@@ -55,20 +58,23 @@ export default function Alphabet() {
                     <HiraganaAmGhepTable />
                   </TabsContent>
                   <TabsContent className="pt-5" value="truongam">
-                    <ChoonHira/>
+                    <ChoonHira />
                   </TabsContent>
                   <TabsContent className="pt-5" value="amngat">
-                    <SokuonHira/>
+                    <SokuonHira />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    Luyện tập{" "}
+                    <AlphabetPracticeComponent />
                   </TabsContent>
                 </Tabs>
               </Card>
             </TabsContent>
             <TabsContent value="katakana">
               <Card className="w-full h-[1380px] px-10 py-5">
-                <Tabs defaultValue="bangchucai" className="w-[1000px] h-[1300px]">
+                <Tabs
+                  defaultValue="bangchucai"
+                  className="w-[1000px] h-[1300px]"
+                >
                   <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="bangchucai">Bảng chữ cái</TabsTrigger>
                     <TabsTrigger value="bienam">Biến âm</TabsTrigger>
@@ -87,13 +93,13 @@ export default function Alphabet() {
                     <KatakanaAmGhepTable />
                   </TabsContent>
                   <TabsContent className="pt-5" value="truongam">
-                    <ChoonKata/>
+                    <ChoonKata />
                   </TabsContent>
                   <TabsContent className="pt-5" value="amngat">
-                    <SokuonKata/>
+                    <SokuonKata />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    Luyện tập{" "}
+                    <AlphabetPracticeComponent />
                   </TabsContent>
                 </Tabs>
               </Card>
@@ -109,7 +115,7 @@ export default function Alphabet() {
                     <NumberDisplay />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    Luyện tập{" "}
+                    <AlphabetPracticeComponent />
                   </TabsContent>
                 </Tabs>
               </Card>
@@ -118,7 +124,7 @@ export default function Alphabet() {
         </div>
       </div>
       {/* Footer */}
-      
+
       <Footer />
     </div>
   );

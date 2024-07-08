@@ -12,26 +12,107 @@ import {
 } from "antd";
 const { Option } = Select;
 import ImgCrop from "antd-img-crop";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
+import axios from "axios";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
+function AddLessonModal({
+  visible,
+  onCancel,
+  dayData,
+  setDayData,
+  lessonSelected,
+  id,
+  lessonIndexSelected,
+}) {
+  const [form] = Form.useForm();
+  const [fileImageList, setFileImageList] = useState<UploadFile[]>([]);
+  const [fileAudioAndVideoList, setFileAudioAndVideoList] = useState<
+    UploadFile[]
+  >([]);
+
   const [userChose, setUserChose] = useState(0);
   const [userSelected, setUserSelected] = useState(null);
 
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const onImageChange = (info) => {
+    if (info.file.status === "done") {
+      const newImageUrl = info.file.response.filePath;
+      setFileImageList((prevUrls) => [...prevUrls, newImageUrl]);
+    }
+  };
+
+  const onAudioOrVideoChange = (info) => {
+    if (info.file.status === "done") {
+      const newImageUrl = info.file.response.filePath;
+      setFileAudioAndVideoList((prevUrls) => [...prevUrls, newImageUrl]);
+    }
+  };
+
+  const handleImageUpload = async (options) => {
+    const { file } = options;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/upload-file",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { filePath } = response.data;
+      setFileImageList([
+        ...fileImageList,
+        {
+          uid: file.uid,
+          name: file.name,
+          status: "done",
+          url: filePath,
+        },
+      ]);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
+
+  const handleAudioOrVideoUpload = async (options) => {
+    const { file } = options;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/upload-file",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const { filePath } = response.data;
+      setFileAudioAndVideoList([
+        ...fileAudioAndVideoList,
+        {
+          uid: file.uid,
+          name: file.name,
+          status: "done",
+          url: filePath,
+        },
+      ]);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
   };
 
   const onPreview = async (file: UploadFile) => {
@@ -51,24 +132,202 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
 
   const onSubmit = (values) => {
     const cloneDayData = [...dayData];
-    cloneDayData[values.day_id].lessons.push({
-      ...values,
-      type: values.vocab_name
-        ? "vocab"
+    if (id && lessonSelected) {
+      const payload = values.vocab_name
+        ? {
+            ...values,
+            vocab_audio: fileAudioAndVideoList
+              .map((file) => file.url)
+              .join(", "),
+            vocab_image: fileImageList.map((file) => file.url).join(", "),
+            vocab_id: lessonSelected.vocab_id,
+          }
         : values.kanji_name
-        ? "kanji"
+        ? {
+            ...values,
+            kanji_image: fileImageList.map((file) => file.url).join(", "),
+            kanji_id: lessonSelected.kanji_id,
+          }
         : values.video_name
-        ? "video"
+        ? {
+            ...values,
+            video_link: fileAudioAndVideoList
+              .map((file) => file.url)
+              .join(", "),
+            video_id: lessonSelected.video_id,
+          }
         : values.grammar_name
-        ? "grammar"
-        : null,
-    });
+        ? {
+            ...values,
+            grammar_image: fileImageList.map((file) => file.url).join(", "),
+            grammar_id: lessonSelected.grammar_id,
+          }
+        : null;
+
+      const index = cloneDayData.findIndex(
+        (day) => day.day_id === values.day_id
+      );
+      cloneDayData[index].lessons[lessonIndexSelected] = {
+        ...payload,
+        type: values.vocab_name
+          ? "vocab"
+          : values.kanji_name
+          ? "kanji"
+          : values.video_name
+          ? "video"
+          : values.grammar_name
+          ? "grammar"
+          : null,
+      };
+    } else {
+      const payload = values.vocab_name
+        ? {
+            ...values,
+            vocab_audio: fileAudioAndVideoList
+              .map((file) => file.url)
+              .join(", "),
+            vocab_image: fileImageList.map((file) => file.url).join(", "),
+            vocab_status_id: 1,
+          }
+        : values.kanji_name
+        ? {
+            ...values,
+            kanji_image: fileImageList.map((file) => file.url).join(", "),
+            kanji_status_id: 1,
+          }
+        : values.video_name
+        ? {
+            ...values,
+            video_link: fileAudioAndVideoList
+              .map((file) => file.url)
+              .join(", "),
+          }
+        : values.grammar_name
+        ? {
+            ...values,
+            grammar_image: fileImageList.map((file) => file.url).join(", "),
+            grammar_status_id: 1,
+          }
+        : null;
+
+      cloneDayData[values.day_id].lessons.push({
+        ...payload,
+        type: values.vocab_name
+          ? "vocab"
+          : values.kanji_name
+          ? "kanji"
+          : values.video_name
+          ? "video"
+          : values.grammar_name
+          ? "grammar"
+          : null,
+      });
+    }
     setDayData(cloneDayData);
+    setUserChose(0);
     onCancel();
   };
+
+  useEffect(() => {
+    if (lessonSelected) {
+      if (lessonSelected.vocab_name) {
+        setUserChose(1);
+
+        setFileAudioAndVideoList(
+          lessonSelected.vocab_audio?.split(", ")?.map((url, index) => ({
+            uid: -index,
+            name: `Image ${index}`,
+            status: "done",
+            url: url,
+          }))
+        );
+        setFileImageList(
+          lessonSelected.vocab_image?.split(", ")?.map((url, index) => ({
+            uid: -index,
+            name: `Image ${index}`,
+            status: "done",
+            url: url,
+          }))
+        );
+        form.setFieldsValue({
+          vocab_image: lessonSelected.vocab_image,
+          vocab_audio: lessonSelected.vocab_audio,
+          vocab_name: lessonSelected.vocab_name,
+          vocab_kanji: lessonSelected.vocab_kanji,
+          vocab_meaning: lessonSelected.vocab_meaning,
+          vocab_example: lessonSelected.vocab_example,
+          day_id: lessonSelected.day_id,
+          type: "vocab",
+        });
+      }
+      if (lessonSelected.kanji_name) {
+        setUserChose(2);
+        setFileImageList(
+          lessonSelected.kanji_image?.split(", ")?.map((url, index) => ({
+            uid: -index,
+            name: `Image ${index}`,
+            status: "done",
+            url: url,
+          }))
+        );
+        form.setFieldsValue({
+          kanji_name: lessonSelected.kanji_name,
+          kanji_image: lessonSelected.kanji_image,
+          day_id: lessonSelected.day_id,
+          cv_spelling: lessonSelected.cv_spelling,
+          kanji_kunyomi: lessonSelected.kanji_kunyomi,
+          kanji_onyomi: lessonSelected.kanji_onyomi,
+          kanji_words: lessonSelected.kanji_words,
+          type: "kanji",
+        });
+      }
+      if (lessonSelected.grammar_name) {
+        setUserChose(3);
+        setFileImageList(
+          lessonSelected.grammar_image?.split(", ")?.map((url, index) => ({
+            uid: -index,
+            name: `Image ${index}`,
+            status: "done",
+            url: url,
+          }))
+        );
+        form.setFieldsValue({
+          grammar_name: lessonSelected.grammar_name,
+          day_id: lessonSelected.day_id,
+          grammar_image: lessonSelected.grammar_image,
+          grammar_structure: lessonSelected.grammar_structure,
+          grammar_description: lessonSelected.grammar_description,
+          grammar_examples: lessonSelected.grammar_examples,
+          type: "grammar",
+        });
+      }
+      if (lessonSelected.video_name) {
+        setUserChose(4);
+        setFileAudioAndVideoList(
+          lessonSelected.video_link?.split(", ")?.map((url, index) => ({
+            uid: -index,
+            name: `Image ${index}`,
+            status: "done",
+            url: url,
+          }))
+        );
+        form.setFieldsValue({
+          video_name: lessonSelected.video_name,
+          video_link: lessonSelected.video_link,
+          day_id: lessonSelected.day_id,
+          questions: lessonSelected.questions,
+
+          type: "video",
+        });
+      }
+    } else {
+      setUserChose(0);
+      form.setFieldsValue({});
+    }
+  }, [lessonSelected]);
   return (
     <Modal
-      title="Add New Lesson"
+      title={id && lessonSelected ? "Update Lesson" : "Add New Lesson"}
       visible={visible}
       onCancel={onCancel}
       footer={null}
@@ -100,7 +359,7 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
         </Form>
       ) : userChose === 1 ? (
         <>
-          <Form layout="vertical" onFinish={onSubmit}>
+          <Form layout="vertical" onFinish={onSubmit} form={form}>
             <Form.Item
               name="vocab_name"
               label="Vocabulary Name"
@@ -115,7 +374,10 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             >
               <Select placeholder="Select a day">
                 {dayData.map((day, index) => (
-                  <Option key={index} value={index}>
+                  <Option
+                    key={index}
+                    value={id && lessonSelected ? day.day_id : index}
+                  >
                     Day {index + 1}: {day.day_name}
                   </Option>
                 ))}
@@ -143,13 +405,13 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             <Form.Item label="Image" name="vocab_image">
               <ImgCrop rotationSlider>
                 <Upload
-                  action="https://your-upload-url"
+                  customRequest={handleImageUpload}
                   listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
+                  fileList={fileImageList}
+                  onChange={onImageChange}
                   onPreview={onPreview}
                 >
-                  {fileList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
@@ -157,17 +419,16 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
               <Input />
             </Form.Item> */}
             <Form.Item label="Audio" name="vocab_audio">
-              <ImgCrop rotationSlider>
-                <Upload
-                  action="https://your-upload-url"
-                  listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
-                  onPreview={onPreview}
-                >
-                  {fileList.length < 5 && "+ Upload"}
-                </Upload>
-              </ImgCrop>
+              <Upload
+                customRequest={handleAudioOrVideoUpload}
+                listType="picture-card"
+                fileList={fileAudioAndVideoList}
+                onChange={onAudioOrVideoChange}
+                onPreview={onPreview}
+                accept="video/*,audio/*"
+              >
+                {fileAudioAndVideoList.length < 5 && "+ Upload"}
+              </Upload>
             </Form.Item>
             <Form.Item>
               <Flex
@@ -190,7 +451,7 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
         </>
       ) : userChose === 2 ? (
         <>
-          <Form layout="vertical" onFinish={onSubmit}>
+          <Form layout="vertical" onFinish={onSubmit} form={form}>
             <Form.Item
               name="kanji_name"
               label="Kanji Name"
@@ -207,7 +468,10 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             >
               <Select placeholder="Select a day">
                 {dayData.map((day, index) => (
-                  <Option key={index} value={index}>
+                  <Option
+                    key={index}
+                    value={id && lessonSelected ? day.day_id : index}
+                  >
                     Day {index + 1}: {day.day_name}
                   </Option>
                 ))}
@@ -235,13 +499,13 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             <Form.Item label="Image" name="kanji_image">
               <ImgCrop rotationSlider>
                 <Upload
-                  action="https://your-upload-url"
+                  customRequest={handleImageUpload}
                   listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
+                  fileList={fileImageList}
+                  onChange={onImageChange}
                   onPreview={onPreview}
                 >
-                  {fileList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
@@ -312,7 +576,12 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
         </>
       ) : userChose === 3 ? (
         <>
-          <Form name="grammar_form" autoComplete="off" onFinish={onSubmit}>
+          <Form
+            name="grammar_form"
+            autoComplete="off"
+            onFinish={onSubmit}
+            form={form}
+          >
             <Form.Item
               name="grammar_name"
               label="Grammar Name"
@@ -334,7 +603,10 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             >
               <Select placeholder="Select a day">
                 {dayData.map((day, index) => (
-                  <Option key={index} value={index}>
+                  <Option
+                    key={index}
+                    value={id && lessonSelected ? day.day_id : index}
+                  >
                     Day {index + 1}: {day.day_name}
                   </Option>
                 ))}
@@ -352,13 +624,13 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             <Form.Item label="Image" name="grammar_image">
               <ImgCrop rotationSlider>
                 <Upload
-                  action="https://your-upload-url"
+                  customRequest={handleImageUpload}
                   listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
+                  fileList={fileImageList}
+                  onChange={onImageChange}
                   onPreview={onPreview}
                 >
-                  {fileList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
@@ -428,7 +700,12 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
         </>
       ) : userChose === 4 ? (
         <>
-          <Form autoComplete="off" layout="vertical" onFinish={onSubmit}>
+          <Form
+            autoComplete="off"
+            layout="vertical"
+            onFinish={onSubmit}
+            form={form}
+          >
             <Form.Item
               name="video_name"
               label="Video Name"
@@ -451,17 +728,16 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
               <Input placeholder="Enter video link" />
             </Form.Item> */}
             <Form.Item label="Video" name="video_link">
-              <ImgCrop rotationSlider>
                 <Upload
-                  action="https://your-upload-url"
+                  customRequest={handleAudioOrVideoUpload}
                   listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
+                  fileList={fileAudioAndVideoList}
+                  onChange={onAudioOrVideoChange}
                   onPreview={onPreview}
+                  accept="video/*,audio/*"
                 >
-                  {fileList.length < 5 && "+ Upload"}
+                  {fileAudioAndVideoList.length < 5 && "+ Upload"}
                 </Upload>
-              </ImgCrop>
             </Form.Item>
 
             <Form.Item
@@ -471,7 +747,10 @@ function AddLessonModal({ visible, onCancel, dayData, setDayData }) {
             >
               <Select placeholder="Select a day">
                 {dayData.map((day, index) => (
-                  <Option key={index} value={index}>
+                  <Option
+                    key={index}
+                    value={id && lessonSelected ? day.day_id : index}
+                  >
                     Day {index + 1}: {day.day_name}
                   </Option>
                 ))}
