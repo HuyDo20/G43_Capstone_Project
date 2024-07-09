@@ -60,8 +60,11 @@ export default function GrammarDetail() {
 
   const navigate = useNavigate();
 
+  const handleLearningByWeek = () => {
+    navigate(`/learningByWeek/${id}`);
+  };
   const handleBack = () => {
-    navigate("/grammar");
+    navigate(`/${id}/${week_id}/${day_id}/grammar`);
   };
 
   return (
@@ -93,7 +96,7 @@ export default function GrammarDetail() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href="/learningByWeek"
+                    onClick={handleLearningByWeek}
                     className="text-2xl font-semibold"
                   >
                     {courseData?.course_name}

@@ -1,4 +1,4 @@
-import { DaySchedule, Practice } from "@/components/course";
+import { DaySchedule } from "@/components/course";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,8 +7,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -21,10 +19,10 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Header from "@/layout/header/Header";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 
-import { useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
-import { useEffect, useState } from "react";
 import { Tag } from "antd";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Kanji() {
   const [reload, setReload] = useState(true);
@@ -33,7 +31,11 @@ export default function Kanji() {
   const [dayCurrent, setDayCurrent] = useState({});
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
+  const navigate = useNavigate();
 
+  const handleLearningByWeek = () => {
+    navigate(`/learningByWeek/${id}`);
+  };
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -103,7 +105,7 @@ export default function Kanji() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href="/learningByWeek"
+                    onClick={handleLearningByWeek}
                     className="text-2xl font-semibold"
                   >
                     {courseData?.course_name}

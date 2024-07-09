@@ -5,13 +5,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() =>
     weekSelected?.days ? weekSelected?.days[0] : {}
   );
   const { pathname } = useLocation();
-  const navigate = useNavigate();
+
 
   const handleClickVocab = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/vocabulary`;

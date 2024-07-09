@@ -7,7 +7,7 @@ export default function Contact() {
         </a>
         <a href="#" className="text-[#69ad32]">Địa chỉ: Đại học FPT, Hà Nội</a>
         <a href="#" className="text-[#69ad32]">Số điện thoại: 0397 311 637</a>
-        <a href="#" className="text-[#69ad32]">Email: thaoosh94@gmail.com</a>
+        <a href="#" className="text-[#69ad32]">Email: thaotthe161205@fpt.edu.vn</a>
       </nav>
     </div>
   );

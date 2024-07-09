@@ -18,7 +18,7 @@ import {
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,10 @@ export default function Video() {
   const [dayCurrent, setDayCurrent] = useState({});
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
-
+  const navigate = useNavigate();
+  const handleLearningByWeek = () => {
+    navigate(`/learningByWeek/${id}`);
+  };
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -102,7 +105,7 @@ export default function Video() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href="/learningByWeek"
+                    onClick={handleLearningByWeek}
                     className="text-2xl font-semibold"
                   >
                     {courseData?.course_name}
