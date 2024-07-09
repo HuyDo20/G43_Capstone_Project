@@ -13,7 +13,7 @@ export default function GetNewPassword() {
   };
   return (
     <div className="flex justify-center pt-28">
-      <div className=" flex flex-col gap-16 px-40 pt-20 w-[800px] h-[700px] border border-[#7d9c64]">
+      <div className=" flex flex-col gap-16 px-20 pt-10 w-[800px] h-[700px] border border-[#7d9c64]">
         <Logo />
         <div>
           <div className="text-2xl font-semibold">Mật khẩu mới</div>
@@ -58,7 +58,7 @@ export default function GetNewPassword() {
             <Button onClick={handleSubmit} className="w-full mt-5">Xác nhận</Button>
           </Link>
           
-          <div className="text-center mt-28">
+          <div className="mt-8 text-center">
             <NavLink className={"w-fit"} to={"/"}>
               Quay lại trang chủ
             </NavLink>
