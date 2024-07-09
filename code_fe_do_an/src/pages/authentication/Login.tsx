@@ -122,7 +122,7 @@ export default function Login() {
     }
   })
   
-  if (widthScreen >= 1200) return (
+  if (widthScreen >= 1000) return (
     <div className="flex flex-row w-5/6 h-[770px] justify-between py-10 ">
       <div className="flex flex-col gap-6 pt-6 basis-2/5">
         <div className="text-3xl font-semibold text-center">Đăng nhập</div>
@@ -209,7 +209,7 @@ export default function Login() {
       </div>
     </div>
   );
-  if (widthScreen < 1200) return (
+  if (widthScreen < 1000) return (
     <div className="w-4/5 h-[770px] flex flex-col gap-3 pt-9">
       <div className="basis-2/6">
         <img className="w-full h-[250px]" src="/login-register.png" alt="" />

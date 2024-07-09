@@ -106,7 +106,7 @@ export default function Register({openLogin}:RegisterProps) {
       })
     }
   })
-  if (widthScreen >= 1200) return (
+  if (widthScreen >= 1000) return (
     <div className="flex flex-row w-5/6 h-[770px] justify-between py-10">
       <div className="flex flex-col gap-6 pr-10 basis-1/2">
         <div className="text-3xl font-semibold text-center">
@@ -225,7 +225,8 @@ export default function Register({openLogin}:RegisterProps) {
       </div>
     </div>
   );
-  if (widthScreen < 1200) return (
+  
+  if (widthScreen < 1000) return (
     <div className="flex flex-row w-full h-[770px] justify-center items-center py-10">
       <div className="flex flex-col w-5/6 gap-6">
         <div className="text-3xl font-semibold text-center">
