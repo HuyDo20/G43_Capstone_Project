@@ -25,7 +25,7 @@ export default function LoginButton() {
       <DialogTrigger asChild>
         <Button variant="outline"  className=" text-white  w-32 bg-[#2dab59] text-lg"  size={"sm"}>Đăng nhập</Button>
       </DialogTrigger>
-      <DialogContent >
+      <DialogContent className="flex items-center justify-center w-2/3">
         <Login/>
       </DialogContent>
     </Dialog >
