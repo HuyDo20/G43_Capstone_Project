@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
+import { FaBars } from "react-icons/fa";
 
 export function Nav() {
 
@@ -34,6 +35,7 @@ export function Nav() {
       }
     });
   }
+  if(window.innerWidth > 1170)
   return (
     <NavigationMenu onValueChange={onNavChange}>
       <NavigationMenuList>
@@ -101,6 +103,96 @@ export function Nav() {
       </NavigationMenuList>
     </NavigationMenu>
   );
+  if(window.innerWidth <= 1170 && window.innerWidth > 750)
+      return (
+        <NavigationMenu onValueChange={onNavChange}>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavLink to="/">
+                <NavigationMenuLink
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent  text-[#6fb24d] font-semibold text-[15px] hover:bg-[#B6DA9F] hover:text-black"
+                  )}
+                >
+                  TRANG CHỦ
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+              <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px] ">
+                HỌC TẬP
+              </NavigationMenuTrigger>
+              {auth.token !== "" ? (
+                <NavigationMenuContent>
+                  <ul className="gap-3 p-6 text-xl w-60">
+                    <ListItem href="/alphabet" title="Học bảng chữ cái" />
+                    <ListItem href="/course" title="Học theo mã môn" />
+                  </ul>
+                </NavigationMenuContent>
+              ) : (
+                <NavigationMenuContent>
+                  <ul className="gap-3 p-6 w-60">
+                    <ListItem title="Bạn chưa đăng nhập!!!" />
+                  </ul>
+                </NavigationMenuContent>
+              )}
+            </NavigationMenuItem>
+            <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+              <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
+                TRÒ CHƠI
+              </NavigationMenuTrigger>
+              {auth.token !== "" ? (
+                <NavigationMenuContent>
+                  <ul className="gap-3 p-6 w-60">
+                    <ListItem href="/" title="Trò chơi 1" />
+                    <ListItem href="/" title="Trò chơi 2" />
+                  </ul>
+                </NavigationMenuContent>
+              ) : (
+                <NavigationMenuContent>
+                  <ul className="gap-3 p-6 w-60">
+                    <ListItem title="Bạn chưa đăng nhập!!!" />
+                  </ul>
+                </NavigationMenuContent>
+              )}
+            </NavigationMenuItem>
+            <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+              <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
+                GIỚI THIỆU
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="gap-3 p-6 w-60">
+                  <ListItem href="/" title="Về trang web" />
+                  <ListItem href="/" title="Về giáo trình Dekiru Nihongo" />
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      );
+if(window.innerWidth <= 750)
+        return (
+          <NavigationMenu onValueChange={onNavChange}>
+            <NavigationMenuList>
+              <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+                <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[9px]">
+                  <FaBars className="size-8" />
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="gap-3 text-[#6fb24d] p-6 w-60">
+                    <ListItem href="/alphabet" title="Học bảng chữ cái" />
+                    <ListItem href="/course" title="Học theo mã môn" />
+                    <ListItem href="/" title="Trò chơi 1" />
+                    <ListItem href="/" title="Trò chơi 2" />
+                    <ListItem href="/" title="Về trang web" />
+                    <ListItem href="/" title="Về giáo trình Dekiru Nihongo" />
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        );
 }
 
 const ListItem = React.forwardRef<

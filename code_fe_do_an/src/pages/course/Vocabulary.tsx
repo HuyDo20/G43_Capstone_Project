@@ -78,6 +78,7 @@ export default function Vocabulary() {
     const audio = new Audio(linkAudio);
     audio.play();
   };
+  console.log(window.innerWidth)
   return (
     <div>
       {/* Header */}
