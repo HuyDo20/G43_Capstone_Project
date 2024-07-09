@@ -4,14 +4,6 @@ import { Button, Card, Flex, Input, Typography, notification } from "antd";
 import { url } from "inspector";
 import { useEffect, useState } from "react";
 
-const hiragana = [
-  { character: "あ", romaji: "a" },
-  { character: "い", romaji: "i" },
-  { character: "う", romaji: "u" },
-  { character: "え", romaji: "e" },
-  { character: "お", romaji: "o" },
-];
-
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
 };
@@ -46,7 +38,7 @@ const generateQuiz = (numQuestions, data) => {
   return quiz;
 };
 
-const AlphabetPracticeComponent = () => {
+const AlphabetPracticeComponent = ({ type = 1 }) => {
   const { handleFetch } = useAuth();
   const [numQuestions, setNumQuestions] = useState(0);
   const [quiz, setQuiz] = useState([]);
@@ -96,15 +88,22 @@ const AlphabetPracticeComponent = () => {
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
-        url: "/all_alphabet",
+        url:
+          type === 8
+            ? "/hiragana_alphabet"
+            : type === 9
+            ? "/katakana_alphabet"
+            : `/alphabet?type_id=${type}`,
         method: "get",
       });
       if (response.statusCode === 200) {
         setData(
-          response.data.map((item) => ({
-            character: item.japanese_character,
-            romaji: item.romaji_character,
-          }))
+          response.data
+            .filter((item) => item.japanese_character && item.romaji_character)
+            .map((item) => ({
+              character: item?.japanese_character,
+              romaji: item?.romaji_character,
+            }))
         );
       }
     };
@@ -125,6 +124,7 @@ const AlphabetPracticeComponent = () => {
                 type="number"
                 value={numQuestions}
                 onChange={(e) => setNumQuestions(Number(e.target.value))}
+                min={0}
               />
               {/* ;
               <input

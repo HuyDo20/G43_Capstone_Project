@@ -64,7 +64,7 @@ export default function Alphabet() {
                     <SokuonHira />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    <AlphabetPracticeComponent />
+                    <AlphabetPracticeComponent type={8}/>
                   </TabsContent>
                 </Tabs>
               </Card>
@@ -99,7 +99,7 @@ export default function Alphabet() {
                     <SokuonKata />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    <AlphabetPracticeComponent />
+                    <AlphabetPracticeComponent type={9} />
                   </TabsContent>
                 </Tabs>
               </Card>
@@ -115,7 +115,7 @@ export default function Alphabet() {
                     <NumberDisplay />
                   </TabsContent>
                   <TabsContent className="pt-5" value="luyentap">
-                    <AlphabetPracticeComponent />
+                    <AlphabetPracticeComponent type={7} />
                   </TabsContent>
                 </Tabs>
               </Card>

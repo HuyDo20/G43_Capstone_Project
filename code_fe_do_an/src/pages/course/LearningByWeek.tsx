@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import Header from "@/layout/header/Header";
+import { DaySchedule, ResetDeadline } from "@/components/course";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,11 +7,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { DaySchedule, ResetDeadline } from "@/components/course";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hook/AuthContext";
+import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { responsiveArray } from "antd/es/_util/responsiveObserver";
 
 export default function LearningByWeek() {
   const { id } = useParams();

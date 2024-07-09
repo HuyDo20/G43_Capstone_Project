@@ -1,4 +1,4 @@
-import { DaySchedule, Practice } from "@/components/course";
+import { DaySchedule } from "@/components/course";
 import GrammarItem from "@/components/course/GrammarItem";
 import {
   Breadcrumb,
@@ -8,13 +8,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Header from "@/layout/header/Header";
 
-import { useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Grammar() {
   const [reload, setReload] = useState(true);
@@ -24,6 +22,12 @@ export default function Grammar() {
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
 
+  const navigate = useNavigate();
+
+  const handleLearningByWeek = () => {
+    navigate(`/learningByWeek/${id}`);
+  };
+  
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -93,7 +97,7 @@ export default function Grammar() {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href="/learningByWeek"
+                    onClick={handleLearningByWeek}
                     className="text-2xl font-semibold"
                   >
                     {courseData?.course_name}
