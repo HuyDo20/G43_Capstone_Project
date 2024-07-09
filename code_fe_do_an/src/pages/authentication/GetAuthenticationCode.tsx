@@ -40,7 +40,7 @@ export default function GetAuthenticationCode() {
             <div className="basis-1/2">Chưa nhận được mã?</div>
             <div className="text-right text-black basis-1/2">Gửi lại mã xác thực</div>
           </div>
-          <div className="mt-24 text-center">
+          <div className="mt-12 text-center">
             <NavLink className={"w-fit"} to={"/"}>
               Quay lại trang chủ
             </NavLink>

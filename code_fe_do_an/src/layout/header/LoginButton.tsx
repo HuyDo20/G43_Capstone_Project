@@ -28,14 +28,14 @@ export default function LoginButton() {
       <DialogContent className="flex items-center justify-center w-2/3">
         <Login/>
       </DialogContent>
-    </Dialog >
+    </Dialog>
       <Dialog open={isRegister} onOpenChange={(isOpen)=>{
         setIsRegister(isOpen);
       }}>
       <DialogTrigger asChild>
         <Button variant="outline"  className=" text-white  w-32 bg-[#2dab59] text-lg"  size={"sm"}>Đăng ký</Button>
       </DialogTrigger>
-      <DialogContent >
+      <DialogContent  className="flex items-center justify-center w-2/3">
         <Register openLogin={()=>openLogin()}  />
       </DialogContent>
     </Dialog>
