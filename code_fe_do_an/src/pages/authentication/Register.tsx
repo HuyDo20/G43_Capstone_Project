@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type RegisterProps = {
   openLogin: () => void;
@@ -35,6 +36,7 @@ const registerSchema = z
     path: ["rewritePassword"],
   });
 
+  
 export default function Register({openLogin}:RegisterProps) {
   const [Account, setAccount] = useState({
     full_name: "",
@@ -44,6 +46,7 @@ export default function Register({openLogin}:RegisterProps) {
   const [RewritePassword, setRewritePassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showRewritePassword, setRewriteShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{
     full_name?: string;
     email?: string;
@@ -202,8 +205,8 @@ export default function Register({openLogin}:RegisterProps) {
               className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               <span>
-                Tôi đồng ý với các <strong>điều khoản sử dụng</strong> và{" "}
-                <strong>chính sách bảo mật</strong> của website
+                Tôi đồng ý với các <strong onClick={()=>{navigate("/policy")}}>điều khoản sử dụng</strong> và{" "}
+                <strong onClick={()=>{navigate("/security")}}>chính sách bảo mật</strong> của website
               </span>
             </label>
           </div>
