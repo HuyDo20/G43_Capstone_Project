@@ -16,6 +16,8 @@ import Video from "./pages/course/Video";
 import Vocabulary from "./pages/course/Vocabulary";
 import Home from "./pages/home/Home";
 import UserProfile from "./pages/userProfie/UserProfile";
+import Security from "./pages/home/Security";
+import Policy from "./pages/home/Policy";
 
 const contentStyle = {
   padding: 50,
@@ -58,6 +60,8 @@ function App() {
             <Route path="/userProfile" element={<UserProfile />} />
             <Route path="/alphabet" element={<Alphabet />} />
             <Route path="/course" element={<Course />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/policy" element={<Policy />} />
             <Route path="/learningByWeek/:id" element={<LearningByWeek />} />
             <Route
               path="/:id/:week_id/:day_id/vocabulary"
