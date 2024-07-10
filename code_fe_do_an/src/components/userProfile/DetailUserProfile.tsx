@@ -87,7 +87,7 @@ export default function DetailUserProfile() {
       return () => clearTimeout(timer); // Cleanup the timer on component unmount or if message changes
     }
   }, [message]);
-
+if (window.innerWidth > 920)
   return (
     <div className="flex items-center justify-center w-full mt-24">
       <div className="flex flex-col w-full h-full gap-10 p-10 bg-white shadow-sm rounded-3xl">
@@ -103,10 +103,10 @@ export default function DetailUserProfile() {
               control={form.control}
               name="full_name"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                <FormItem className="flex flex-row items-center pr-8">
                   <FormLabel className="w-1/6">Họ và Tên</FormLabel>
                   <FormControl>
-                    <Input className="w-1/2" {...field} />
+                    <Input className="w-full ml-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,10 +116,10 @@ export default function DetailUserProfile() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center pl-8 gap-7">
-                  <FormLabel className="w-1/6">Email</FormLabel>
+                <FormItem className="flex flex-row items-center pr-8">
+                  <FormLabel className="w-1/6 ">Email</FormLabel>
                   <FormControl>
-                    <Input className="w-1/2" {...field} readOnly />
+                    <Input className="w-full ml-3" {...field} readOnly />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,10 +129,10 @@ export default function DetailUserProfile() {
               control={form.control}
               name="phone_number"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                <FormItem className="flex flex-row items-center pr-8">
                   <FormLabel className="w-1/6">Số điện thoại</FormLabel>
                   <FormControl>
-                    <Input className="w-1/2" {...field} />
+                    <Input className="w-full ml-3" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,20 +142,20 @@ export default function DetailUserProfile() {
               control={form.control}
               name="dob"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center pl-8 gap-7">
+                <FormItem className="flex flex-row items-center pr-8">
                   <FormLabel className="w-1/6">Ngày sinh</FormLabel>
                   <FormControl>
-                    <Input className="w-1/2" type="date" {...field} />
+                    <Input className="w-full ml-3" type="date" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button
-              className="w-1/3 bg-[#eeb55f] hover:bg-[#ff9800] mx-auto"
+              className="w-4/5 bg-[#eeb55f] hover:bg-[#ff9800] mx-auto"
               disabled={isButtonDisabled}
             >
-              Thay đổi thông tin
+              <p className="w-full">Thay đổi thông tin</p>
             </Button>
             <div className="text-[#7db660]">{message}</div>
           </form>
@@ -163,4 +163,156 @@ export default function DetailUserProfile() {
       </div>
     </div>
   );
+if (window.innerWidth <= 920 && window.innerWidth > 620)
+  return (
+    <div className="flex w-full mt-20">
+      <div className="flex flex-col w-full h-full gap-10 bg-white shadow-sm rounded-3xl">
+        <div className="mt-5 text-xl font-semibold text-center">
+          THÔNG TIN CÁ NHÂN
+        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-5 pl-16"
+          >
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pr-8">
+                  <FormLabel className="w-1/6">Họ và Tên</FormLabel>
+                  <FormControl>
+                    <Input className="w-full ml-3" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pr-8">
+                  <FormLabel className="w-1/6 ">Email</FormLabel>
+                  <FormControl>
+                    <Input className="w-full ml-3" {...field} readOnly />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pr-8">
+                  <FormLabel className="w-1/6">Số điện thoại</FormLabel>
+                  <FormControl>
+                    <Input className="w-full ml-3" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center pr-8">
+                  <FormLabel className="w-1/6">Ngày sinh</FormLabel>
+                  <FormControl>
+                    <Input className="w-full ml-3" type="date" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              className="w-4/5 bg-[#eeb55f] hover:bg-[#ff9800] mx-auto"
+              disabled={isButtonDisabled}
+            >
+              <p className="w-full">Thay đổi thông tin</p>
+            </Button>
+            <div className="text-[#7db660]">{message}</div>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
+if (window.innerWidth <= 620)
+    return (
+      <div className="flex w-full mt-10">
+        <div className="flex flex-col w-full h-full gap-10 bg-white shadow-sm rounded-3xl">
+          <div className="mt-8 text-xs font-semibold text-center">
+            THÔNG TIN CÁ NHÂN
+          </div>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-5 pl-2"
+            >
+              <FormField
+                control={form.control}
+                name="full_name"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center pr-8">
+                    <FormLabel className="w-1/6">Họ và Tên</FormLabel>
+                    <FormControl>
+                      <Input className="w-full ml-3" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center pr-8">
+                    <FormLabel className="w-1/6 ">Email</FormLabel>
+                    <FormControl>
+                      <Input className="w-full ml-3" {...field} readOnly />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center pr-8">
+                    <FormLabel className="w-1/6">Số điện thoại</FormLabel>
+                    <FormControl>
+                      <Input className="w-full ml-3" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center pr-8">
+                    <FormLabel className="w-1/6">Ngày sinh</FormLabel>
+                    <FormControl>
+                      <Input className="w-full ml-3" type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-4/5 bg-[#eeb55f] hover:bg-[#ff9800] mx-auto"
+                disabled={isButtonDisabled}
+              >
+                <p className="w-full">Thay đổi thông tin</p>
+              </Button>
+              <div className="text-[#7db660]">{message}</div>
+            </form>
+          </Form>
+        </div>
+      </div>
+    );
 }
