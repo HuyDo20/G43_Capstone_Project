@@ -425,9 +425,9 @@ const UserManagementPage: React.FC = () => {
                   />
                 </a>
 
-                <a onClick={() => handleDeleteUser(record.id)}>
+                {/* <a onClick={() => handleDeleteUser(record.id)}>
                   <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
-                </a>
+                </a> */}
               </Space>
             )}
           </>

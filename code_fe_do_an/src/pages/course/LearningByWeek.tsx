@@ -103,9 +103,9 @@ export default function LearningByWeek() {
             </Breadcrumb>
           </div>
           <div className="flex flex-col items-center gap-3 pt-10">
-            <div>
+            {/* <div>
               <ResetDeadline />
-            </div>
+            </div> */}
             <div className="w-[800px]">
               <DaySchedule weekSelected={weekSelected} id={id} />
             </div>

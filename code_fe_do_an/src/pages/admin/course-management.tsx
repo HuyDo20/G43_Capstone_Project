@@ -213,7 +213,7 @@ const CoursesManagementPage: React.FC = () => {
 
   return (
     <>
-      <Button
+      {/* <Button
         type="primary"
         onClick={() => {
           navigate("/admin/course-management/create");
@@ -221,7 +221,7 @@ const CoursesManagementPage: React.FC = () => {
         style={{ marginBottom: "8px" }}
       >
         Add Course
-      </Button>
+      </Button> */}
       <Table dataSource={courses} columns={columns} rowKey="course_id" />
       <CourseModal
         isModalOpen={isModalOpen}
