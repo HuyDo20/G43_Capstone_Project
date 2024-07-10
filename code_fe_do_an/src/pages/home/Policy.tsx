@@ -110,8 +110,14 @@ export default function Policy() {
               Nihongo Learning System.
             </div>
           </div>
-          <div className="text-xl font-semibold text-right text-[#5fb633]">
-            DNLS Team
+          <div className="flex flex-row items-center">
+            <div className="basis-5/6"></div>
+            <div className="flex flex-row items-center gap-3 basis-1/6">
+              <div className="text-xl font-semibold text-right text-[#5fb633]">
+                DNLS Team
+              </div>
+              <img className="w-2/5 h-full" src="echlaplo.png" />
+            </div>
           </div>
         </div>
       </div>
