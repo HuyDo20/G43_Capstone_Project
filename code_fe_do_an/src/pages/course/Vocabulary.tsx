@@ -222,7 +222,11 @@ export default function Vocabulary() {
                                       <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                         Ví dụ
                                       </div>
+                                      <div className="flex flex-col gap-2">
                                       <div>{lesson.vocab_example}</div>
+                                      {/* <div>{lesson.vo}</div> */}
+                                      </div>
+                                      
                                     </div>
                                     {/* <Button className=" w-[140px] h-[40px] mt-8">
                                     <Dialog>

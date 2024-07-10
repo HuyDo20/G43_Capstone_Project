@@ -1,7 +1,6 @@
 import { useAuth } from "@/hook/AuthContext";
 import { SmileOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, Input, Typography, notification } from "antd";
-import { url } from "inspector";
 import { useEffect, useState } from "react";
 
 const getRandomInt = (max) => {
