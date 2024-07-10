@@ -11,6 +11,8 @@ const StepTwo = ({
   id,
   setReload,
   reload,
+  mode,
+  navigate
 }) => {
   const onChange = (key) => {
     console.log(key);
@@ -50,6 +52,7 @@ const StepTwo = ({
                   id={id}
                   setReload={setReload}
                   reload={reload}
+                  mode={mode}
                 />
               ),
             };
@@ -63,13 +66,24 @@ const StepTwo = ({
           <Button onClick={handlePreviousStep} style={{ width: "30%" }}>
             Previous
           </Button>
-          <Button
-            onClick={handleNextStep}
-            type="primary"
-            style={{ width: "30%" }}
-          >
-            Next
-          </Button>
+          {mode === "view" ? (
+            <Button
+              onClick={()=>navigate("/admin/course-management")}
+              
+              type="primary"
+              style={{ width: "30%" }}
+            >
+              Return Course Page
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNextStep}
+              type="primary"
+              style={{ width: "30%" }}
+            >
+              Next
+            </Button>
+          )}
         </Flex>
       </div>
     </>

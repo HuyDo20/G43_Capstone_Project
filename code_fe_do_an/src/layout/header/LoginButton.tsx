@@ -7,12 +7,13 @@ import {
 import Login from "@/pages/authentication/Login";
 import Register from "@/pages/authentication/Register";
 import { useState } from "react";
+import "./login.css"
+
 export default function LoginButton() {
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   
   const openLogin = () => {
-    console.log("open Login");
     setIsLogin(true);
     setIsRegister(false);
   }
@@ -86,8 +87,8 @@ export default function LoginButton() {
     ); 
   if(innerWidth<=750)
         return (
-          <div className="flex mr-6">
-            <Dialog
+          <div className="flex mr-6 max-" >
+            <Dialog 
               open={isLogin}
               onOpenChange={(isOpen) => {
                 setIsLogin(isOpen);

@@ -3,12 +3,13 @@ import type { GetProp, UploadFile, UploadProps } from "antd";
 import { Card, Steps, Typography, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 function CourseDetailPage() {
   const params = useParams();
+  const { state } = useLocation();
   const { id } = params;
   const navigate = useNavigate();
   const [reload, setReload] = useState(true);
@@ -22,6 +23,8 @@ function CourseDetailPage() {
     week: "0",
   });
   const [weekData, setWeekData] = useState([]);
+
+  const [mode] = useState(state?.mode);
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -59,7 +62,7 @@ function CourseDetailPage() {
           {
             courseData: {
               ...course,
-              course_image: fileList.map((file) => file.url).join(", "),
+              course_image: fileList.map((file) => file.url).join(),
             },
             weeksData: weekData,
             account_id: id,
@@ -89,7 +92,7 @@ function CourseDetailPage() {
           {
             ...course,
             account_id: userId,
-            course_image: fileList.map((file) => file.url).join(", "),
+            course_image: fileList.map((file) => file.url).join(),
           },
           {
             headers: {
@@ -336,14 +339,17 @@ function CourseDetailPage() {
         });
         if (request.status === 200) {
           const response = request.data.data;
-          const listFileCourse =
-            response.courseData?.course_image?.split(", ") || [];
-          const listFileAntd = listFileCourse?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }));
+          const listFileCourse = response.courseData?.course_image
+            ? response.courseData?.course_image?.split()
+            : [];
+          const listFileAntd = listFileCourse.length
+            ? listFileCourse?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : [];
           setWeekData(response.weekData);
           setCourse(response.courseData);
           setFileList(listFileAntd);
@@ -357,13 +363,19 @@ function CourseDetailPage() {
   return (
     <div style={{ margin: "0 auto", textAlign: "center" }}>
       <Typography.Title level={3}>
-        {id ? "Update Course" : "Create New Course"}
+        {mode === "view"
+          ? "Course Details"
+          : id
+          ? "Update Course"
+          : "Create New Course"}
       </Typography.Title>
-      <Steps current={step} style={{ margin: "2% auto", maxWidth: "800px" }}>
-        <Steps.Step title={id ? "Update Course" : "Create Course"} />
-        <Steps.Step title="Update week and lesson" />
-        <Steps.Step title="Finish" />
-      </Steps>
+      {mode !== "view" && (
+        <Steps current={step} style={{ margin: "2% auto", maxWidth: "800px" }}>
+          <Steps.Step title={id ? "Update Course" : "Create Course"} />
+          <Steps.Step title="Update week and lesson" />
+          <Steps.Step title="Finish" />
+        </Steps>
+      )}
       <Card style={{ maxWidth: "1000px", margin: "0 auto" }}>
         {step === 0 && (
           <StepOne
@@ -373,6 +385,7 @@ function CourseDetailPage() {
             setFileList={setFileList}
             onPreview={onPreview}
             handleNextStep={handleNextStep}
+            mode={mode}
           />
         )}
         {step === 1 && (
@@ -385,9 +398,11 @@ function CourseDetailPage() {
             id={id}
             setReload={setReload}
             reload={reload}
+            mode={mode}
+            navigate={navigate}
           />
         )}
-        {step === 2 && (
+        {mode !== "view" && step === 2 && (
           <StepThree
             handlePreviousStep={handlePreviousStep}
             handleSubmit={handleSubmit}

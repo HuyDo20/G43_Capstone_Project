@@ -12,6 +12,7 @@ function WeekCard({
   id,
   setReload,
   reload,
+  mode,
 }) {
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -95,30 +96,33 @@ function WeekCard({
             Topic: <b style={{ color: "red" }}>{topicName}</b>
           </Typography.Title>
         )}
-        <Flex>
-          <Button
-            icon={<PlusOutlined />}
-            className="custom-button"
-            onClick={() => {
-              showModal();
-              setDayIndexSelected(null);
-            }}
-          >
-            Add New Day
-          </Button>
-          <div style={{ width: "10px" }}></div>
-          <Button
-            icon={<PlusOutlined />}
-            className="custom-button"
-            onClick={showLessonModal}
-          >
-            Add New Lesson
-          </Button>
-        </Flex>
+        {mode !== "view" && (
+          <Flex>
+            <Button
+              icon={<PlusOutlined />}
+              className="custom-button"
+              onClick={() => {
+                showModal();
+                setDayIndexSelected(null);
+              }}
+            >
+              Add New Day
+            </Button>
+            <div style={{ width: "10px" }}></div>
+            <Button
+              icon={<PlusOutlined />}
+              className="custom-button"
+              onClick={showLessonModal}
+            >
+              Add New Lesson
+            </Button>
+          </Flex>
+        )}
       </Flex>
 
       <DayCard
         dayData={dayData}
+        setDayData={setDayData}
         setVisibleNewDay={setVisible}
         setVisibleLesson={setIsModalVisible}
         setDaySelected={setDaySelected}
@@ -126,6 +130,7 @@ function WeekCard({
         setDayIndexSelected={setDayIndexSelected}
         setLessonIndexSelected={setLessonIndexSelected}
         setReload={setReload}
+        mode={mode}
       />
       <AddDayModal
         dayData={dayData}
@@ -146,6 +151,7 @@ function WeekCard({
         lessonSelected={lessonSelected}
         lessonIndexSelected={lessonIndexSelected}
         id={id}
+        mode={mode}
       />
     </>
   );

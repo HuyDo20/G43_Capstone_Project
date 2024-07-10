@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Button, Table, Tag, Modal, Form, Input, Select } from "antd";
+import { useAuth } from "@/hook/AuthContext";
+import { Button, Form, Input, Modal, Table } from "antd";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Course {
@@ -95,10 +96,29 @@ const CourseModal: React.FC<CourseModalProps> = ({
 
 const CoursesManagementPage: React.FC = () => {
   const navigate = useNavigate();
+  const { handleFetch } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [reload, setReload] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  const handleDeleteCourse = async (id) => {
+    const confirm = window.confirm(
+      `Are you sure you want to delete this course?`
+    );
+    if (confirm) {
+      const request = await handleFetch({
+        method: "patch",
+        url: `/course/${id}`,
+      });
+      if (request.statusCode === 200) {
+        alert(`Delete successfully`);
+        setReload(true);
+      } else {
+        alert(`Delete failed`);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -124,6 +144,7 @@ const CoursesManagementPage: React.FC = () => {
     };
     if (reload) {
       fetchCourses();
+      setReload(false);
     }
   }, [reload]);
 
@@ -142,7 +163,7 @@ const CoursesManagementPage: React.FC = () => {
           src={
             course_image?.split(", ")[1] || course_image?.split(", ")[0] || ""
           }
-          style={{ maxWidth: "120px", height: "200px" }}
+          style={{ maxWidth: "120px" }}
           alt="thumbnail course"
         />
       ),
@@ -161,13 +182,31 @@ const CoursesManagementPage: React.FC = () => {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Course) => (
-        <Button
-          onClick={() => {
-            navigate(`/admin/course-management/${record.course_id}`);
-          }}
-        >
-          Edit
-        </Button>
+        <>
+          <Button
+            onClick={() => {
+              navigate(`/admin/course-management/${record.course_id}`, {
+                state: { mode: "view" },
+              });
+            }}
+          >
+            View
+          </Button>
+          <Button
+            onClick={() => {
+              navigate(`/admin/course-management/${record.course_id}`);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => {
+              handleDeleteCourse(record.course_id);
+            }}
+          >
+            Delete
+          </Button>
+        </>
       ),
     },
   ];
