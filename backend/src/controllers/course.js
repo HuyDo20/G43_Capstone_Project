@@ -29,11 +29,14 @@ const {
 	COURSE_DELETED,
 } = require("../messages/course");
 const { transformCourseData } = require("../helper/course");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 
 const getAllCourse = async (req, res) => {
 	try {
-		const course = await Course.findAll();
+		const course = await Course.findAll({
+			where: { [Op.or]: [{ course_status_id: 2 }, { course_status_id: 1 }] },
+			order: [["course_id", "asc"]]
+		});
 		if (course) {
 			return responseWithData(res, 200, course);
 		} else {
