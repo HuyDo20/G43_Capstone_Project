@@ -3,7 +3,6 @@ const {
 	responseWithData,
 	badRequest,
 	error,
-	notfound,
 	forbidden,
 	created,
 	ok,
