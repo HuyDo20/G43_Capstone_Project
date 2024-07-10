@@ -210,7 +210,7 @@ export default function Login() {
     </div>
   );
   if (window.innerWidth <= 1000) return (
-    <div className="w-4/5 h-[770px] flex flex-col gap-3 pt-9">
+    <div className="w-full h-[770px] flex flex-col gap-3 pt-9">
       <div className="basis-2/6">
         <img className="w-full h-[250px]" src="/login-register.png" alt="" />
       </div>
