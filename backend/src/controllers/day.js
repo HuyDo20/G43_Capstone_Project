@@ -4,6 +4,7 @@ const {
 	badRequest,
 	error,
 	forbidden,
+	notfound,
 	created,
 	ok,
 } = require("../handlers/response_handler");
