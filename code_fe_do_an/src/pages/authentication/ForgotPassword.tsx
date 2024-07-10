@@ -40,7 +40,7 @@ export default function ForgotPassword() {
             <Button onClick={handleSubmit} className="w-full mt-5">Gửi mã xác nhận</Button>
           </Link>
 
-          <div className="mt-32 text-center">
+          <div className="mt-12 text-center">
             <NavLink className={"w-fit"} to={"/"}>
               Quay lại trang chủ
             </NavLink>

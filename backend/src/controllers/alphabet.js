@@ -1,4 +1,3 @@
-const { Op } = require("sequelize");
 const { Alphabet } = require("../../models");
 const {
 	responseWithData,
@@ -41,7 +40,6 @@ async function getAllAlphabetByTypeId(req, res) {
 		throw error;
 	}
 }
-
 async function getAllHigaAlphabet(req, res) {
 	try {
 		const alphabets = await Alphabet.findAll({
