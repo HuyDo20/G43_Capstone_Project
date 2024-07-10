@@ -10,13 +10,21 @@ const StepOne = ({
   setFileList,
   onPreview,
   handleNextStep,
+  mode,
 }) => {
-
   const onChange = (info) => {
     if (info.file.status === "done") {
       const newImageUrl = info.file.response.filePath;
-      setFileList((prevUrls) => [...prevUrls, newImageUrl]);
+      setFileList([newImageUrl]);
     }
+  };
+
+  const beforeUpload = (file) => {
+    if (fileList.length >= 1) {
+      alert("Upload failed, just have one image in here");
+      return false;
+    }
+    return true;
   };
 
   const handleUpload = async (options) => {
@@ -36,9 +44,8 @@ const StepOne = ({
         }
       );
 
-      const { filePath } = response.data; 
+      const { filePath } = response.data;
       setFileList([
-        ...fileList,
         {
           uid: file.uid,
           name: file.name,
@@ -78,11 +85,13 @@ const StepOne = ({
             name="course_name"
             value={course.course_name}
             onChange={handleChangeInput}
+            readOnly={mode === "view"}
           />
         </Form.Item>
 
         <Form.Item label="Week" name="week">
           <Input
+            readOnly={mode === "view"}
             placeholder="Enter number of weeks"
             type="number"
             name="week"
@@ -101,6 +110,15 @@ const StepOne = ({
               onChange={onChange}
               onPreview={onPreview}
               name="files"
+              disabled={mode === "view"}
+              beforeUpload={beforeUpload}
+              maxCount={1}
+              onRemove={() => setFileList([])}
+              showUploadList={{
+                showPreviewIcon: false,
+                showRemoveIcon: true,
+                showDownloadIcon: false,
+              }}
             >
               {fileList.length < 5 && "+ Upload"}
             </Upload>
@@ -113,6 +131,7 @@ const StepOne = ({
           rules={[{ required: true, message: "Please input the description!" }]}
         >
           <Input.TextArea
+            readOnly={mode === "view"}
             rows={4}
             placeholder="Enter description"
             name="description"

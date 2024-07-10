@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Form,
+  Input,
+  Modal,
   Select,
   Space,
   Table,
-  Tag,
-  Button,
-  Modal,
-  Form,
-  Input,
-  Spin,
+  Tag
 } from "antd";
 import axios from "axios";
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 interface User {
   id: number;
@@ -81,7 +80,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     }
   }, [data]);
 
-  const handleUpdateUserData = async () => {
+  const handleCreateAccount = async () => {
     if (
       !userData.full_name ||
       !userData.avatar ||
@@ -104,13 +103,15 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     }
 
     try {
-      const endpoint = data
-        ? `/User/UpdateUser/${data.id}`
-        : "/User/CreateUser";
-      const response = await axios[data ? "put" : "post"](endpoint, userData);
-
-      if (response.status === 200 && response.data.isSucceed) {
-        alert(data ? "Update successful" : "Create successful");
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const response = await axios.post("/account", {...userData, role_id: userData.role_id});
+      if (response.status === 201) {
+        alert("Create successful");
         setReload(true);
         setIsModalOpen(false);
       } else {
@@ -123,9 +124,9 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
   return (
     <Modal
-      title={data ? "Update User" : "Create User"}
+      title={"Create User"}
       visible={isModalOpen}
-      onOk={handleUpdateUserData}
+      onOk={handleCreateAccount}
       onCancel={handleCancel}
     >
       <Form style={{ maxWidth: 600 }} layout="vertical" autoComplete="off">
@@ -213,6 +214,41 @@ const UserManagementPage: React.FC = () => {
 
   const handleDeleteUser = async (id: number) => {};
 
+  const handleUpdateUserData = async () => {
+    if (!selectedItem.role_id || !selectedItem.status_id) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const response = await axios.put(
+        `/account/${selectedItem.account_id}`,
+        selectedItem, {
+          headers: {
+            Authorization : token
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Update successful");
+        setReload(true);
+        // setIsModalOpen(false);
+        setSelectedItem(null);
+      } else {
+        alert("Operation failed");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const columns = [
     {
       title: "Id",
@@ -255,71 +291,104 @@ const UserManagementPage: React.FC = () => {
       title: "Role",
       dataIndex: "role_id",
       key: "role_id",
-      render: (roleId: number) => {
+      render: (_: any, user: User) => {
+        const { role_id, account_id } = user;
         const bgColor =
-          roleId === 1
+          role_id === 1
             ? "cyan"
-            : roleId === 2
+            : role_id === 2
             ? "green"
-            : roleId === 3
+            : role_id === 3
             ? "volcano"
-            : roleId === 4
+            : role_id === 4
             ? "magenta"
             : "";
         const content =
-          roleId === 1
+          role_id === 1
             ? "Admin"
-            : roleId === 2
+            : role_id === 2
             ? "Content manager"
-            : roleId === 3
+            : role_id === 3
             ? "Content creator"
-            : roleId === 4
+            : role_id === 4
             ? "User"
             : "";
         return (
-          <Tag color={bgColor} key={roleId}>
-            {content}
-          </Tag>
+          <>
+            {selectedItem?.account_id !== account_id ? (
+              <Tag color={bgColor} key={role_id}>
+                {content}
+              </Tag>
+            ) : (
+              <Select
+                onChange={(value) =>
+                  setSelectedItem({ ...selectedItem, role_id: value })
+                }
+                value={selectedItem.role_id}
+                options={[
+                  { label: "Admin", value: 1 },
+                  { label: "Content Manager", value: 2 },
+                  { label: "Content Creator", value: 3 },
+                  { label: "User", value: 4 },
+                ]}
+              />
+            )}
+          </>
         );
       },
     },
     {
       title: "Status",
-      dataIndex: "status_id",
+      // dataIndex: "status_id",
       key: "status_id",
-      render: (roleId: number) => {
+      render: (_: any, user: User) => {
+        const { status_id, account_id } = user;
         const bgColor =
-          roleId === 1
+          status_id === 1
             ? "cyan"
-            : roleId === 2
+            : status_id === 2
             ? "green"
-            : roleId === 3
+            : status_id === 3
             ? "volcano"
-            : roleId === 4
+            : status_id === 4
             ? "magenta"
-            : roleId === 5
+            : status_id === 5
             ? "magenta"
             : "";
         const content =
-          roleId === 1
+          status_id === 1
             ? "Pending"
-            : roleId === 2
+            : status_id === 2
             ? "active"
-            : roleId === 3
+            : status_id === 3
             ? "deactive"
-            : roleId === 4
+            : status_id === 4
             ? "done"
-            : roleId === 5
+            : status_id === 5
             ? "undone"
             : "";
         return (
-          <Tag
-            color={bgColor}
-            key={roleId}
-            style={{ textTransform: "capitalize" }}
-          >
-            {content}
-          </Tag>
+          <>
+            {selectedItem?.account_id !== account_id ? (
+              <Tag
+                color={bgColor}
+                key={status_id}
+                style={{ textTransform: "capitalize" }}
+              >
+                {content}
+              </Tag>
+            ) : (
+              <Select
+                onChange={(value) =>
+                  setSelectedItem({ ...selectedItem, status_id: value })
+                }
+                value={selectedItem.status_id}
+              >
+                <Select.Option value={2}>Active</Select.Option>
+                <Select.Option value={3}>Deactive</Select.Option>
+              </Select>
+            )}
+          </>
         );
       },
     },
@@ -336,22 +405,34 @@ const UserManagementPage: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: User) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              setIsModalOpen(true);
-              setSelectedItem(record);
-            }}
-          >
-            <AiOutlineEdit style={{ fontSize: "20px", color: "orange" }} />
-          </a>
+      render: (_: any, record: User) => {
+        return (
+          <>
+            {selectedItem?.account_id === record?.account_id ? (
+              <Button type="primary" onClick={handleUpdateUserData}>
+                Complete
+              </Button>
+            ) : (
+              <Space size="middle">
+                <a
+                  onClick={() => {
+                    // setIsModalOpen(true);
+                    setSelectedItem(record);
+                  }}
+                >
+                  <AiOutlineEdit
+                    style={{ fontSize: "20px", color: "orange" }}
+                  />
+                </a>
 
-          <a onClick={() => handleDeleteUser(record.id)}>
-            <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
-          </a>
-        </Space>
-      ),
+                <a onClick={() => handleDeleteUser(record.id)}>
+                  <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
+                </a>
+              </Space>
+            )}
+          </>
+        );
+      },
     },
   ];
 

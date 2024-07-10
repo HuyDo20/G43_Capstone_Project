@@ -27,6 +27,7 @@ function AddLessonModal({
   lessonSelected,
   id,
   lessonIndexSelected,
+  mode,
 }) {
   const [form] = Form.useForm();
   const [fileImageList, setFileImageList] = useState<UploadFile[]>([]);
@@ -40,14 +41,14 @@ function AddLessonModal({
   const onImageChange = (info) => {
     if (info.file.status === "done") {
       const newImageUrl = info.file.response.filePath;
-      setFileImageList((prevUrls) => [...prevUrls, newImageUrl]);
+      setFileImageList([newImageUrl]);
     }
   };
 
   const onAudioOrVideoChange = (info) => {
     if (info.file.status === "done") {
       const newImageUrl = info.file.response.filePath;
-      setFileAudioAndVideoList((prevUrls) => [...prevUrls, newImageUrl]);
+      setFileAudioAndVideoList([newImageUrl]);
     }
   };
 
@@ -130,36 +131,48 @@ function AddLessonModal({
     imgWindow?.document.write(image.outerHTML);
   };
 
+  const beforeUpload = (file) => {
+    if (fileImageList.length >= 1) {
+      alert("Upload failed, just have one image in here");
+      return false;
+    }
+    return true;
+  };
+
+  const beforeUploadAudioAndVideo = (file) => {
+    if (fileAudioAndVideoList.length >= 1) {
+      alert("Upload failed, just have one audio/video in here");
+      return false;
+    }
+    return true;
+  };
+
   const onSubmit = (values) => {
     const cloneDayData = [...dayData];
     if (id && lessonSelected) {
       const payload = values.vocab_name
         ? {
             ...values,
-            vocab_audio: fileAudioAndVideoList
-              .map((file) => file.url)
-              .join(", "),
-            vocab_image: fileImageList.map((file) => file.url).join(", "),
+            vocab_audio: fileAudioAndVideoList.map((file) => file.url).join(),
+            vocab_image: fileImageList.map((file) => file.url).join(),
             vocab_id: lessonSelected.vocab_id,
           }
         : values.kanji_name
         ? {
             ...values,
-            kanji_image: fileImageList.map((file) => file.url).join(", "),
+            kanji_image: fileImageList.map((file) => file.url).join(),
             kanji_id: lessonSelected.kanji_id,
           }
         : values.video_name
         ? {
             ...values,
-            video_link: fileAudioAndVideoList
-              .map((file) => file.url)
-              .join(", "),
+            video_link: fileAudioAndVideoList.map((file) => file.url).join(),
             video_id: lessonSelected.video_id,
           }
         : values.grammar_name
         ? {
             ...values,
-            grammar_image: fileImageList.map((file) => file.url).join(", "),
+            grammar_image: fileImageList.map((file) => file.url).join(),
             grammar_id: lessonSelected.grammar_id,
           }
         : null;
@@ -183,29 +196,25 @@ function AddLessonModal({
       const payload = values.vocab_name
         ? {
             ...values,
-            vocab_audio: fileAudioAndVideoList
-              .map((file) => file.url)
-              .join(", "),
-            vocab_image: fileImageList.map((file) => file.url).join(", "),
+            vocab_audio: fileAudioAndVideoList.map((file) => file.url).join(),
+            vocab_image: fileImageList.map((file) => file.url).join(),
             vocab_status_id: 1,
           }
         : values.kanji_name
         ? {
             ...values,
-            kanji_image: fileImageList.map((file) => file.url).join(", "),
+            kanji_image: fileImageList.map((file) => file.url).join(),
             kanji_status_id: 1,
           }
         : values.video_name
         ? {
             ...values,
-            video_link: fileAudioAndVideoList
-              .map((file) => file.url)
-              .join(", "),
+            video_link: fileAudioAndVideoList.map((file) => file.url).join(),
           }
         : values.grammar_name
         ? {
             ...values,
-            grammar_image: fileImageList.map((file) => file.url).join(", "),
+            grammar_image: fileImageList.map((file) => file.url).join(),
             grammar_status_id: 1,
           }
         : null;
@@ -228,26 +237,31 @@ function AddLessonModal({
     onCancel();
   };
 
+  console.log("🚀 ~ useEffect ~ lessonSelected:", lessonSelected);
   useEffect(() => {
     if (lessonSelected) {
       if (lessonSelected.vocab_name) {
         setUserChose(1);
 
         setFileAudioAndVideoList(
-          lessonSelected.vocab_audio?.split(", ")?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }))
+          lessonSelected.vocab_audio
+            ? lessonSelected.vocab_audio?.split()?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : []
         );
         setFileImageList(
-          lessonSelected.vocab_image?.split(", ")?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }))
+          lessonSelected.vocab_image
+            ? lessonSelected.vocab_image?.split()?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : []
         );
         form.setFieldsValue({
           vocab_image: lessonSelected.vocab_image,
@@ -263,12 +277,14 @@ function AddLessonModal({
       if (lessonSelected.kanji_name) {
         setUserChose(2);
         setFileImageList(
-          lessonSelected.kanji_image?.split(", ")?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }))
+          lessonSelected.kanji_image
+            ? lessonSelected.kanji_image?.split()?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : []
         );
         form.setFieldsValue({
           kanji_name: lessonSelected.kanji_name,
@@ -284,12 +300,14 @@ function AddLessonModal({
       if (lessonSelected.grammar_name) {
         setUserChose(3);
         setFileImageList(
-          lessonSelected.grammar_image?.split(", ")?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }))
+          lessonSelected.grammar_image
+            ? lessonSelected.grammar_image?.split()?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : []
         );
         form.setFieldsValue({
           grammar_name: lessonSelected.grammar_name,
@@ -304,12 +322,14 @@ function AddLessonModal({
       if (lessonSelected.video_name) {
         setUserChose(4);
         setFileAudioAndVideoList(
-          lessonSelected.video_link?.split(", ")?.map((url, index) => ({
-            uid: -index,
-            name: `Image ${index}`,
-            status: "done",
-            url: url,
-          }))
+          lessonSelected.video_link
+            ? lessonSelected.video_link?.split()?.map((url, index) => ({
+                uid: -index,
+                name: `Image ${index}`,
+                status: "done",
+                url: url,
+              }))
+            : []
         );
         form.setFieldsValue({
           video_name: lessonSelected.video_name,
@@ -323,13 +343,27 @@ function AddLessonModal({
     } else {
       setUserChose(0);
       form.setFieldsValue({});
+      setFileImageList([]);
+      setFileAudioAndVideoList([]);
     }
   }, [lessonSelected]);
   return (
     <Modal
-      title={id && lessonSelected ? "Update Lesson" : "Add New Lesson"}
+      title={
+        mode === "view"
+          ? "Lesson Detail"
+          : id && lessonSelected
+          ? "Update Lesson"
+          : "Add New Lesson"
+      }
       visible={visible}
-      onCancel={onCancel}
+      onCancel={() => {
+        onCancel();
+        setUserChose(0);
+        form.setFieldsValue({});
+        setFileImageList([]);
+        setFileAudioAndVideoList([]);
+      }}
       footer={null}
       destroyOnClose={true}
     >
@@ -365,14 +399,14 @@ function AddLessonModal({
               label="Vocabulary Name"
               rules={[{ required: true }]}
             >
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
               name="day_id"
               label="Select Day"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Select a day">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -384,68 +418,88 @@ function AddLessonModal({
               </Select>
             </Form.Item>
             <Form.Item name="vocab_kanji" label="Kanji">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item name="vocab_meaning" label="Meaning">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item name="vocab_example" label="Example">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
               name="vocab_status_id"
               label="Example"
               style={{ display: "none" }}
             >
-              <Input value={"1"} />
+              <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
             {/* <Form.Item name="vocab_image" label="Image URL">
-              <Input />
+              <Input readOnly={mode==="view"} />
             </Form.Item> */}
             <Form.Item label="Image" name="vocab_image">
               <ImgCrop rotationSlider>
                 <Upload
+                  disabled={mode === "view"}
                   customRequest={handleImageUpload}
                   listType="picture-card"
                   fileList={fileImageList}
                   onChange={onImageChange}
                   onPreview={onPreview}
+                  beforeUpload={beforeUpload}
+                  maxCount={1}
+                  onRemove={() => setFileImageList([])}
+                  showUploadList={{
+                    showPreviewIcon: false,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false,
+                  }}
                 >
                   {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
             {/* <Form.Item name="vocab_audio" label="Audio URL">
-              <Input />
+              <Input readOnly={mode==="view"} />
             </Form.Item> */}
             <Form.Item label="Audio" name="vocab_audio">
               <Upload
+                disabled={mode === "view"}
                 customRequest={handleAudioOrVideoUpload}
                 listType="picture-card"
                 fileList={fileAudioAndVideoList}
                 onChange={onAudioOrVideoChange}
                 onPreview={onPreview}
                 accept="video/*,audio/*"
+                beforeUpload={beforeUploadAudioAndVideo}
+                maxCount={1}
+                onRemove={() => setFileAudioAndVideoList([])}
+                showUploadList={{
+                  showPreviewIcon: false,
+                  showRemoveIcon: true,
+                  showDownloadIcon: false,
+                }}
               >
                 {fileAudioAndVideoList.length < 5 && "+ Upload"}
               </Upload>
             </Form.Item>
             <Form.Item>
-              <Flex
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    setUserChose(0);
-                  }}
+              {mode !== "view" && (
+                <Flex
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Return
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Submit Vocabulary
-                </Button>
-              </Flex>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      setUserChose(0);
+                    }}
+                  >
+                    Return
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Submit Vocabulary
+                  </Button>
+                </Flex>
+              )}
             </Form.Item>
           </Form>
         </>
@@ -459,14 +513,14 @@ function AddLessonModal({
                 { required: true, message: "Please enter the kanji name." },
               ]}
             >
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
               name="day_id"
               label="Select Day"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Select a day">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -482,28 +536,37 @@ function AddLessonModal({
               label="Example"
               style={{ display: "none" }}
             >
-              <Input value={"1"} />
+              <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
             <Form.Item name="cv_spelling" label="CV Spelling">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item name="kanji_kunyomi" label="Kunyomi">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item name="kanji_onyomi" label="Onyomi">
-              <Input />
+              <Input readOnly={mode === "view"} />
             </Form.Item>
             {/* <Form.Item name="kanji_image" label="Image URL">
-              <Input />
+              <Input readOnly={mode==="view"} />
             </Form.Item> */}
             <Form.Item label="Image" name="kanji_image">
               <ImgCrop rotationSlider>
                 <Upload
+                  disabled={mode === "view"}
                   customRequest={handleImageUpload}
                   listType="picture-card"
                   fileList={fileImageList}
                   onChange={onImageChange}
                   onPreview={onPreview}
+                  beforeUpload={beforeUpload}
+                  maxCount={1}
+                  onRemove={() => setFileImageList([])}
+                  showUploadList={{
+                    showPreviewIcon: false,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false,
+                  }}
                 >
                   {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
@@ -525,19 +588,28 @@ function AddLessonModal({
                           { required: true, message: "Missing Kanji word" },
                         ]}
                       >
-                        <Input placeholder="Kanji Word" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Kanji Word"
+                        />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "hiragana_character"]}
                       >
-                        <Input placeholder="Hiragana Character" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Hiragana Character"
+                        />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "kanji_word_meaning"]}
                       >
-                        <Input placeholder="Meaning" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Meaning"
+                        />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => remove(name)} />
                     </Space>
@@ -556,21 +628,23 @@ function AddLessonModal({
               )}
             </Form.List>
             <Form.Item>
-              <Flex
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    setUserChose(0);
-                  }}
+              {mode !== "view" && (
+                <Flex
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Return
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Submit Kanji
-                </Button>
-              </Flex>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      setUserChose(0);
+                    }}
+                  >
+                    Return
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Submit Kanji
+                  </Button>
+                </Flex>
+              )}
             </Form.Item>
           </Form>
         </>
@@ -587,21 +661,24 @@ function AddLessonModal({
               label="Grammar Name"
               rules={[{ required: true }]}
             >
-              <Input placeholder="Enter Grammar name" />
+              <Input
+                readOnly={mode === "view"}
+                placeholder="Enter Grammar name"
+              />
             </Form.Item>
             <Form.Item
               name="grammar_status_id"
               label="Example"
               style={{ display: "none" }}
             >
-              <Input value={"1"} />
+              <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
             <Form.Item
               name="day_id"
               label="Select Day"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Select a day">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -613,22 +690,37 @@ function AddLessonModal({
               </Select>
             </Form.Item>
             <Form.Item name="grammar_structure" label="Grammar Structure">
-              <Input placeholder="Enter Grammar structure" />
+              <Input
+                readOnly={mode === "view"}
+                placeholder="Enter Grammar structure"
+              />
             </Form.Item>
             <Form.Item name="grammar_description" label="Grammar Description">
-              <Input placeholder="Enter Grammar description" />
+              <Input
+                readOnly={mode === "view"}
+                placeholder="Enter Grammar description"
+              />
             </Form.Item>
             {/* <Form.Item name="grammar_image" label="Image URL">
-              <Input placeholder="Enter image URL" />
+              <Input readOnly={mode==="view"} placeholder="Enter image URL" />
             </Form.Item> */}
             <Form.Item label="Image" name="grammar_image">
               <ImgCrop rotationSlider>
                 <Upload
+                  disabled={mode === "view"}
                   customRequest={handleImageUpload}
                   listType="picture-card"
                   fileList={fileImageList}
                   onChange={onImageChange}
                   onPreview={onPreview}
+                  beforeUpload={beforeUpload}
+                  maxCount={1}
+                  onRemove={() => setFileImageList([])}
+                  showUploadList={{
+                    showPreviewIcon: false,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false,
+                  }}
                 >
                   {fileImageList.length < 5 && "+ Upload"}
                 </Upload>
@@ -654,13 +746,19 @@ function AddLessonModal({
                           },
                         ]}
                       >
-                        <Input placeholder="Grammar Example" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Grammar Example"
+                        />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "grammar_example_meaning"]}
                       >
-                        <Input placeholder="Example Meaning" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Example Meaning"
+                        />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => remove(name)} />
                     </Space>
@@ -680,21 +778,23 @@ function AddLessonModal({
             </Form.List>
 
             <Form.Item>
-              <Flex
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    setUserChose(0);
-                  }}
+              {mode !== "view" && (
+                <Flex
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Return
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Submit Grammar
-                </Button>
-              </Flex>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      setUserChose(0);
+                    }}
+                  >
+                    Return
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Submit Grammar
+                  </Button>
+                </Flex>
+              )}
             </Form.Item>
           </Form>
         </>
@@ -711,33 +811,45 @@ function AddLessonModal({
               label="Video Name"
               rules={[{ required: true }]}
             >
-              <Input placeholder="Enter video name" />
+              <Input
+                readOnly={mode === "view"}
+                placeholder="Enter video name"
+              />
             </Form.Item>
             <Form.Item
               name="video_status_id"
               label="Example"
               style={{ display: "none" }}
             >
-              <Input value={"1"} />
+              <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
             {/* <Form.Item
               name="video_link"
               label="Video Link"
               rules={[{ required: true }]}
             >
-              <Input placeholder="Enter video link" />
+              <Input readOnly={mode==="view"} placeholder="Enter video link" />
             </Form.Item> */}
             <Form.Item label="Video" name="video_link">
-                <Upload
-                  customRequest={handleAudioOrVideoUpload}
-                  listType="picture-card"
-                  fileList={fileAudioAndVideoList}
-                  onChange={onAudioOrVideoChange}
-                  onPreview={onPreview}
-                  accept="video/*,audio/*"
-                >
-                  {fileAudioAndVideoList.length < 5 && "+ Upload"}
-                </Upload>
+              <Upload
+                disabled={mode === "view"}
+                customRequest={handleAudioOrVideoUpload}
+                listType="picture-card"
+                fileList={fileAudioAndVideoList}
+                onChange={onAudioOrVideoChange}
+                onPreview={onPreview}
+                accept="video/*,audio/*"
+                beforeUpload={beforeUploadAudioAndVideo}
+                maxCount={1}
+                onRemove={() => setFileAudioAndVideoList([])}
+                showUploadList={{
+                  showPreviewIcon: false,
+                  showRemoveIcon: true,
+                  showDownloadIcon: false,
+                }}
+              >
+                {fileAudioAndVideoList.length < 5 && "+ Upload"}
+              </Upload>
             </Form.Item>
 
             <Form.Item
@@ -745,7 +857,7 @@ function AddLessonModal({
               label="Select Day"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Select a day">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -782,14 +894,20 @@ function AddLessonModal({
                           },
                         ]}
                       >
-                        <Input placeholder="Enter question content" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Enter question content"
+                        />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "question_answer"]}
                         label="Question Answer"
                       >
-                        <Input placeholder="Enter correct answer" />
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Enter correct answer"
+                        />
                       </Form.Item>
 
                       <Form.List name={[name, "options"]}>
@@ -810,7 +928,10 @@ function AddLessonModal({
                                     },
                                   ]}
                                 >
-                                  <Input placeholder="Option content" />
+                                  <Input
+                                    readOnly={mode === "view"}
+                                    placeholder="Option content"
+                                  />
                                 </Form.Item>
                                 <MinusCircleOutlined
                                   onClick={() => removeOption(option.name)}
@@ -847,21 +968,23 @@ function AddLessonModal({
             </Form.List>
 
             <Form.Item>
-              <Flex
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    setUserChose(0);
-                  }}
+              {mode !== "view" && (
+                <Flex
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Return
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Submit Video
-                </Button>
-              </Flex>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      setUserChose(0);
+                    }}
+                  >
+                    Return
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Submit Video
+                  </Button>
+                </Flex>
+              )}
             </Form.Item>
           </Form>
         </>
