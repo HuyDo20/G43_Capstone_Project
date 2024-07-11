@@ -15,7 +15,7 @@ const {
 	ALPHABET_DELETED,
 	ALPHABET_UPDATED,
 } = require("../messages/alphabet");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 async function getAllAlphabet(req, res) {
 	try {
 		const alphabets = await Alphabet.findAll();
