@@ -79,7 +79,7 @@ export default function Kanji() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
       {/* Body*/}
@@ -143,7 +143,7 @@ export default function Kanji() {
                       <CarouselItem key={index}>
                         <div className="p-1">
                           <Card>
-                            <CardContent className="flex flex-row px-16 pt-10 h-[670px] w-[1200px] bg-[#fff8e1]">
+                            <CardContent className="flex flex-row px-16 pt-10 h-[670px] w-[1200px] bg-[#f2fae9]">
                               <div className="flex flex-col gap-9 basis-2/5">
                                 <div className="text-2xl text-[#7db660] font-semibold">
                                   Chữ Hán{" "}
@@ -174,13 +174,13 @@ export default function Kanji() {
                               <div className="flex flex-col p-12 basis-3/5">
                                 <div className="flex flex-row basis-1/5">
                                   <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Chữ Hán
                                     </div>
                                     <div>{lesson.kanji_name}</div>
                                   </div>
                                   <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Âm Hán Việt
                                     </div>
                                     <div>{lesson.cv_spelling}</div>
@@ -188,13 +188,13 @@ export default function Kanji() {
                                 </div>
                                 <div className="flex flex-row basis-1/5">
                                   <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Âm on
                                     </div>
                                     <div>{lesson.kanji_onyomi}</div>
                                   </div>
                                   <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Âm kun
                                     </div>
                                     <div>{lesson.kanji_kunyomi}</div>
@@ -203,7 +203,7 @@ export default function Kanji() {
 
                                 <div className="flex flex-col items-center justify-around gap-5 basis-3/5 ">
                                   <div className="flex flex-col items-center justify-center gap-3">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Từ ghép
                                     </div>
                                     <Table>

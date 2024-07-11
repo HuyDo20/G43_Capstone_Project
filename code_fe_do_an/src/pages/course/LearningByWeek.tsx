@@ -41,7 +41,7 @@ export default function LearningByWeek() {
   }, [reload]);
   return (
     <div>
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
       <div className="container flex flex-row w-full h-fit">

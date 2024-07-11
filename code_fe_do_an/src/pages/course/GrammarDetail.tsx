@@ -70,7 +70,7 @@ export default function GrammarDetail() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
       {/* Body*/}
