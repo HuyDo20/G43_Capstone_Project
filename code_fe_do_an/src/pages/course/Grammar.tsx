@@ -71,7 +71,7 @@ export default function Grammar() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
       {/* Body*/}
@@ -125,7 +125,7 @@ export default function Grammar() {
             </Breadcrumb>
           </div>
           {/* Grammar List*/}
-          <div className="w-[1300px] h-[650px] ml-16 bg-[#fff8e1] mt-5 rounded-md px-20 pt-10 flex flex-col gap-10">
+          <div className="w-[1300px] h-[650px] ml-16 bg-[#f2fae9] mt-5 rounded-md px-20 pt-10 flex flex-col gap-10">
             <div className="text-[#4b9c47] font-semibold text-xl">Ngữ pháp</div>
             <div className="flex flex-col gap-5 w-full h-[370px] ">
               {dayCurrent?.lessons

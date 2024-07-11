@@ -31,16 +31,16 @@ export default function Course() {
   }, []);
   
   return (
-    <div className="flex flex-col w-full h-full bg-[#f7ecc7]">
-      <div className="bg-[#fff8e1]">
+    <div className="flex flex-col w-full h-full bg-[#d5e9be]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
       
-      <div className="container max-w-[1400px] w-full h-fit p-7">
+      <div className="container max-w-[1400px] w-full h-fit p-7 ">
         <div
           className="w-full h-full rounded-2xl"
         >
-          <div className="container w-full h-[1000px] p-10 flex flex-col gap-y-7 items-center bg-[#fff8e1]">
+          <div className="container w-full h-[1000px] p-10 flex flex-col gap-y-7 items-center bg-[#f2fae9] rounded-md shadow-md">
             <div className="text-2xl font-semibold text-[#78b24d]">
               KHÓA HỌC
             </div>
@@ -59,7 +59,7 @@ export default function Course() {
           </div>
         </div>
       </div>
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Footer />
       </div>
     </div>
