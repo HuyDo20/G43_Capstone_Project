@@ -64,17 +64,17 @@ export default function Home() {
       <Layout>
         <div className="container flex justify-between gap-10 p-16">
           <ContentHome1
-            image={"/thuchanh.png"}
+            image={"/thuchanh.gif"}
             title="Thực hành"
             description="“Dekiru Nihongo” giúp người học luyện kỹ năng qua bài tập và tình huống thực tế, dễ áp dụng vào đời sống."
           />
           <ContentHome1
-            image={"/tuongtac.png"}
+            image={"/tuongtac.gif"}
             title="Tương tác"
             description="Tạo điều kiện tương tác giữa người học và người dạy qua các hoạt động nhóm và bài tập đối thoại, cải thiện kỹ năng giao tiếp của người học."
           />
           <ContentHome1
-            image={"/tiepcanthucte.png"}
+            image={"/tiepcan.gif"}
             title="Tiếp cận thực tế"
             description="Áp dụng tiếng Nhật vào giao tiếp hằng ngày, công việc, du lịch và mua sắm, dễ dàng sử dụng từ vựng và ngữ pháp trong thực tế."
           />
@@ -110,17 +110,17 @@ export default function Home() {
           <Layout>
             <div className="container flex justify-between gap-10 p-16">
               <ContentHome1
-                image={"/thuchanh.png"}
+                image={"/thuchanh.gif"}
                 title="Thực hành"
                 description="“Dekiru Nihongo” giúp người học luyện kỹ năng qua bài tập và tình huống thực tế, dễ áp dụng vào đời sống."
               />
               <ContentHome1
-                image={"/tuongtac.png"}
+                image={"/tuongtac.gif"}
                 title="Tương tác"
                 description="Tạo điều kiện tương tác giữa người học và người dạy qua các hoạt động nhóm và bài tập đối thoại, cải thiện kỹ năng giao tiếp của người học."
               />
               <ContentHome1
-                image={"/tiepcanthucte.png"}
+                image={"/tiepcan.gif"}
                 title="Tiếp cận thực tế"
                 description="Áp dụng tiếng Nhật vào giao tiếp hằng ngày, công việc, du lịch và mua sắm, dễ dàng sử dụng từ vựng và ngữ pháp trong thực tế."
               />
