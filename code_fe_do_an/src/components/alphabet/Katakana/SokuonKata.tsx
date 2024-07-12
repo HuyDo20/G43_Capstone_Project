@@ -4,11 +4,11 @@ import { Bs1CircleFill, Bs2CircleFill, Bs3CircleFill } from "react-icons/bs";
 export default function SokuonKata() {
   return (
     <div className="flex flex-col gap-5">
-      <div className="text-xl font-semibold text-[#f1a72b]">ÂM NGẮT</div>
+      <div className="text-xl font-semibold text-[#7db660]">ÂM NGẮT</div>
       <div className="flex flex-col gap-3">
         <div className="bg-[#f1f1ee] w-full h-[150px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5 mb-3">
-            <Bs1CircleFill size={30} color="#f1a72b" />
+            <Bs1CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Định nghĩa</div>
           </div>
           <div>
@@ -21,7 +21,7 @@ export default function SokuonKata() {
         </div>
         <div className="bg-[#f1f1ee] w-full h-[150px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5 mb-3">
-            <Bs2CircleFill size={30} color="#f1a72b" />
+            <Bs2CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách viết</div>
           </div>
           <div>
@@ -34,7 +34,7 @@ export default function SokuonKata() {
         </div>
         <div className="bg-[#f1f1ee] w-full h-[400px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5 mb-3">
-            <Bs3CircleFill size={30} color="#f1a72b" />
+            <Bs3CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách đọc</div>
           </div>
           <div className="mt-3">
@@ -50,31 +50,31 @@ export default function SokuonKata() {
             <div className="flex flex-row mt-7">
               <div className="flex flex-col gap-3 ml-20 basis-1/4">
                 <div className="text-xl">
-                  サ<span className="text-[#f1a72b] font-semibold">ッ</span>
+                  サ<span className="text-[#7db660] font-semibold">ッ</span>
                   カー
                 </div>
                 <div className="text-xl">
-                  バ<span className="text-[#f1a72b] font-semibold">ッ</span>グ
+                  バ<span className="text-[#7db660] font-semibold">ッ</span>グ
                 </div>
                 <div className="text-xl">
-                  カ<span className="text-[#f1a72b] font-semibold">ッ</span>ト
+                  カ<span className="text-[#7db660] font-semibold">ッ</span>ト
                 </div>
                 <div className="text-xl">
-                  ク<span className="text-[#f1a72b] font-semibold">ッ</span>キ
+                  ク<span className="text-[#7db660] font-semibold">ッ</span>キ
                 </div>
               </div>
               <div className="flex flex-col gap-3 basis-1/4">
                 <div className="text-xl">
-                  sa<span className="text-[#f1a72b] font-semibold">kk</span>a
+                  sa<span className="text-[#7db660] font-semibold">kk</span>a
                 </div>
                 <div className="text-xl">
-                  ba<span className="text-[#f1a72b] font-semibold">gg</span>u
+                  ba<span className="text-[#7db660] font-semibold">gg</span>u
                 </div>
                 <div className="text-xl">
-                  ka<span className="text-[#f1a72b] font-semibold">tt</span>o
+                  ka<span className="text-[#7db660] font-semibold">tt</span>o
                 </div>
                 <div className="text-xl">
-                  ku<span className="text-[#f1a72b] font-semibold">kk</span>i
+                  ku<span className="text-[#7db660] font-semibold">kk</span>i
                 </div>
               </div>
               <div className="flex flex-col gap-3 basis-1/4">

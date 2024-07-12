@@ -53,7 +53,7 @@ export default function UserProfile() {
   }, []);
   if (widthScreen > 1100)
     return (
-      <div className="bg-[#fff8e1] h-full w-full">
+      <div className="bg-[#f2fae9] h-full w-full">
         <Header />
         <div className="bg-white shadow-md p-7">
           <div className="flex flex-row h-auto bg-[#f1f8e9] rounded-3xl w-full">
@@ -69,14 +69,14 @@ export default function UserProfile() {
                       />
                       <AvatarFallback></AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col items-center w-full max-w-sm gap-3 flex- ">
+                    <div className="flex flex-col items-center w-full max-w-sm gap-3">
                       <div className="flex flex-row items-center justify-center gap-3">
                         <FaCamera />
                         <Label className="text-center">Tải ảnh lên</Label>
                       </div>
                       <div className="flex flex-row gap-3 w-[250px]">
                         <Input
-                          className="w-3/4"
+                          className="w-3/5"
                           id="picture"
                           type="file"
                           multiple={false}
@@ -88,12 +88,12 @@ export default function UserProfile() {
                             console.log(event.target.files[0]);
                           }}
                         />
-                        <Button className="w-1/4" onClick={handleOnSubmitFile}>
+                        <Button className="w-2/5" onClick={handleOnSubmitFile}>
                           Cập nhật
                         </Button>
                       </div>
                     </div>
-                    <TabsList className="flex flex-col w-full gap-2 mt-24 bg-[#f1f8e9]">
+                    <TabsList className="flex flex-col w-full gap-2 mt-12 bg-[#f1f8e9]">
                       <TabsTrigger value="account" className="mb-2">
                         Thông tin cá nhân
                       </TabsTrigger>
@@ -133,7 +133,7 @@ export default function UserProfile() {
     );
   if (widthScreen <= 1100 && widthScreen > 920)
     return (
-      <div className="bg-[#fff8e1] h-full w-full">
+      <div className="bg-[#f2fae9] h-full w-full">
         <Header />
         <div className="bg-white shadow-md p-7">
           <div className="flex flex-row h-auto bg-[#f1f8e9] rounded-3xl w-full">
@@ -217,7 +217,7 @@ export default function UserProfile() {
     return (
       <div className="bg-[#fff8e1] h-full w-full">
         <Header />
-        <div className="bg-white shadow-md p-7">
+        <div className="mb-10 bg-white shadow-md p-7">
           <div className="flex flex-row w-full h-[700px] bg-[#f1f8e9] rounded-3xl">
             <div className="flex w-full m-10">
               <Tabs defaultValue="account" className="flex flex-col w-full">
@@ -300,7 +300,7 @@ export default function UserProfile() {
     return (
       <div className="bg-[#fff8e1] h-full w-full">
         <Header />
-        <div className="bg-white shadow-md p-7">
+        <div className="mb-10 bg-white shadow-md p-7">
           <div className="flex flex-row w-full h-auto bg-[#f1f8e9] rounded-3xl">
             <div className="flex w-full m-10">
               <Tabs defaultValue="account" className="flex flex-col w-full">

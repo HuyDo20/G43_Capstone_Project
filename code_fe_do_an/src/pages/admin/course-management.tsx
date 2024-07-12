@@ -3,6 +3,9 @@ import { Button, Form, Input, Modal, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaRegEye } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface Course {
   course_id: number;
@@ -182,31 +185,31 @@ const CoursesManagementPage: React.FC = () => {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Course) => (
-        <>
-          <Button
-            onClick={() => {
-              navigate(`/admin/course-management/${record.course_id}`, {
-                state: { mode: "view" },
-              });
-            }}
-          >
-            View
-          </Button>
-          <Button
-            onClick={() => {
-              navigate(`/admin/course-management/${record.course_id}`);
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            onClick={() => {
-              handleDeleteCourse(record.course_id);
-            }}
-          >
-            Delete
-          </Button>
-        </>
+        <div className="flex flex-row gap-2">
+            <FaRegEye size={24} color="#2E75B5"
+              onClick={() => {
+                navigate(`/admin/course-management/${record.course_id}`, {
+                  state: { mode: "view" },
+                });
+              }}
+            >
+              View
+            </FaRegEye>
+              <CiEdit size={24} color="#feb32a"
+                onClick={() => {
+                  navigate(`/admin/course-management/${record.course_id}`);
+                }}
+              >
+                Edit
+              </CiEdit>
+              <MdDeleteOutline size={24} color="red"
+                onClick={() => {
+                  handleDeleteCourse(record.course_id);
+                }}
+              >
+                Delete
+              </MdDeleteOutline>
+        </div>
       ),
     },
   ];

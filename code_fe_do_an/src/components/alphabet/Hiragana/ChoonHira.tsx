@@ -8,12 +8,12 @@ import {
 export default function ChoonHira() {
   return (
     <div className="flex flex-col gap-3">
-      <div className="text-xl font-semibold text-[#f1a72b] ">TRƯỜNG ÂM</div>
+      <div className="text-xl font-semibold text-[#7db660] ">TRƯỜNG ÂM</div>
       <div className="flex flex-row w-full h-[150px] gap-3">
         {/*khai niem */}
         <div className="bg-[#f1f1ee] basis-1/2 rounded-lg p-5 flex flex-col gap-5">
           <div className="flex flex-row items-center gap-5">
-            <Bs1CircleFill size={30} color="#f1a72b" />
+            <Bs1CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Khái niệm</div>
           </div>
           <div>
@@ -23,7 +23,7 @@ export default function ChoonHira() {
         {/*cach doc */}
         <div className="bg-[#f1f1ee] basis-1/2 rounded-lg p-5 flex flex-col gap-5">
           <div className="flex flex-row items-center gap-5">
-            <Bs2CircleFill size={30} color="#f1a72b" />
+            <Bs2CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách đọc</div>
           </div>
           <div>
@@ -35,7 +35,7 @@ export default function ChoonHira() {
       {/*truong am lam thay doi nghia */}
       <div className="bg-[#f1f1ee] h-[300px] w-full rounded-lg p-5 flex flex-col gap-3">
         <div className="flex flex-row items-center gap-5">
-          <Bs3CircleFill size={30} color="#f1a72b" />
+          <Bs3CircleFill size={30} color="#7db660" />
           <div className="text-xl font-semibold">
             Trường âm làm thay đổi nghĩa của từ
           </div>
@@ -51,22 +51,22 @@ export default function ChoonHira() {
           </div>
           <div className="flex flex-col gap-3 pr-16">
             <div>
-              おば<span className="text-[#f1a72b] font-semibold">あ</span>さん
+              おば<span className="text-[#7db660] font-semibold">あ</span>さん
               (bà)
             </div>
             <div>
-              おじ<span className="text-[#f1a72b] font-semibold">い</span>さん
+              おじ<span className="text-[#7db660] font-semibold">い</span>さん
               (ông)
             </div>
             <div>
-              ゆ<span className="text-[#f1a72b] font-semibold">う</span>き (dũng
+              ゆ<span className="text-[#7db660] font-semibold">う</span>き (dũng
               cảm)
             </div>
             <div>
-              え<span className="text-[#f1a72b] font-semibold">え</span> (vâng)
+              え<span className="text-[#7db660] font-semibold">え</span> (vâng)
             </div>
             <div>
-              へ<span className="text-[#f1a72b] font-semibold">い</span>や (đồng
+              へ<span className="text-[#7db660] font-semibold">い</span>や (đồng
               bằng)
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function ChoonHira() {
       {/*cach viet */}
       <div className="bg-[#f1f1ee] h-[750px] w-full rounded-lg p-5 flex flex-col">
         <div className="flex flex-row items-center gap-5">
-          <Bs4CircleFill size={30} color="#f1a72b" />
+          <Bs4CircleFill size={30} color="#7db660" />
           <div className="text-xl font-semibold">Cách viết</div>
         </div>
         <div className="flex flex-col gap-6 mt-3">
@@ -88,7 +88,7 @@ export default function ChoonHira() {
               chữ か
             </div>
             <div className="pl-10">
-              おか<span className="text-[#f1a72b] font-semibold">あ</span>さん
+              おか<span className="text-[#7db660] font-semibold">あ</span>さん
               Mẹ
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function ChoonHira() {
               trường âm
             </div>
             <div className="pl-10">
-              おじ<span className="text-[#f1a72b] font-semibold">い</span>さん
+              おじ<span className="text-[#7db660] font-semibold">い</span>さん
               Ông 
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function ChoonHira() {
             Ví dụ: chữ く thuộc cột う thì khi ghi trường âm ta thêm chữ う vào sau chữ く
             </div>
             <div className="pl-10">
-            く<span className="text-[#f1a72b] font-semibold">う</span>こう Máy bay
+            く<span className="text-[#7db660] font-semibold">う</span>こう Máy bay
             </div>
           </div>
           <div className="flex flex-col gap-3">
@@ -124,10 +124,10 @@ export default function ChoonHira() {
             Ví dụ: chữ れ thuộc cột え thì khi ghi trường âm ta thêm chữ い vào sau chữ れ
             </div>
             <div className="pl-10">
-            れ<span className="text-[#f1a72b] font-semibold">い</span>ぶん Câu ví dụ
+            れ<span className="text-[#7db660] font-semibold">い</span>ぶん Câu ví dụ
             </div>
             <div className="pl-10">
-            <span className="font-semibold">Chú ý</span>: trong nhiều trường hợp trường âm của cột え thêm え. Ví dụ: ね<span className="text-[#f1a72b] font-semibold">え</span> Này
+            <span className="font-semibold">Chú ý</span>: trong nhiều trường hợp trường âm của cột え thêm え. Ví dụ: ね<span className="text-[#7db660] font-semibold">え</span> Này
             </div>
             
           </div>
@@ -139,10 +139,10 @@ export default function ChoonHira() {
             Ví dụ: chữ よ thuộc cột お thì khi ghi trường âm ta thêm chữ う vào sau chữ よ
             </div>
             <div className="pl-10">
-            よ<span className="text-[#f1a72b] font-semibold">う</span>やく Dần dần, từ từ
+            よ<span className="text-[#7db660] font-semibold">う</span>やく Dần dần, từ từ
             </div>
             <div className="pl-10">
-            <span className="font-semibold">Chú ý</span>: trong nhiều trường hợp trường âm của cột お thêm お. Ví dụ: と<span className="text-[#f1a72b] font-semibold">お</span>い Xa
+            <span className="font-semibold">Chú ý</span>: trong nhiều trường hợp trường âm của cột お thêm お. Ví dụ: と<span className="text-[#7db660] font-semibold">お</span>い Xa
             </div>
           </div>
         </div>

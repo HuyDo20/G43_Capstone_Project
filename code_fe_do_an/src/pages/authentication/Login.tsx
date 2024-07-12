@@ -171,8 +171,8 @@ export default function Login() {
           </div>
 
           {/* Remember pw and forgot pw */}
-          <div className="flex">
-            <div className="flex items-center pr-4 space-x-2">
+          <div className="flex flex-row">
+            <div className="flex items-center pr-4 space-x-2 basis-1/2">
               <Checkbox id="rememberMe" checked={rememberMe} onCheckedChange={handleRememberMeChange} />
               <label
                 htmlFor="rememberMe"
@@ -181,7 +181,7 @@ export default function Login() {
                 Nhớ mật khẩu
               </label>
             </div>
-            <div className="w-[290px] text-right">
+            <div className="w-full text-right basis-1/2">
               <NavLink
                 className={"text-sm text-[#a9dd6d]"}
                 to={"/ForgotPassword"}

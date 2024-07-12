@@ -56,9 +56,9 @@ export default function NumberDisplay() {
 
   return (
     <div className="container mx-auto">
-      <div className="text-xl font-semibold text-[#f1a72b] ">SỐ ĐẾM</div>
+      <div className="text-xl font-semibold text-[#7db660] ">SỐ ĐẾM</div>
       {selectedNumber && (
-        <div className="p-4 text-center bg-[#f1a72b] border border-[#f1a72b] rounded-lg mt-7">
+        <div className="p-4 text-center bg-[#7db660] border border-[#7db660] rounded-lg mt-7">
           <h1 className="text-3xl font-semibold text-white">
             {selectedNumber.romaji_character} - {selectedNumber.japanese_character}
           </h1>
@@ -71,7 +71,7 @@ export default function NumberDisplay() {
             onClick={() => handleNumberClick(number)}
             className={`p-4 text-2xl font-semibold border h-[100px] rounded-lg ${
               selectedNumber?.romaji_character === number.romaji_character
-                ? "bg-[#f1a72b] text-white"
+                ? "bg-[#7db660] text-white"
                 : "bg-white text-black"
             }`}
           >
