@@ -30,41 +30,76 @@ export default function Course() {
     handleFetchData();
   }, []);
 
+  const [widthScreen, setWidthScreen] = useState(window.innerWidth);
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setWidthScreen(window.innerWidth);
+    });
+    return () =>
+      window.removeEventListener("resize", () => {
+        setWidthScreen(window.innerWidth);
+      });
+  }, []);
+if(widthScreen >= 1100)
   return (
-    <div
-      className="w-full h-full bg-center bg-cover"
-      style={{ backgroundImage: `url("/public/bg2.png")` }}
-    >
-      <div className="flex flex-col w-full h-full">
-        <div className="bg-[#f2fae9] mb-10">
-          <Header />
-        </div>
-
-        <div className="container max-w-[1400px] w-full h-fit p-7">
-          <div className="w-full h-full rounded-2xl">
-            <div className="container w-full h-[1000px] p-10 flex flex-col gap-y-7 items-center bg-[#f2fae9] rounded-md shadow-md">
-              <div className="text-2xl font-semibold text-[#78b24d]">
-                KHÓA HỌC
-              </div>
-              {courseList.map((courseData: CourseResponse, index) => {
-                return (
-                  <CourseItem
-                    key={index}
-                    course_name={courseData.course_name}
-                    course_id={courseData.course_id}
-                    course_image={courseData.course_image}
-                    description={courseData.description}
-                    week={courseData.week}
-                  />
-                );
-              })}
+    <div className="flex flex-col w-full h-full bg-[#d5e9be]">
+      <div className="bg-[#f2fae9]">
+        <Header />
+      </div>
+      
+      <div className="w-full h-fit p-7">
+          <div className="container w-full h-full p-10 flex flex-col gap-y-7 items-center bg-[#fff8e1]">
+            <div className="text-2xl font-semibold text-[#78b24d]">
+              KHÓA HỌC
             </div>
-          </div>
+            {courseList.map((courseData: CourseResponse, index)=>{
+              return(
+                <CourseItem
+                key={index}
+                course_name={courseData.course_name}
+                course_id={courseData.course_id}
+                course_image={courseData.course_image}
+                description={courseData.description}
+                week={courseData.week}
+                />
+              )
+            })}
         </div>
-        <div className="">
-          <Footer />
-        </div>
+      </div>
+      <div className="bg-[#f2fae9]">
+        <Footer />
       </div>
     </div>
   );
+if(widthScreen < 1100)
+  return (
+    <div className="flex flex-col w-full h-full bg-[#f7ecc7]">
+      <div className="bg-[#fff8e1]">
+        <Header />
+      </div>
+ 
+      <div className="container w-full h-fit p-7">
+        <div className="w-full h-full rounded-2xl">
+          <div className="container w-full h-auto p-10 flex flex-col gap-y-7 items-center bg-[#fff8e1]">
+            <div className="text-2xl font-semibold text-[#78b24d]">KHÓA HỌC</div>
+            {courseList.map((courseData: CourseResponse, index) => {
+              return (
+                <CourseItem
+                  key={index}
+                  course_name={courseData.course_name}
+                  course_id={courseData.course_id}
+                  course_image={courseData.course_image}
+                  description={courseData.description}
+                  week={courseData.week}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#fff8e1]">
+        <Footer />
+      </div>
+    </div>
+  ) 
 }
