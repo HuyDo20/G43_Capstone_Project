@@ -3,6 +3,7 @@ import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { CourseResponse } from "@/type";
 import axios from "axios";
+import { url } from "inspector";
 import { useEffect, useState } from "react";
 
 export default function Course() {
@@ -40,15 +41,20 @@ export default function Course() {
         setWidthScreen(window.innerWidth);
       });
   }, []);
+  
 if(widthScreen >= 1100)
   return (
-    <div className="flex flex-col w-full h-full bg-[#d5e9be]">
+    <div
+      className="w-full h-full bg-center bg-cover"
+      style={{ backgroundImage: `url("/public/bg2.png")` }}
+    >
+    <div className="flex flex-col w-full h-full">
       <div className="bg-[#f2fae9]">
         <Header />
       </div>
       
-      <div className="w-full h-fit p-7">
-          <div className="container w-full h-full p-10 flex flex-col gap-y-7 items-center bg-[#fff8e1]">
+      <div className="w-full container max-w-[1400px] h-fit p-7">
+          <div className="container w-full h-full p-10 flex flex-col gap-y-7 items-center bg-[#f2fae9]">
             <div className="text-2xl font-semibold text-[#78b24d]">
               KHÓA HỌC
             </div>
@@ -70,36 +76,43 @@ if(widthScreen >= 1100)
         <Footer />
       </div>
     </div>
+    </div>
   );
 if(widthScreen < 1100)
   return (
-    <div className="flex flex-col w-full h-full bg-[#f7ecc7]">
-      <div className="bg-[#fff8e1]">
+    <div
+      className="w-full h-full bg-center bg-cover"
+      style={{ backgroundImage: `url("/public/bg2.png")` }}
+    >
+    <div className="flex flex-col w-full h-full">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
- 
-      <div className="container w-full h-fit p-7">
-        <div className="w-full h-full rounded-2xl">
-          <div className="container w-full h-auto p-10 flex flex-col gap-y-7 items-center bg-[#fff8e1]">
-            <div className="text-2xl font-semibold text-[#78b24d]">KHÓA HỌC</div>
-            {courseList.map((courseData: CourseResponse, index) => {
-              return (
+      
+      <div className="w-full h-fit p-7">
+          <div className="container w-full h-full p-10 flex flex-col gap-y-7 items-center bg-[#f2fae9]">
+            <div className="text-2xl font-semibold text-[#78b24d]">
+              KHÓA HỌC
+            </div>
+            {courseList.map((courseData: CourseResponse, index)=>{
+              return(
                 <CourseItem
-                  key={index}
-                  course_name={courseData.course_name}
-                  course_id={courseData.course_id}
-                  course_image={courseData.course_image}
-                  description={courseData.description}
-                  week={courseData.week}
+                key={index}
+                course_name={courseData.course_name}
+                course_id={courseData.course_id}
+                course_image={courseData.course_image}
+                description={courseData.description}
+                week={courseData.week}
                 />
-              );
+              )
             })}
-          </div>
         </div>
       </div>
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Footer />
       </div>
     </div>
-  ) 
+    </div>
+  );
+
 }
