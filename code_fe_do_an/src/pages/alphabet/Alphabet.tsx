@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
-import AlphabetPracticeComponent from "@/Practice/AlphabetyPractice";
+import AlphabetPracticeComponent from "@/Practice/AlphabetPractice";
 export default function Alphabet() {
   return (
     <div
@@ -24,13 +24,13 @@ export default function Alphabet() {
     >
       {/* className="w-full h-full bg-center bg-cover" style={{backgroundImage: `url("/public/bg1.png")` }} */}
       {/* Header */}
-      <div className="bg-[#fff8e1]">
+      <div className="bg-[#f2fae9]">
         <Header />
       </div>
 
       {/* Body */}
       <div className="container max-w-[1200px] w-full h-[1600px] p-7">
-        <div className="bg-[#fbecb3] w-full h-[1480px] p-7 rounded-3xl">
+        <div className="bg-[#7db660] w-full h-[1480px] p-7 rounded-3xl">
           <Tabs defaultValue="hiragana" className="w-full h-[1500px]">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="hiragana">Hiragana</TabsTrigger>

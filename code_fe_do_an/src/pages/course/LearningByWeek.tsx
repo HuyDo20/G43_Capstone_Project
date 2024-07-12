@@ -40,6 +40,7 @@ export default function LearningByWeek() {
     }
   }, [reload]);
   return (
+ 
     <div>
       <div className="bg-[#f2fae9]">
         <Header />

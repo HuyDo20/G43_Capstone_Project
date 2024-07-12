@@ -4,11 +4,11 @@ import { Bs1CircleFill, Bs2CircleFill, Bs3CircleFill } from "react-icons/bs";
 export default function ChoonKata() {
   return (
     <div className="flex flex-col gap-3">
-      <div className="text-xl font-semibold text-[#f1a72b]">TRƯỜNG ÂM</div>
+      <div className="text-xl font-semibold text-[#7db660]">TRƯỜNG ÂM</div>
       <div className="flex flex-col gap-3">
         <div className="bg-[#f1f1ee] w-full h-[105px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs1CircleFill size={30} color="#f1a72b" />
+            <Bs1CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Khái niệm</div>
           </div>
           <div>
@@ -18,7 +18,7 @@ export default function ChoonKata() {
         </div>
         <div className="bg-[#f1f1ee] w-full h-[370px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs2CircleFill size={30} color="#f1a72b" />
+            <Bs2CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách ghi</div>
           </div>
           <div className="mt-5">Sử dụng kí hiệu trường âm ―</div>
@@ -26,21 +26,21 @@ export default function ChoonKata() {
           <div className="flex flex-row mt-3">
             <div className="flex flex-col gap-3 ml-32 basis-1/4">
               <div className="text-xl">
-                カ<span className="text-[#f1a72b] font-semibold">ー</span>ド
+                カ<span className="text-[#7db660] font-semibold">ー</span>ド
               </div>
               <div className="text-xl">
-                タクシ<span className="text-[#f1a72b] font-semibold">ー</span>
+                タクシ<span className="text-[#7db660] font-semibold">ー</span>
               </div>
               <div className="text-xl">
-                ス<span className="text-[#f1a72b] font-semibold">ー</span>パ
-                <span className="text-[#f1a72b] font-semibold">ー</span>
+                ス<span className="text-[#7db660] font-semibold">ー</span>パ
+                <span className="text-[#7db660] font-semibold">ー</span>
               </div>
               <div className="text-xl">
-                ノ<span className="text-[#f1a72b] font-semibold">ー</span>ト
+                ノ<span className="text-[#7db660] font-semibold">ー</span>ト
               </div>
               <div className="text-xl">
-                エスカレ<span className="text-[#f1a72b] font-semibold">ー</span>
-                タ<span className="text-[#f1a72b] font-semibold">ー</span>
+                エスカレ<span className="text-[#7db660] font-semibold">ー</span>
+                タ<span className="text-[#7db660] font-semibold">ー</span>
               </div>
             </div>
             <div className="flex flex-col gap-3 ml-32 basis-1/4">
@@ -54,7 +54,7 @@ export default function ChoonKata() {
         </div>
         <div className="bg-[#f1f1ee] w-full h-[720px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs3CircleFill size={30} color="#f1a72b" />
+            <Bs3CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách viết</div>
           </div>
           <div className="mt-3">
@@ -69,8 +69,8 @@ export default function ChoonKata() {
               </div>
               <div>Ví dụ:</div>
               <div className="ml-20">
-                カ<span className="text-[#f1a72b] font-semibold">ー</span>ド ka
-                <span className="text-[#f1a72b] font-semibold">a</span>do Thẻ,
+                カ<span className="text-[#7db660] font-semibold">ー</span>ド ka
+                <span className="text-[#7db660] font-semibold">a</span>do Thẻ,
                 bưu thiếp
               </div>
             </div>
@@ -80,9 +80,9 @@ export default function ChoonKata() {
               </div>
               <div>Ví dụ:</div>
               <div className="ml-20">
-                ディズニ<span className="text-[#f1a72b] font-semibold">ー</span>
+                ディズニ<span className="text-[#7db660] font-semibold">ー</span>
                 ランド dizuni
-                <span className="text-[#f1a72b] font-semibold">i</span>rando
+                <span className="text-[#7db660] font-semibold">i</span>rando
                 Disneyland
               </div>
             </div>
@@ -92,9 +92,9 @@ export default function ChoonKata() {
               </div>
               <div>Ví dụ:</div>
               <div className="ml-20">
-                ク<span className="text-[#f1a72b] font-semibold">ー</span>ラ
-                <span className="text-[#f1a72b] font-semibold">ー</span> ku
-                <span className="text-[#f1a72b] font-semibold">u</span>raa Máy
+                ク<span className="text-[#7db660] font-semibold">ー</span>ラ
+                <span className="text-[#7db660] font-semibold">ー</span> ku
+                <span className="text-[#7db660] font-semibold">u</span>raa Máy
                 lạnh
               </div>
             </div>
@@ -104,9 +104,9 @@ export default function ChoonKata() {
               </div>
               <div>Ví dụ:</div>
               <div className="ml-20">
-                セ<span className="text-[#f1a72b] font-semibold">ー</span>タ
-                <span className="text-[#f1a72b] font-semibold">ー</span> sei
-                <span className="text-[#f1a72b] font-semibold">i</span>taa Áo
+                セ<span className="text-[#7db660] font-semibold">ー</span>タ
+                <span className="text-[#7db660] font-semibold">ー</span> sei
+                <span className="text-[#7db660] font-semibold">i</span>taa Áo
                 len
               </div>
             </div>
@@ -116,10 +116,10 @@ export default function ChoonKata() {
               </div>
               <div>Ví dụ:</div>
               <div className="ml-20">
-                オ<span className="text-[#f1a72b] font-semibold">ー</span>バ
-                <span className="text-[#f1a72b] font-semibold">ー</span> o
-                <span className="text-[#f1a72b] font-semibold">o</span>ba
-                <span className="text-[#f1a72b] font-semibold">a</span> Áo
+                オ<span className="text-[#7db660] font-semibold">ー</span>バ
+                <span className="text-[#7db660] font-semibold">ー</span> o
+                <span className="text-[#7db660] font-semibold">o</span>ba
+                <span className="text-[#7db660] font-semibold">a</span> Áo
                 choàng
               </div>
             </div>
