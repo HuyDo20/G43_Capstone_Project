@@ -97,7 +97,7 @@ export default function Vocabulary() {
     return (
       <div>
         {/* Header */}
-        <div className="bg-[#fff8e1]">
+        <div className="bg-[#f2fae9]">
           <Header />
         </div>
         {/* Body*/}
@@ -161,7 +161,7 @@ export default function Vocabulary() {
                         <CarouselItem key={index}>
                           <div className="p-1">
                             <Card>
-                              <CardContent className="flex flex-row px-16 pt-10 h-[670px] w-[1200px] bg-[#fff8e1]">
+                              <CardContent className="flex flex-row px-16 pt-10 h-[670px] w-[1200px] bg-[#f2fae9]">
                                 <div className="flex flex-col gap-9 basis-2/5">
                                   <div className="text-2xl text-[#7db660] font-semibold">
                                     Từ vựng{" "}
@@ -198,20 +198,20 @@ export default function Vocabulary() {
                                 <div className="flex flex-col p-16 basis-3/5">
                                   <div className="flex flex-row basis-1/4">
                                     <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                      <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                      <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                         Từ vựng
                                       </div>
                                       <div>{lesson.vocab_name}</div>
                                     </div>
                                     <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                                      <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                      <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                         Kanji
                                       </div>
                                       <div>{lesson.vocab_kanji}</div>
                                     </div>
                                   </div>
                                   <div className="flex flex-col items-center justify-center gap-3 basis-1/4">
-                                    <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                    <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                       Nghĩa
                                     </div>
                                     <div>{lesson.vocab_meaning}</div>
@@ -219,7 +219,7 @@ export default function Vocabulary() {
 
                                   <div className="flex flex-col items-center gap-5 pt-10 basis-2/4 ">
                                     <div className="flex flex-col items-center justify-center gap-3">
-                                      <div className="bg-[#d1eeb0] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                      <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
                                         Ví dụ
                                       </div>
                                       <div className="flex flex-col gap-2">

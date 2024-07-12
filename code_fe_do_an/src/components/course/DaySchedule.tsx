@@ -40,7 +40,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             key={index}
             onClick={() => setDaySelected(day)}
           >
-            <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
+            <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
               Ngày {index + 1}: {day?.day_name}
             </AccordionTrigger>
             {daySelected?.lessons?.filter((item) => item.vocab_id)?.length >
@@ -49,8 +49,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
                 onClick={handleClickVocab}
                 className={
                   pathname?.includes("vocabulary")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#FFEFC0]"
-                    : "bg-[#fff8e1] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#FFEFC0]"
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
                 }
               >
                 Từ mới
@@ -62,8 +62,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
                 onClick={handleClickGrammar}
                 className={
                   pathname?.includes("grammar")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#FFEFC0]"
-                    : "bg-[#fff8e1] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#FFEFC0]"
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
                 }
               >
                 Ngữ pháp
@@ -75,8 +75,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
                 onClick={handleClickVideo}
                 className={
                   pathname?.includes("video")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#FFEFC0]"
-                    : "bg-[#fff8e1] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#FFEFC0]"
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
                 }
               >
                 Video bổ trợ
@@ -88,8 +88,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
                 onClick={handleClickKanji}
                 className={
                   pathname?.includes("kanji")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#FFEFC0]"
-                    : "bg-[#fff8e1] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#FFEFC0]"
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
                 }
               >
                 Kanji
@@ -98,10 +98,10 @@ export default function DaySchedule({ weekSelected, id = null }) {
           </AccordionItem>
         ))}
         <AccordionItem value="item-7">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
+          <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
             Kiểm tra tổng hợp
           </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+          <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1">
             Kiểm tra
           </AccordionContent>
         </AccordionItem>

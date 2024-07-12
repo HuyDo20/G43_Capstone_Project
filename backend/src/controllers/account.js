@@ -36,7 +36,10 @@ async function loginAccount(req, res) {
 		if (!user) {
 			return notfound(res);
 		}
-
+		if (user.status_id !== 2) {
+			//Status của hệ thống: 1 :pending, 2: active, 3: deactive, 
+			return forbidden(res, { message: "Account is deactivated" });
+		}
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return badRequest(res, INVALID_PASSWORD);
