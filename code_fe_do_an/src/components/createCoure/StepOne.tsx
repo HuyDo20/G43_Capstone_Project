@@ -96,6 +96,7 @@ const StepOne = ({
             type="number"
             name="week"
             value={course.week}
+            min={0}
             onChange={handleChangeInput}
           />
         </Form.Item>
