@@ -22,6 +22,7 @@ const {
 	INVALID_PASSWORD,
 	ACCOUNT_EXISTED,
 	ACCOUNT_CREATED,
+	ACCOUNT_DEACTIVE,
 } = require("../messages").userMessages;
 
 async function loginAccount(req, res) {
@@ -38,7 +39,7 @@ async function loginAccount(req, res) {
 		}
 		if (user.status_id !== 2) {
 			//Status của hệ thống: 1 :pending, 2: active, 3: deactive, 
-			return forbidden(res, { message: "Account is deactivated" });
+			return forbidden(res, ACCOUNT_DEACTIVE);
 		}
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {

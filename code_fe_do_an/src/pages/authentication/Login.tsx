@@ -92,7 +92,7 @@ export default function Login() {
         if (result.role_id === 1) {
           navigate("/admin")
       } else {
-        // alert(response.data?.message);
+          alert(response.data?.message);
       }
     }
     } catch (err) {
