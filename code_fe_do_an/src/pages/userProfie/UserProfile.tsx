@@ -215,7 +215,7 @@ export default function UserProfile() {
     );
   if (widthScreen <= 920 && widthScreen > 550)
     return (
-      <div className="bg-[#fff8e1] h-full w-full">
+      <div className="bg-[#f2fae9] h-full w-full">
         <Header />
         <div className="mb-10 bg-white shadow-md p-7">
           <div className="flex flex-row w-full h-[700px] bg-[#f1f8e9] rounded-3xl">

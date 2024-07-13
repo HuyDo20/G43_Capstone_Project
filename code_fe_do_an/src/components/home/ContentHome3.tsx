@@ -40,7 +40,7 @@ export default function ContentHome3() {
 if(window.innerWidth > 1024)
   return (
     <div className="flex flex-col items-center gap-y-10">
-      <div className="flex justify-center items-center text-center w-[350px] h-[50px] text-3xl font-serif bg-[#ffe0b2] text-[#16a34a] rounded-full shadow-md">
+      <div className="flex justify-center items-center text-center w-[350px] h-[50px] text-3xl font-serif bg-[#9dc46a] text-white rounded-full shadow-md">
         Quote tạo động lực học
       </div>
       <Carousel setApi={setApi} plugins={[plugin.current]}>

@@ -39,7 +39,7 @@ export default function Home() {
             <p className="text-center mb-16 text-4xl font-semibold text-[#6fb24d]">
               PHƯƠNG PHÁP HỌC TIẾNG NHẬT
             </p>
-            <div className="flex justify-center gap-16 ">
+            <div className="flex justify-center gap-16 mb-20">
               <ContentHome2
                 image={"/content2_p1.png"}
                 title="Chinh phục tiếng nhật thời đại 4.0"
@@ -85,7 +85,7 @@ export default function Home() {
             <p className="text-center mb-16 text-2xl font-semibold text-[#6fb24d]">
               PHƯƠNG PHÁP HỌC TIẾNG NHẬT
             </p>
-            <div className="flex justify-center gap-16 ">
+            <div className="flex justify-center gap-16 mb-20 ">
               <ContentHome2
                 image={"/content2_p1.png"}
                 title="Chinh phục tiếng nhật thời đại 4.0"
@@ -131,7 +131,7 @@ export default function Home() {
                 <p className="text-center mb-16 text-xl font-semibold text-[#6fb24d]">
                   PHƯƠNG PHÁP HỌC TIẾNG NHẬT
                 </p>
-                <div className="flex justify-center gap-16 ">
+                <div className="flex justify-center gap-16 mb-20 ">
                   <ContentHome2
                     image={"/content2_p1.png"}
                     title="Chinh phục tiếng nhật thời đại 4.0"
