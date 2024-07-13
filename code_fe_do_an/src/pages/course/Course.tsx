@@ -46,7 +46,7 @@ if(widthScreen >= 1100)
   return (
     <div
       className="w-full h-full bg-center bg-cover"
-      style={{ backgroundImage: `url("/public/bg2.png")` }}
+      style={{ backgroundImage: `url("/public/bg2.jpg")` }}
     >
     <div className="flex flex-col w-full h-full">
       <div className="bg-[#f2fae9]">
@@ -72,7 +72,7 @@ if(widthScreen >= 1100)
             })}
         </div>
       </div>
-      <div className="bg-[#f2fae9]">
+      <div >
         <Footer />
       </div>
     </div>
@@ -82,7 +82,7 @@ if(widthScreen < 1100)
   return (
     <div
       className="w-full h-full bg-center bg-cover"
-      style={{ backgroundImage: `url("/public/bg2.png")` }}
+      style={{ backgroundImage: `url("/public/bg2.jpg")` }}
     >
     <div className="flex flex-col w-full h-full">
       <div className="bg-[#f2fae9]">
@@ -108,7 +108,7 @@ if(widthScreen < 1100)
             })}
         </div>
       </div>
-      <div className="bg-[#f2fae9]">
+      <div >
         <Footer />
       </div>
     </div>

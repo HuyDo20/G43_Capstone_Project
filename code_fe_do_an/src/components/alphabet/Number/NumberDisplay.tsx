@@ -54,6 +54,19 @@ export default function NumberDisplay() {
     audio.play();
   };
 
+  const [widthScreen, setWidthScreen] = useState(window.innerWidth);
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setWidthScreen(window.innerWidth);
+    });
+    return () => {
+      window.removeEventListener("resize", () => {
+        setWidthScreen(window.innerWidth);
+      });
+    };
+  });
+  
+  if (widthScreen > 1200)
   return (
     <div className="container mx-auto">
       <div className="text-xl font-semibold text-[#7db660] ">SỐ ĐẾM</div>
@@ -81,4 +94,34 @@ export default function NumberDisplay() {
       </div>
     </div>
   );
+  if (widthScreen <= 1200)
+  return (
+    <div className="container mx-auto">
+      <div className="text-xl font-semibold text-[#7db660] ">SỐ ĐẾM</div>
+      {selectedNumber && (
+        <div className="p-4 text-center bg-[#7db660] border border-[#7db660] rounded-lg mt-7">
+          <h1 className="text-3xl font-semibold text-white">
+            {selectedNumber.romaji_character} - {selectedNumber.japanese_character}
+          </h1>
+        </div>
+      )}
+      <div className="grid grid-cols-5 gap-4 p-4 mt-5">
+        {numberList.map((number) => (
+          <button
+            key={number.alphabet_id}
+            onClick={() => handleNumberClick(number)}
+            className={`p-4 text-base font-semibold border w-full h-[80px] rounded-lg ${
+              selectedNumber?.romaji_character === number.romaji_character
+                ? "bg-[#7db660] text-white"
+                : "bg-white text-black"
+            }`}
+          >
+            {number.romaji_character}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  
 }
