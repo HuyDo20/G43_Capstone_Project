@@ -196,9 +196,11 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
         <Form.Item label="Point">
           <Input
+       
             value={userData.point}
             onChange={handleChangeInput}
             name="point"
+            readOnly
           />
         </Form.Item>
       </Form>
