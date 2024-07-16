@@ -326,7 +326,7 @@ const UserManagementPage: React.FC = () => {
                 }
                 value={selectedItem.role_id}
                 options={[
-                  { label: "Admin", value: 1 },
+              
                   { label: "Content Manager", value: 2 },
                   { label: "Content Creator", value: 3 },
                   { label: "User", value: 4 },
