@@ -7,10 +7,11 @@ import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
+import OtpVerification from "./OtpVerification";
 
 type RegisterProps = {
   openLogin: () => void;
-}
+};
 
 const emailSchema = z
   .string()
@@ -35,13 +36,13 @@ const registerSchema = z
     path: ["rewritePassword"],
   });
 
-export default function Register({openLogin}:RegisterProps) {
+export default function Register({ openLogin }: RegisterProps) {
   const [Account, setAccount] = useState({
-    full_name: "",
-    email: "",
-    password: "",
+    full_name: "Test User", // Default value for testing
+    email: "test@gmail.com", // Default value for testing
+    password: "password123", // Default value for testing
   });
-  const [RewritePassword, setRewritePassword] = useState("");
+  const [RewritePassword, setRewritePassword] = useState("password123"); // Default value for testing
   const [showPassword, setShowPassword] = useState(false);
   const [showRewritePassword, setRewriteShowPassword] = useState(false);
   const [errors, setErrors] = useState<{
@@ -51,33 +52,27 @@ export default function Register({openLogin}:RegisterProps) {
     rewritePassword?: string;
   }>({});
   const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    if (id === "rewritePassword") {
-      setRewritePassword(value);
-    } else {
-      setAccount({ ...Account, [id]: value });
-    }
+    setAccount((prevAccount) => ({ ...prevAccount, [id]: value }));
   };
+
   const handleCheckboxChange = (checked: boolean) => {
     setIsTermsChecked(checked);
   };
+
   const handleSubmit = async () => {
     try {
       registerSchema.parse({ ...Account, rewritePassword: RewritePassword });
       setErrors({});
-      // Thực hiện hành động sau khi xác thực thành công (ví dụ: gửi form)
       const request = await axios.post("/register", Account);
-      console.log(request);
       const response = request.data;
       if (response.statusCode === 200) {
-        alert(response.data?.message);
-        // clear form
-        // đóng modal
-        // mở cửa sổ login
-        openLogin();
+        setShowOtpVerification(true);
       } else {
-        alert(response.data?.message);
+        alert(response.data);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -94,6 +89,23 @@ export default function Register({openLogin}:RegisterProps) {
       }
     }
   };
+
+  const handleOtpVerified = () => {
+    alert("Đăng ký thành công!");
+    setShowOtpVerification(false);
+    openLogin();
+  };
+
+  if (showOtpVerification) {
+    return (
+      <OtpVerification
+        email={Account.email}
+        full_name={Account.full_name}
+        password={Account.password}
+        onOtpVerified={handleOtpVerified}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-row w-[1100px] h-[770px] px-20 py-10">
@@ -162,7 +174,7 @@ export default function Register({openLogin}:RegisterProps) {
                 type={showRewritePassword ? "text" : "password"}
                 id="rewritePassword"
                 value={RewritePassword}
-                onChange={handleInputChange}
+                onChange={(e) => setRewritePassword(e.target.value)}
                 placeholder="Tối thiểu 8 ký tự"
                 className="bg-[#f3f4f6]"
               />
@@ -183,9 +195,11 @@ export default function Register({openLogin}:RegisterProps) {
             )}
           </div>
           <div className="flex items-center pr-4 space-x-2">
-            <Checkbox id="terms"
+            <Checkbox
+              id="terms"
               checked={isTermsChecked}
-              onCheckedChange={handleCheckboxChange} />
+              onCheckedChange={handleCheckboxChange}
+            />
             <label
               htmlFor="terms"
               className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -201,7 +215,7 @@ export default function Register({openLogin}:RegisterProps) {
           <Button
             onClick={handleSubmit}
             className="w-full bg-[#70be58] shadow-md"
-            disabled={!isTermsChecked} 
+            disabled={!isTermsChecked}
           >
             Đăng ký
           </Button>
