@@ -147,10 +147,11 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         </Form.Item>
 
         <Form.Item label="Password">
-          <Input.Password
-            value={userData.password}
-            onChange={handleChangeInput}
-            name="password"
+        <Input.Password
+        value={userData.password  ? userData.password : '12345678'}
+        onChange={handleChangeInput}
+        name="password"
+        readOnly
           />
         </Form.Item>
 
@@ -196,7 +197,6 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
         <Form.Item label="Point">
           <Input
-       
             value={userData.point}
             onChange={handleChangeInput}
             name="point"
