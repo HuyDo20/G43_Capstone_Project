@@ -7,6 +7,9 @@ const ACCOUNT_DEACTIVE = "Tài khoản của bạn đã bị vô hiệu hoá";
 const ACCOUNT_EXISTED = "Email đã tồn tại.";
 const ACCOUNT_CREATED = "Tạo tài khoảng thành công!";
 const ACCOUNT_LOGIN = "Đăng nhập thành công!";
+const OTP_GENERATED = "Tạo mã OTP đăng ký thành công!";
+const OTP_EXPIRED = "OTP đã hết hạn";
+const OTP_INVALID = "OTP không hợp lệ";
 
 //update
 const ACCOUNT_UPDATED = "Cập nhật tài khoản thành công!";
@@ -28,5 +31,8 @@ module.exports = {
 	ACCOUNT_DELETED,
 	ACCOUNT_LOGOUT,
 	ACCOUNT_LOGIN,
+	OTP_GENERATED,
+	OTP_EXPIRED,
+	OTP_INVALID,
 	ACCOUNT_DEACTIVE,
 };
