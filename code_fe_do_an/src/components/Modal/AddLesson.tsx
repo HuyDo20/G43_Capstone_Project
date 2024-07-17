@@ -728,41 +728,41 @@ function AddLessonModal({
             </Form.Item>
 
             <Form.List name="grammar_examples">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Space
-                      key={key}
-                      style={{ display: "flex", marginBottom: 8 }}
-                      align="baseline"
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space
+                    key={key}
+                    style={{ display: 'flex', marginBottom: 8 }}
+                    align="baseline"
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'grammar_example']}
+                      rules={[{ required: true, message: 'Missing example' }]}
                     >
-                      <Form.Item
-                        {...restField}
-                        name={[name, "grammar_example"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter a grammar example",
-                          },
-                        ]}
-                      >
-                        <Input
-                          readOnly={mode === "view"}
-                          placeholder="Grammar Example"
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "grammar_example_meaning"]}
-                      >
-                        <Input
-                          readOnly={mode === "view"}
-                          placeholder="Example Meaning"
-                        />
-                      </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(name)} />
-                    </Space>
-                  ))}
+                      <Input
+                        readOnly={mode === "view"}
+                        placeholder="Grammar Example"
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'grammar_example_meaning']}
+                    >
+                      <Input
+                        readOnly={mode === "view"}
+                        placeholder="Example Meaning"
+                      />
+                    </Form.Item>
+                    {mode !== "view" && (
+                      <MinusCircleOutlined
+                        onClick={() => remove(name)}
+                      />
+                    )}
+                  </Space>
+                ))}
+                {mode !== "view" && (
                   <Form.Item>
                     <Button
                       type="dashed"
@@ -773,9 +773,10 @@ function AddLessonModal({
                       Add Grammar Example
                     </Button>
                   </Form.Item>
-                </>
-              )}
-            </Form.List>
+                )}
+              </>
+            )}
+          </Form.List>
 
             <Form.Item>
               {mode !== "view" && (
