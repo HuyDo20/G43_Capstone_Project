@@ -93,7 +93,6 @@ export default function Register({ openLogin }: RegisterProps) {
   };
 
   const handleOtpVerified = () => {
-    alert("Đăng ký thành công!");
     setShowOtpVerification(false);
     openLogin();
   };
