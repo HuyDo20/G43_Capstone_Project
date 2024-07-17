@@ -8,11 +8,11 @@ import {
 export default function SokuonHira() {
   return (
     <div className="flex flex-col gap-5">
-      <div className="text-xl font-semibold text-[#f1a72b] ">ÂM NGẮT</div>
+      <div className="text-xl font-semibold text-[#7db660] ">ÂM NGẮT</div>
       <div className="flex flex-col gap-3">
         <div className="bg-[#f1f1ee] w-full h-[165px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs1CircleFill size={30} color="#f1a72b" />
+            <Bs1CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Khái niệm</div>
           </div>
           <div>
@@ -27,7 +27,7 @@ export default function SokuonHira() {
 
         <div className="bg-[#f1f1ee] w-full h-[335px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs2CircleFill size={30} color="#f1a72b" />
+            <Bs2CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">
               Âm ngắt làm thay đổi nghĩa của từ
             </div>
@@ -51,19 +51,19 @@ export default function SokuonHira() {
             <div className="flex flex-col gap-3 pr-16">
               <div className="flex flex-col items-center gap-1">
                 <div className="text-xl">
-                  ぶ<span className="text-[#f1a72b] font-semibold">っ</span>か
+                  ぶ<span className="text-[#7db660] font-semibold">っ</span>か
                 </div>
                 <div>Mức giá</div>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <div className="text-xl">
-                  か<span className="text-[#f1a72b] font-semibold">っ</span>さい
+                  か<span className="text-[#7db660] font-semibold">っ</span>さい
                 </div>
                 <div>Vỗ tay</div>
               </div>
               <div className="flex flex-col items-center gap-1">
                 <div className="text-xl">
-                  お<span className="text-[#f1a72b] font-semibold">っ</span>と
+                  お<span className="text-[#7db660] font-semibold">っ</span>と
                 </div>
                 <div>Chồng</div>
               </div>
@@ -73,7 +73,7 @@ export default function SokuonHira() {
 
         <div className="bg-[#f1f1ee] w-full h-[500px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs3CircleFill size={30} color="#f1a72b" />
+            <Bs3CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách đọc</div>
           </div>
           <div className="flex flex-col gap-1 mt-7">
@@ -90,30 +90,30 @@ export default function SokuonHira() {
           <div className="flex flex-row pl-40">
             <div className="flex flex-col gap-7 basis-1/4">
               <div className="text-xl">
-                に<span className="text-[#f1a72b] font-semibold">っ</span>き
+                に<span className="text-[#7db660] font-semibold">っ</span>き
               </div>
               <div className="text-xl">
-                ざ<span className="text-[#f1a72b] font-semibold">っ</span>し
+                ざ<span className="text-[#7db660] font-semibold">っ</span>し
               </div>
               <div className="text-xl">
-                き<span className="text-[#f1a72b] font-semibold">っ</span>て
+                き<span className="text-[#7db660] font-semibold">っ</span>て
               </div>
               <div className="text-xl">
-                い<span className="text-[#f1a72b] font-semibold">っ</span>ぱい
+                い<span className="text-[#7db660] font-semibold">っ</span>ぱい
               </div>
             </div>
             <div className="flex flex-col basis-1/4 gap-7">
               <div className="text-xl">
-                ni<span className="text-[#f1a72b] font-semibold">kk</span>i
+                ni<span className="text-[#7db660] font-semibold">kk</span>i
               </div>
               <div className="text-xl">
-                za<span className="text-[#f1a72b] font-semibold">ss</span>hi
+                za<span className="text-[#7db660] font-semibold">ss</span>hi
               </div>
               <div className="text-xl">
-                ki<span className="text-[#f1a72b] font-semibold">tt</span>e
+                ki<span className="text-[#7db660] font-semibold">tt</span>e
               </div>
               <div className="text-xl">
-                i<span className="text-[#f1a72b] font-semibold">pp</span>ai
+                i<span className="text-[#7db660] font-semibold">pp</span>ai
               </div>
             </div>
             <div className="flex flex-col basis-1/4 gap-7">
@@ -127,7 +127,7 @@ export default function SokuonHira() {
 
         <div className="bg-[#f1f1ee] w-full h-[165px] rounded-lg p-5 gap-2 flex flex-col">
           <div className="flex flex-row items-center gap-5">
-            <Bs4CircleFill size={30} color="#f1a72b" />
+            <Bs4CircleFill size={30} color="#7db660" />
             <div className="text-xl font-semibold">Cách viết</div>
           </div>
           <div>

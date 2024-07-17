@@ -4,25 +4,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useNavigate } from "react-router-dom";
-export default function DaySchedule() {
-  const navigate = useNavigate();
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+export default function DaySchedule({ weekSelected, id = null }) {
+  const [daySelected, setDaySelected] = useState(() =>
+    weekSelected?.days ? weekSelected?.days[0] : {}
+  );
+  const { pathname } = useLocation();
+
 
   const handleClickVocab = () => {
-    navigate("/vocabulary");
+    window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/vocabulary`;
   };
 
   const handleClickKanji = () => {
-    navigate("/kanji");
+    window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/kanji`;
   };
   const handleClickGrammar = () => {
-    navigate("/grammar");
+    window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/grammar`;
   };
   const handleClickVideo = () => {
-    navigate("/video");
+    window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/video`;
   };
-
-  
 
   return (
     <div>
@@ -31,80 +34,74 @@ export default function DaySchedule() {
         collapsible
         className="flex flex-col w-full gap-3"
       >
-        <AccordionItem value="item-1">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 1
-          </AccordionTrigger>
-          <AccordionContent
-            onClick={handleClickVocab}
-            className="bg-[#fff8e1] pt-4 pl-20 mt-1"
+        {weekSelected?.days?.map((day, index) => (
+          <AccordionItem
+            value={`item-${index + 1}`}
+            key={index}
+            onClick={() => setDaySelected(day)}
           >
-            Từ mới
-          </AccordionContent>
-          <AccordionContent onClick={handleClickGrammar} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Ngữ pháp
-          </AccordionContent>
-          <AccordionContent onClick={handleClickVideo} className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Video bổ trợ
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-2">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 2
-          </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Từ mới
-          </AccordionContent>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Ngữ pháp
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-3">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 3
-          </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Từ mới
-          </AccordionContent>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Ngữ pháp
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-4">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 4
-          </AccordionTrigger>
-          <AccordionContent
-            onClick={handleClickKanji}
-            className="bg-[#fff8e1] pt-4 pl-20 mt-1"
-          >
-            Kanji
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-5">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 5
-          </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Từ mới
-          </AccordionContent>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Ngữ pháp
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-6">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
-            Ngày 6
-          </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
-            Kanji
-          </AccordionContent>
-        </AccordionItem>
+            <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
+              Ngày {index + 1}: {day?.day_name}
+            </AccordionTrigger>
+            {daySelected?.lessons?.filter((item) => item.vocab_id)?.length >
+              0 && (
+              <AccordionContent
+                onClick={handleClickVocab}
+                className={
+                  pathname?.includes("vocabulary")
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
+                }
+              >
+                Từ mới
+              </AccordionContent>
+            )}
+            {daySelected?.lessons?.filter((item) => item.grammar_id)?.length >
+              0 && (
+              <AccordionContent
+                onClick={handleClickGrammar}
+                className={
+                  pathname?.includes("grammar")
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
+                }
+              >
+                Ngữ pháp
+              </AccordionContent>
+            )}
+            {daySelected?.lessons?.filter((item) => item.video_id)?.length >
+              0 && (
+              <AccordionContent
+                onClick={handleClickVideo}
+                className={
+                  pathname?.includes("video")
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
+                }
+              >
+                Video bổ trợ
+              </AccordionContent>
+            )}
+            {daySelected?.lessons?.filter((item) => item.kanji_id)?.length >
+              0 && (
+              <AccordionContent
+                onClick={handleClickKanji}
+                className={
+                  pathname?.includes("kanji")
+                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
+                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
+                }
+              >
+                Kanji
+              </AccordionContent>
+            )}
+          </AccordionItem>
+        ))}
         <AccordionItem value="item-7">
-          <AccordionTrigger className="bg-[#ffefc0] pl-12 pr-6">
+          <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
             Kiểm tra tổng hợp
           </AccordionTrigger>
-          <AccordionContent className="bg-[#fff8e1] pt-4 pl-20 mt-1">
+          <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1">
             Kiểm tra
           </AccordionContent>
         </AccordionItem>

@@ -3,6 +3,7 @@ const cors = require("cors");
 const privateRouter = require("./src/routes");
 const { connectionMySQL } = require("./connection/db");
 const cron = require("node-cron");
+const path = require("path");
 
 // CSP protection
 const helmet = require("helmet");
@@ -36,6 +37,7 @@ app.use(
 		directives: {
 			defaultSrc: ["'self'"],
 			scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
+			frameAncestors: ["'self'", FE_ENDPOINT],
 		},
 	}),
 );
@@ -45,6 +47,8 @@ app.use(cookieParser());
 // app.get("/csrf-token", (req, res) => {
 // 	res.json({ csrfToken: req.csrfToken() });
 // });
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
 	res.send("Hello hacker lord to the 4user !!!");

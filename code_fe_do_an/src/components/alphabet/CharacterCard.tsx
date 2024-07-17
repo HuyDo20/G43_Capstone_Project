@@ -23,7 +23,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="p-4 text-center rounded-lg hover:bg-[#f1a72b] hover:text-white">
+        <div className="p-4 text-center rounded-lg hover:bg-[#7db660] hover:text-white">
           <div className="text-4xl font-semibold ">
             {character.japanese_character}
           </div>

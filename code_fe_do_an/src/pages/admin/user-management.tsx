@@ -1,36 +1,41 @@
-import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Form,
+  Input,
+  Modal,
   Select,
   Space,
   Table,
-  Tag,
-  Button,
-  Modal,
-  Form,
-  Input,
-  Spin,
+  Tag
 } from "antd";
 import axios from "axios";
-import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 interface User {
   id: number;
-  userName: string;
+  full_name: string;
   email: string;
-  phone: string;
-  campus: string;
-  name?: string;
+  avatar?: string;
   password?: string;
-  phoneNumber?: string;
-  isActive?: boolean;
+  phone_number?: string;
+  status_id?: number;
+  role_id: number;
+  point: number;
+  dob: string;
 }
 
 const UserDefaultData: User = {
   id: 0,
-  userName: "",
+  full_name: "",
   email: "",
-  phone: "",
-  campus: "",
+  avatar: "",
+  role_id: 4,
+  dob: "",
+  point: 0,
+  password: "",
+  phone_number: "",
+  status_id: 1,
 };
 
 interface ModalEditProps {
@@ -61,43 +66,57 @@ const ModalEdit: React.FC<ModalEditProps> = ({
     if (data) {
       setUserData({
         id: data.id,
-        name: data.name || "",
-        userName: data.userName,
+        full_name: data.full_name || "",
         password: "",
         email: data.email,
-        phoneNumber: data.phoneNumber || "",
-        campus: data.campus,
-        isActive: data.isActive,
+        phone_number: data.phone_number || "",
+        role_id: data.role_id || 4,
+        status_id: data.status_id || 2,
+        dob: data.dob || "",
+        point: data.point || 0,
       });
+    } else {
+      setUserData(UserDefaultData);
     }
   }, [data]);
 
-  const handleUpdateUserData = async () => {
+  const handleCreateAccount = async () => {
+    // Set default password if it is null or empty
+    if (!userData.password) {
+      userData.password = '12345678'; // Set your default password here
+    }
+  
+    // Adjusted validation check to ensure correct checking of null values
     if (
-      !userData.userName ||
-      !userData.name ||
-      !userData.email ||
-      !userData.phoneNumber ||
-      !userData.password
+      !userData.full_name.trim() ||
+      !userData.email.trim() ||
+      !userData.phone_number.trim() ||
+      !userData.password.trim() ||
+      !userData.role_id ||
+      userData.point === null || // Ensure point is not null
+      !userData.dob.trim() ||
+      !userData.status_id
     ) {
       alert("Please fill in all required fields");
       return;
     }
-
+  
     const phoneRegex = /^0\d{9}$/;
-    if (!phoneRegex.test(userData.phoneNumber)) {
+    if (!phoneRegex.test(userData.phone_number)) {
       alert("Phone number is invalid");
       return;
     }
-
+  
     try {
-      const endpoint = data
-        ? `/User/UpdateUser/${data.id}`
-        : "/User/CreateUser";
-      const response = await axios[data ? "put" : "post"](endpoint, userData);
-
-      if (response.status === 200 && response.data.isSucceed) {
-        alert(data ? "Update successful" : "Create successful");
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const response = await axios.post("/account", { ...userData, role_id: userData.role_id });
+      if (response.status === 201) {
+        alert("Create successful");
         setReload(true);
         setIsModalOpen(false);
       } else {
@@ -107,41 +126,22 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       console.error(error);
     }
   };
+  
 
   return (
     <Modal
-      title={data ? "Update User" : "Create User"}
+      title={"Create User"}
       visible={isModalOpen}
-      onOk={handleUpdateUserData}
+      onOk={handleCreateAccount}
       onCancel={handleCancel}
     >
       <Form style={{ maxWidth: 600 }} layout="vertical" autoComplete="off">
         <Form.Item label="User Name">
           <Input
-            value={userData.userName}
+            value={userData.full_name}
             onChange={handleChangeInput}
-            name="userName"
+            name="full_name"
           />
-        </Form.Item>
-
-        <Form.Item label="Name">
-          <Input
-            value={userData.name}
-            onChange={handleChangeInput}
-            name="name"
-          />
-        </Form.Item>
-
-        <Form.Item label="Campus">
-          <Select
-            onChange={(value) => setUserData({ ...userData, campus: value })}
-            value={userData.campus}
-          >
-            <Select.Option value="HN">HN</Select.Option>
-            <Select.Option value="HCM">HCM</Select.Option>
-            <Select.Option value="CT">CT</Select.Option>
-            <Select.Option value="DN">DN</Select.Option>
-          </Select>
         </Form.Item>
 
         <Form.Item label="Email">
@@ -152,19 +152,61 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="Phone Number">
-          <Input
-            value={userData.phoneNumber}
-            onChange={handleChangeInput}
-            name="phoneNumber"
+        <Form.Item label="Password">
+        <Input.Password
+        value={userData.password  ? userData.password : '12345678'}
+        onChange={handleChangeInput}
+        name="password"
+        readOnly
           />
         </Form.Item>
 
-        <Form.Item label="Password">
-          <Input.Password
-            value={userData.password}
+        <Form.Item label="Status">
+          <Select
+            onChange={(value) => setUserData({ ...userData, status_id: value })}
+            value={userData.status_id}
+          >
+            <Select.Option value={2}>Active</Select.Option>
+            <Select.Option value={3}>Deactive</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Role">
+          <Select
+            onChange={(value) => setUserData({ ...userData, role_id: value })}
+            value={userData.role_id}
+            options={[
+              { label: "Admin", value: 1 },
+              { label: "Content Manager", value: 2 },
+              { label: "Content Creator", value: 3 },
+              { label: "User", value: 4 },
+            ]}
+          />
+        </Form.Item>
+
+        <Form.Item label="Phone Number">
+          <Input
+            value={userData.phone_number}
             onChange={handleChangeInput}
-            name="password"
+            name="phone_number"
+          />
+        </Form.Item>
+
+        <Form.Item label="DOB">
+          <Input
+            value={userData.dob}
+            onChange={handleChangeInput}
+            name="dob"
+            type="date"
+          />
+        </Form.Item>
+
+        <Form.Item label="Point">
+          <Input
+            value={userData.point}
+            onChange={handleChangeInput}
+            name="point"
+            readOnly
           />
         </Form.Item>
       </Form>
@@ -179,6 +221,41 @@ const UserManagementPage: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<User | null>(null);
 
   const handleDeleteUser = async (id: number) => {};
+
+  const handleUpdateUserData = async () => {
+    if (!selectedItem.role_id || !selectedItem.status_id) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const response = await axios.put(
+        `/account/${selectedItem.account_id}`,
+        selectedItem, {
+          headers: {
+            Authorization : token
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Update successful");
+        setReload(true);
+        // setIsModalOpen(false);
+        setSelectedItem(null);
+      } else {
+        alert("Operation failed");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const columns = [
     {
@@ -222,71 +299,104 @@ const UserManagementPage: React.FC = () => {
       title: "Role",
       dataIndex: "role_id",
       key: "role_id",
-      render: (roleId: number) => {
+      render: (_: any, user: User) => {
+        const { role_id, account_id } = user;
         const bgColor =
-          roleId === 1
+          role_id === 1
             ? "cyan"
-            : roleId === 2
+            : role_id === 2
             ? "green"
-            : roleId === 3
+            : role_id === 3
             ? "volcano"
-            : roleId === 4
+            : role_id === 4
             ? "magenta"
             : "";
         const content =
-          roleId === 1
+          role_id === 1
             ? "Admin"
-            : roleId === 2
+            : role_id === 2
             ? "Content manager"
-            : roleId === 3
+            : role_id === 3
             ? "Content creator"
-            : roleId === 4
+            : role_id === 4
             ? "User"
             : "";
         return (
-          <Tag color={bgColor} key={roleId}>
-            {content}
-          </Tag>
+          <>
+            {selectedItem?.account_id !== account_id ? (
+              <Tag color={bgColor} key={role_id}>
+                {content}
+              </Tag>
+            ) : (
+              <Select
+                onChange={(value) =>
+                  setSelectedItem({ ...selectedItem, role_id: value })
+                }
+                value={selectedItem.role_id}
+                options={[
+              
+                  { label: "Content Manager", value: 2 },
+                  { label: "Content Creator", value: 3 },
+                  { label: "User", value: 4 },
+                ]}
+              />
+            )}
+          </>
         );
       },
     },
     {
       title: "Status",
-      dataIndex: "status_id",
+      // dataIndex: "status_id",
       key: "status_id",
-      render: (roleId: number) => {
+      render: (_: any, user: User) => {
+        const { status_id, account_id } = user;
         const bgColor =
-          roleId === 1
+          status_id === 1
             ? "cyan"
-            : roleId === 2
+            : status_id === 2
             ? "green"
-            : roleId === 3
+            : status_id === 3
             ? "volcano"
-            : roleId === 4
+            : status_id === 4
             ? "magenta"
-            : roleId === 5
+            : status_id === 5
             ? "magenta"
             : "";
         const content =
-          roleId === 1
+          status_id === 1
             ? "Pending"
-            : roleId === 2
+            : status_id === 2
             ? "active"
-            : roleId === 3
+            : status_id === 3
             ? "deactive"
-            : roleId === 4
+            : status_id === 4
             ? "done"
-            : roleId === 5
+            : status_id === 5
             ? "undone"
             : "";
         return (
-          <Tag
-            color={bgColor}
-            key={roleId}
-            style={{ textTransform: "capitalize" }}
-          >
-            {content}
-          </Tag>
+          <>
+            {selectedItem?.account_id !== account_id ? (
+              <Tag
+                color={bgColor}
+                key={status_id}
+                style={{ textTransform: "capitalize" }}
+              >
+                {content}
+              </Tag>
+            ) : (
+              <Select
+                onChange={(value) =>
+                  setSelectedItem({ ...selectedItem, status_id: value })
+                }
+                value={selectedItem.status_id}
+              >
+                <Select.Option value={2}>Active</Select.Option>
+                <Select.Option value={3}>Deactive</Select.Option>
+              </Select>
+            )}
+          </>
         );
       },
     },
@@ -303,22 +413,34 @@ const UserManagementPage: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: User) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              setIsModalOpen(true);
-              setSelectedItem(record);
-            }}
-          >
-            <AiOutlineEdit style={{ fontSize: "20px", color: "orange" }} />
-          </a>
+      render: (_: any, record: User) => {
+        return (
+          <>
+            {selectedItem?.account_id === record?.account_id ? (
+              <Button type="primary" onClick={handleUpdateUserData}>
+                Complete
+              </Button>
+            ) : (
+              <Space size="middle">
+                <a
+                  onClick={() => {
+                    // setIsModalOpen(true);
+                    setSelectedItem(record);
+                  }}
+                >
+                  <AiOutlineEdit
+                    style={{ fontSize: "20px", color: "orange" }}
+                  />
+                </a>
 
-          <a onClick={() => handleDeleteUser(record.id)}>
-            <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
-          </a>
-        </Space>
-      ),
+                {/* <a onClick={() => handleDeleteUser(record.id)}>
+                  <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
+                </a> */}
+              </Space>
+            )}
+          </>
+        );
+      },
     },
   ];
 
@@ -375,7 +497,6 @@ const UserManagementPage: React.FC = () => {
         data={selectedItem}
         setReload={setReload}
       />
-      
     </>
   );
 };

@@ -16,9 +16,12 @@ export default function GetNewPWSuccess() {
             <div>Chọn tiếp tục để quay lại trang chủ</div>
           </div>
         </div>
+
         <Link to={"/"}>
-            <Button className="w-full mt-5">Tiếp tục</Button>
-          </Link>
+          <div className="flex items-center justify-center">
+            <Button className="w-1/3">Tiếp tục</Button>
+          </div>
+        </Link>
       </div>
     </div>
   );

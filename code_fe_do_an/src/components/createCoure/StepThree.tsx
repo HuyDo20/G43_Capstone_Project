@@ -1,7 +1,7 @@
 import { Typography, Flex, Button, Space } from "antd";
 import { FcIdea } from "react-icons/fc";
 
-function StepThree({ handlePreviousStep, handleSubmit, waitingCreate }) {
+function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
   return (
     <>
       <Space>
@@ -11,9 +11,13 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate }) {
           level={5}
           style={{ marginTop: "3%", maxWidth: "600px" }}
         >
-          Congratulations! You've completed the setup. By clicking "Yes" below,
+          {id
+            ? `Congratulations! You've completed the setup. By clicking "Yes" below,
+          you can update course information. This process may take a few minutes.
+          Please wait until it is finished.`
+            : `Congratulations! You've completed the setup. By clicking "Yes" below,
           you can create a new course. This process may take a few minutes.
-          Please wait until it is finished.
+          Please wait until it is finished.`}
         </Typography.Title>
       </Space>
       <Flex

@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button, Table, Tag, Modal, Form, Input, Select } from "antd";
+import { useAuth } from "@/hook/AuthContext";
+import { Button, Form, Input, Modal, Table } from "antd";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaRegEye } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface Course {
   course_id: number;
@@ -16,7 +20,7 @@ const defaultCourseData: Course = {
   course_id: 0,
   course_name: "",
   description: "",
-  course_status_id: 2,
+  course_status_id: 1,
   course_image: "",
   week: 0,
 };
@@ -94,11 +98,30 @@ const CourseModal: React.FC<CourseModalProps> = ({
 };
 
 const CoursesManagementPage: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { handleFetch } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [reload, setReload] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  const handleDeleteCourse = async (id) => {
+    const confirm = window.confirm(
+      `Are you sure you want to delete this course?`
+    );
+    if (confirm) {
+      const request = await handleFetch({
+        method: "patch",
+        url: `/course/${id}`,
+      });
+      if (request.statusCode === 200) {
+        alert(`Delete successfully`);
+        setReload(true);
+      } else {
+        alert(`Delete failed`);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -124,6 +147,7 @@ const CoursesManagementPage: React.FC = () => {
     };
     if (reload) {
       fetchCourses();
+      setReload(false);
     }
   }, [reload]);
 
@@ -132,6 +156,20 @@ const CoursesManagementPage: React.FC = () => {
       title: "Course Name",
       dataIndex: "course_name",
       key: "course_name",
+    },
+    {
+      title: "Course Image",
+      dataIndex: "course_image",
+      key: "course_image",
+      render: (course_image) => (
+        <img
+          src={
+            course_image?.split(", ")[1] || course_image?.split(", ")[0] || ""
+          }
+          style={{ maxWidth: "120px" }}
+          alt="thumbnail course"
+        />
+      ),
     },
     {
       title: "Description",
@@ -147,21 +185,38 @@ const CoursesManagementPage: React.FC = () => {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Course) => (
-        <Button
-          onClick={() => {
-            setSelectedCourse(record);
-            setIsModalOpen(true);
-          }}
-        >
-          Edit
-        </Button>
+        <div className="flex flex-row gap-2">
+            <FaRegEye size={24} color="#2E75B5"
+              onClick={() => {
+                navigate(`/admin/course-management/${record.course_id}`, {
+                  state: { mode: "view" },
+                });
+              }}
+            >
+              View
+            </FaRegEye>
+              <CiEdit size={24} color="#feb32a"
+                onClick={() => {
+                  navigate(`/admin/course-management/${record.course_id}`);
+                }}
+              >
+                Edit
+              </CiEdit>
+              <MdDeleteOutline size={24} color="red"
+                onClick={() => {
+                  handleDeleteCourse(record.course_id);
+                }}
+              >
+                Delete
+              </MdDeleteOutline>
+        </div>
       ),
     },
   ];
 
   return (
     <>
-      <Button
+      {/* <Button
         type="primary"
         onClick={() => {
           navigate("/admin/course-management/create");
@@ -169,7 +224,7 @@ const CoursesManagementPage: React.FC = () => {
         style={{ marginBottom: "8px" }}
       >
         Add Course
-      </Button>
+      </Button> */}
       <Table dataSource={courses} columns={columns} rowKey="course_id" />
       <CourseModal
         isModalOpen={isModalOpen}

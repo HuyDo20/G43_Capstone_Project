@@ -3,11 +3,10 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { GoogleButton } from "@/components/authentication";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
-import OtpVerification from "./OtpVerification";
 
 type RegisterProps = {
   openLogin: () => void;
@@ -36,7 +35,7 @@ const registerSchema = z
     path: ["rewritePassword"],
   });
 
-export default function Register({ openLogin }: RegisterProps) {
+export default function Register({openLogin}:RegisterProps) {
   const [Account, setAccount] = useState({
     full_name: "Test User", // Default value for testing
     email: "test@gmail.com", // Default value for testing
@@ -45,6 +44,7 @@ export default function Register({ openLogin }: RegisterProps) {
   const [RewritePassword, setRewritePassword] = useState("password123"); // Default value for testing
   const [showPassword, setShowPassword] = useState(false);
   const [showRewritePassword, setRewriteShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<{
     full_name?: string;
     email?: string;
@@ -107,8 +107,19 @@ export default function Register({ openLogin }: RegisterProps) {
     );
   }
 
-  return (
-    <div className="flex flex-row w-[1100px] h-[770px] px-20 py-10">
+  const [widthScreen, setWidthScreen] = useState(window.innerWidth);
+  useEffect(()=>{
+    window.addEventListener('resize', () => {
+      setWidthScreen(window.innerWidth)
+    })
+    return () => {
+      window.removeEventListener('resize', () => {
+        setWidthScreen(window.innerWidth)
+      })
+    }
+  })
+  if (widthScreen >= 1000) return (
+    <div className="flex flex-row w-5/6 h-[770px] justify-between py-10">
       <div className="flex flex-col gap-6 pr-10 basis-1/2">
         <div className="text-3xl font-semibold text-center">
           Đăng ký tài khoản
@@ -205,8 +216,8 @@ export default function Register({ openLogin }: RegisterProps) {
               className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               <span>
-                Tôi đồng ý với các <strong>điều khoản sử dụng</strong> và{" "}
-                <strong>chính sách bảo mật</strong> của website
+                Tôi đồng ý với các <strong onClick={()=>{navigate("/policy")}}>điều khoản sử dụng</strong> và{" "}
+                <strong onClick={()=>{navigate("/security")}}>chính sách bảo mật</strong> của website
               </span>
             </label>
           </div>
@@ -226,6 +237,124 @@ export default function Register({ openLogin }: RegisterProps) {
       <div className="basis-1/2">
         <img className="w-full h-full" src="/login-register.png" alt="" />
       </div>
+    </div>
+  );
+  
+  if (widthScreen < 1000) return (
+    <div className="flex flex-row w-full h-[770px] justify-center items-center py-10">
+      <div className="flex flex-col w-5/6 gap-6">
+        <div className="text-3xl font-semibold text-center">
+          Đăng ký tài khoản
+        </div>
+        <div className="flex flex-col gap-5">
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="full_name">Họ và tên</Label>
+            <Input
+              type="text"
+              id="full_name"
+              value={Account.full_name}
+              onChange={handleInputChange}
+              placeholder="Nhập họ và tên"
+              className="bg-[#f3f4f6]"
+            />
+            {errors.full_name && (
+              <p style={{ color: "red" }}>{errors.full_name}</p>
+            )}
+          </div>
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              value={Account.email}
+              onChange={handleInputChange}
+              placeholder="Nhập email"
+              className="bg-[#f3f4f6]"
+            />
+            {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+          </div>
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="password">Mật khẩu</Label>
+            <div className="relative flex flex-row items-center">
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={Account.password}
+                onChange={handleInputChange}
+                placeholder="Tối thiểu 8 ký tự"
+                className="bg-[#f3f4f6]"
+              />
+              {showPassword ? (
+                <FaRegEye
+                  className="absolute cursor-pointer right-3"
+                  onClick={() => setShowPassword(false)}
+                />
+              ) : (
+                <FaRegEyeSlash
+                  className="absolute cursor-pointer right-3"
+                  onClick={() => setShowPassword(true)}
+                />
+              )}
+            </div>
+            {errors.password && (
+              <p style={{ color: "red" }}>{errors.password}</p>
+            )}
+          </div>
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="rewritePassword">Nhập lại mật khẩu</Label>
+            <div className="relative flex flex-row items-center">
+              <Input
+                type={showRewritePassword ? "text" : "password"}
+                id="rewritePassword"
+                value={RewritePassword}
+                onChange={handleInputChange}
+                placeholder="Tối thiểu 8 ký tự"
+                className="bg-[#f3f4f6]"
+              />
+              {showRewritePassword ? (
+                <FaRegEye
+                  className="absolute cursor-pointer right-3"
+                  onClick={() => setRewriteShowPassword(false)}
+                />
+              ) : (
+                <FaRegEyeSlash
+                  className="absolute cursor-pointer right-3"
+                  onClick={() => setRewriteShowPassword(true)}
+                />
+              )}
+            </div>
+            {errors.rewritePassword && (
+              <p style={{ color: "red" }}>{errors.rewritePassword}</p>
+            )}
+          </div>
+          <div className="flex items-center pr-4 space-x-2">
+            <Checkbox id="terms"
+              checked={isTermsChecked}
+              onCheckedChange={handleCheckboxChange} />
+            <label
+              htmlFor="terms"
+              className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              <span>
+                Tôi đồng ý với các <strong>điều khoản sử dụng</strong> và{" "}
+                <strong>chính sách bảo mật</strong> của website
+              </span>
+            </label>
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <Button
+            onClick={handleSubmit}
+            className="w-full bg-[#70be58] shadow-md"
+            disabled={!isTermsChecked} 
+          >
+            Đăng ký
+          </Button>
+          <div className="text-center">Hoặc</div>
+          <GoogleButton />
+        </div>
+      </div>
+      
     </div>
   );
 }

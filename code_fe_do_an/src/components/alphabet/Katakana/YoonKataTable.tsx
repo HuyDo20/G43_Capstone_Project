@@ -46,7 +46,7 @@ export default function KatakanaAmGhepTable() {
 
   return (
 <div className="flex flex-col gap-5">
-      <div className="text-xl font-semibold text-[#f1a72b] ">ÂM GHÉP</div>
+      <div className="text-xl font-semibold text-[#7db660] ">ÂM GHÉP</div>
       <div className="w-full h-[1180px] p-1 rounded-2xl">
         <div className="w-full h-[1130px] ">
           <div className="grid grid-cols-3 gap-4">

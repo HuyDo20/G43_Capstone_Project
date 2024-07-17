@@ -5,8 +5,8 @@ import AuthProvider from "./hook/AuthContext";
 import Alphabet from "./pages/alphabet/Alphabet";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import GetAuthenticationCode from "./pages/authentication/GetAuthenticationCode";
-import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
 import GetNewPassword from "./pages/authentication/GetNewPassword";
+import GetNewPWSuccess from "./pages/authentication/GetNewPWSuccess";
 import Course from "./pages/course/Course";
 import Grammar from "./pages/course/Grammar";
 import GrammarDetail from "./pages/course/GrammarDetail";
@@ -16,6 +16,8 @@ import Video from "./pages/course/Video";
 import Vocabulary from "./pages/course/Vocabulary";
 import Home from "./pages/home/Home";
 import UserProfile from "./pages/userProfie/UserProfile";
+import Security from "./pages/home/Security";
+import Policy from "./pages/home/Policy";
 
 const contentStyle = {
   padding: 50,
@@ -58,12 +60,20 @@ function App() {
             <Route path="/userProfile" element={<UserProfile />} />
             <Route path="/alphabet" element={<Alphabet />} />
             <Route path="/course" element={<Course />} />
-            <Route path="/learningByWeek" element={<LearningByWeek />} />
-            <Route path="/vocabulary" element={<Vocabulary />} />
-            <Route path="/kanji" element={<Kanji />} />
-            <Route path="/grammar" element={<Grammar />} />
-            <Route path="/video" element={<Video />} />
-            <Route path="/grammar/detail" element={<GrammarDetail />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/policy" element={<Policy />} />
+            <Route path="/learningByWeek/:id" element={<LearningByWeek />} />
+            <Route
+              path="/:id/:week_id/:day_id/vocabulary"
+              element={<Vocabulary />}
+            />
+            <Route path="/:id/:week_id/:day_id/kanji" element={<Kanji />} />
+            <Route path="/:id/:week_id/:day_id/grammar" element={<Grammar />} />
+            <Route path="/:id/:week_id/:day_id/video" element={<Video />} />
+            <Route
+              path="/:id/:week_id/:day_id/grammar/detail/:grammar_id"
+              element={<GrammarDetail />}
+            />
             <Route path="/admin/*" element={<AdminRoutes />} />
           </Routes>
         </Suspense>
