@@ -164,6 +164,43 @@ async function getListUser(req, res) {
 	}
 }
 
+
+async function createUser(req, res) {
+	try {
+	  const { full_name, email, password, phone_number, dob, avatar, role_id, point, status_id } = req.body;
+  
+	  // Check if the account already exists
+	  const existingUser = await Account.findOne({
+		where: {
+		  [Op.or]: [{ email: email }],
+		},
+	  });
+  
+	  if (existingUser) {
+		return badRequest(res, ACCOUNT_EXISTED);
+	  }
+	  // Hash the password
+	  const hashedPassword = await bcrypt.hash(password, 10);
+	  // Create the new account
+	  const newAccount = await Account.create({
+		full_name,
+		email,
+		password: hashedPassword,
+		phone_number,
+		dob,
+		avatar,
+		role_id: role_id || 4, 
+		point: point || 0, 
+		status_id: status_id || 2, 
+	  });
+  
+	  return created(res, ACCOUNT_CREATED, newAccount);
+	} catch (err) {
+	  console.error("Error during account creation:", err);
+	  return error(res);
+	}
+  }
+
 async function updateUserById(req, res) {
 	const { full_name, phone_number, dob, avatar, role_id, point, status_id, password } = req.body;
 	const { account_id } = req.params;
@@ -292,9 +329,11 @@ module.exports = {
 	loginAccount,
 	registerAccount,
 	getListUser,
+	createUser,
 	updateUserById,
 	deleteUserById,
 	getUserById,
 	registerAccountSystem,
 	logoutAccount,
+
 };
