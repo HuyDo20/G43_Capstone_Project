@@ -18,6 +18,9 @@ import Home from "./pages/home/Home";
 import UserProfile from "./pages/userProfie/UserProfile";
 import Security from "./pages/home/Security";
 import Policy from "./pages/home/Policy";
+import AboutDNLS from "./pages/about/AboutDNLS";
+import AboutTextbook from "./pages/about/AboutTextbook";
+import DetailTextbook from "./pages/about/DetailTextbook";
 
 const contentStyle = {
   padding: 50,
@@ -58,6 +61,9 @@ function App() {
             <Route path="/getNewPassword" element={<GetNewPassword />} />
             <Route path="/getNewPWSuccess" element={<GetNewPWSuccess />} />
             <Route path="/userProfile" element={<UserProfile />} />
+            <Route path="/aboutDNLS" element={<AboutDNLS />} />
+            <Route path="/aboutDekiru" element={<AboutTextbook />} />
+            <Route path="/detailTextbook" element={<DetailTextbook />} />
             <Route path="/alphabet" element={<Alphabet />} />
             <Route path="/course" element={<Course />} />
             <Route path="/security" element={<Security />} />

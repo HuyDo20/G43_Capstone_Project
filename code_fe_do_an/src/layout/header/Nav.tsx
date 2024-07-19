@@ -95,8 +95,8 @@ export function Nav() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="gap-3 p-6 w-60">
-              <ListItem href="/" title="Về trang web" />
-              <ListItem href="/" title="Về giáo trình Dekiru Nihongo" />
+              <ListItem href="/aboutDNLS" title="Về trang web" />
+              <ListItem href="/aboutDekiru" title="Về giáo trình Dekiru Nihongo" />
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

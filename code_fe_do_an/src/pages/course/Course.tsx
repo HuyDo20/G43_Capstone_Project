@@ -3,7 +3,6 @@ import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { CourseResponse } from "@/type";
 import axios from "axios";
-import { url } from "inspector";
 import { useEffect, useState } from "react";
 
 export default function Course() {
