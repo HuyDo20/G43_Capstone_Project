@@ -14,7 +14,7 @@ const { generateToken } = require("../middleware/auth");
 const { omitPassword } = require("../helper/user");
 const RANDOM_OTP_CHARACTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID } = require("../messages/user");
+const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS } = require("../messages/user");
 
 const {
 	ACCOUNT_UPDATED,
@@ -316,6 +316,32 @@ async function updateUserById(req, res) {
 	}
 }
 
+
+async function changePassword(req, res) {
+	const { currentPassword, newPassword } = req.body;
+	const { account_id } = req.params;
+	try {
+	  const user = await Account.findOne({ where: { account_id } });
+	  if (!user) {
+		return notfound(res);
+	  }
+  
+	  const isMatch = await bcrypt.compare(currentPassword, user.password);
+	  if (!isMatch) {
+		return responseWithData(res, 202, CURRENT_PASSWORD_WRONG);
+	  }
+  
+	  let hashedPassword = await bcrypt.hash(newPassword, 10);
+	  user.password = hashedPassword;
+	  await user.save();
+	  return ok(res, CHANGE_PASSWORD_SUCCESS);
+	} catch (err) {
+	  console.error("Error changing password:", err);
+	  return error(res);
+	}
+  }
+  
+
 async function deleteUserById(req, res) {
 	try {
 		const { account_id } = req.params;
@@ -411,6 +437,6 @@ module.exports = {
 	deleteUserById,
 	getUserById,
 	registerAccountSystem,
-	logoutAccount,verifyOtp,resendOtp
+	logoutAccount,verifyOtp,resendOtp,changePassword
 
 };
