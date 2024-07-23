@@ -13,8 +13,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useAuth } from "@/hook/AuthContext";
 import Header from "@/layout/header/Header";
@@ -89,10 +87,8 @@ export default function Vocabulary() {
             Authorization: token,
           },
         });
-        console.log(request);
         if (request.status === 200) {
-          const learnedVocabIds = request.data.map((item) => item.vocabulary_id);
-          console.log(JSON.stringify(request.data));
+          const learnedVocabIds = request.data.map((item) => item.vocabulary_id);      
           setLearnedVocab(new Set(learnedVocabIds));
         }
         else{
@@ -116,7 +112,7 @@ export default function Vocabulary() {
     audio.play();
   };
 
-  const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id }) => {
+  const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id}) => {
     const [viewedItems, setViewedItems] = useState(new Set());
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
@@ -142,7 +138,8 @@ export default function Vocabulary() {
     }, [itemRefs.current]);
   
     useEffect(() => {
-      if (dayCurrent?.lessons?.length === viewedItems.size) {
+      const numberOfVocabulary = dayCurrent?.lessons?.filter(lesson => lesson.vocab_id !== undefined).length;
+      if (numberOfVocabulary === viewedItems.size) {
         setAllViewed(true);
       }
     }, [viewedItems, dayCurrent]);
@@ -165,11 +162,17 @@ export default function Vocabulary() {
         alert('An error occurred');
       }
     };
+ 
+    const isLearned = (vocabId) => {
+      const learned = learnedVocab.has(vocabId);
+      return learned;
+    };
   
-    const isLearned = (vocabId) => learnedVocab.has(vocabId);
-  
-    const isAllLearned = dayCurrent?.lessons?.every((lesson) => isLearned(lesson.vocab_id));
-  
+    // Filter lessons with defined vocab_id and check if all are learned
+    const isAllLearned = dayCurrent?.lessons
+      ?.filter((lesson) => lesson.vocab_id !== undefined)
+      ?.every((lesson) => isLearned(lesson.vocab_id));
+
     const handleSummaryClick = (index) => {
         setActiveIndex(index);
         const targetItem = itemRefs.current[index];
@@ -401,7 +404,7 @@ export default function Vocabulary() {
                   currentIndex={0}
                   handleViewItem={(index) => console.log('View item', index)}
                   handlePlayAudio={(audioUrl) => handlePlayAudio(audioUrl)}
-                  day_id={day_id}
+                  day_id={day_id}         
                 />
               </div>
             </div>
