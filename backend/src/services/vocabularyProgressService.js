@@ -2,25 +2,20 @@
 const { VocabularyProgress } = require('../../models');
 
 const updateVocabularyProgress = async (accountId, vocabularyId) => {
-  console.log("try to update: " + accountId + vocabularyId);
+
   try {
     let progress = await VocabularyProgress.findOne({
       where: { account_id: accountId, vocabulary_id: vocabularyId }
     });
-    console.log("Find result: ", progress);
-
     if (progress) {
       progress.learned = true;
       await progress.save();
-      console.log("Updated progress: ", progress);
     } else {
-      console.log("Creating new progress entry");
       progress = await VocabularyProgress.create({
         account_id: accountId,
         vocabulary_id: vocabularyId,
         learned: true
       });
-      console.log("Created progress: ", progress);
     }
     return progress;
   } catch (error) {

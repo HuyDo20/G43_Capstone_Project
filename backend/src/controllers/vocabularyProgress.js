@@ -26,6 +26,7 @@ const updateAllVocabularyProgress = async (req, res) => {
 const getUserVocabularyProgress = async (req, res) => {
   const { accountId } = req.params;
   try {
+
     const progress = await vocabularyProgressService.getUserVocabularyProgress(accountId);
     return res.status(200).json(progress);
   } catch (error) {

@@ -145,7 +145,11 @@ export default function Vocabulary() {
     }, [viewedItems, dayCurrent]);
   
     const handleComplete = async () => {
-      const vocabularyIds = dayCurrent?.lessons?.map(lesson => lesson.vocab_id);
+      const vocabularyIds = dayCurrent?.lessons
+      ?.filter((lesson) => lesson.vocab_id !== undefined)
+      ?.map((lesson) => lesson.vocab_id);
+      // const vocabularyIds = dayCurrent?.lessons?.map(lesson => lesson.vocab_id);
+      console.log(vocabularyIds);
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
@@ -157,6 +161,7 @@ export default function Vocabulary() {
             Authorization: token,
           },
         });
+        setReload(true);
       } catch (error) {
         console.error("Error update vocabulary process", error);
         alert('An error occurred');
