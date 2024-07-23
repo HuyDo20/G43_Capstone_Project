@@ -77,5 +77,11 @@ db.Course.hasMany(db.CourseEnrollment, { foreignKey: "course_id" });
 db.CourseEnrollment.belongsTo(db.Course, { foreignKey: "course_id" });
 
 
+db["Account"].hasMany(db["VocabularyProgress"], { foreignKey: "account_id" });
+db["VocabularyProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+db["Vocabulary"].hasMany(db["VocabularyProgress"], { foreignKey: "vocabulary_id" });
+db["VocabularyProgress"].belongsTo(db["Vocabulary"], { foreignKey: "vocabulary_id" });
+
 
 module.exports = db;
