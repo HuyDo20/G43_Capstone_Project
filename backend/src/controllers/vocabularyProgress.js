@@ -14,9 +14,10 @@ const updateVocabularyProgress = async (req, res) => {
 const updateAllVocabularyProgress = async (req, res) => {
   const { userId, vocabularyIds } = req.body;
   try {
-    const result = await vocabularyProgressService.updateAllVocabularyProgress(userId, vocabularyIds);
-    return res.status(200).json(result);
-  } catch (error) {
+    // const result = await vocabularyProgressService.updateAllVocabularyProgress(userId, vocabularyIds);
+    console.log(vocabularyIds);
+    return res.status(200).json({ message: "ok"});
+    } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };

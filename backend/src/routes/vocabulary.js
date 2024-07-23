@@ -18,8 +18,8 @@ router.post("/vocabulary", checkAuthAndRole([1, 3]), createNewVocab);
 router.put("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), updateVocabById);
 router.patch("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), deleteVocabById);
 
-router.post('/update', vocabularyProgressController.updateVocabularyProgress);
-router.get('/user/:userId', vocabularyProgressController.getUserVocabularyProgress);
-router.post('/update-all', vocabularyProgressController.updateAllVocabularyProgress); 
+router.post('/update',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.updateVocabularyProgress);
+router.get('/user/:userId',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.getUserVocabularyProgress);
+router.post('/update-all',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.updateAllVocabularyProgress); 
 
 module.exports = router;
