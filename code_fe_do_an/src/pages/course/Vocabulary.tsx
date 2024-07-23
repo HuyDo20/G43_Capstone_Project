@@ -29,10 +29,10 @@ export default function Vocabulary() {
   const [courseData, setCourseData] = useState([]);
   const [weekSelected, setWeekSelected] = useState({});
   const [dayCurrent, setDayCurrent] = useState({});
+  const [learnedVocab, setLearnedVocab] = useState(new Set());
+  const [viewedItems, setViewedItems] = useState(new Set());
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
-  const [learnedVocab, setLearnedVocab] = useState(new Set());
-
   const navigate = useNavigate();
 
   const handleLearningByWeek = () => {
@@ -47,7 +47,7 @@ export default function Vocabulary() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-  
+
         setCourseData(result.courseData);
         setWeekSelected(
           result.weekData?.find((item) => item.week_id === parseInt(week_id))
@@ -75,23 +75,32 @@ export default function Vocabulary() {
       }
     };
     const fetchLearnedVocab = async () => {
-      const userEncode = localStorage.getItem("user");
-      const accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
       try {
-        const response = await axios.get(`/user/${accountId}`);
-        const learnedVocabIds = response.data.map((item) => item.vocabulary_id);
-        setLearnedVocab(new Set(learnedVocabIds));
+        const userEncode = localStorage.getItem("user");
+        const accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        const token = userEncode ? JSON.parse(userEncode)?.token : '';
+        const request = await axios.get(`/user/${accountId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (request.status === 200) {
+          const learnedVocabIds = request.data.map((item) => item.vocabulary_id);
+          setLearnedVocab(new Set(learnedVocabIds));
+        } else {
+          alert("Failed to fetch learned vocabulary.");
+        }
       } catch (error) {
-        console.error("Error fetching learned vocabulary: ", error);
+        console.error("Error fetching learned vocabulary:", error);
       }
     };
+
     if (reload) {
       handleFetchData();
       fetchLearnedVocab();
       setReload(false);
     }
   }, [reload]);
-  
 
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
@@ -99,7 +108,6 @@ export default function Vocabulary() {
   };
 
   const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id }) => {
-    const [viewedItems, setViewedItems] = useState(new Set());
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
 
@@ -109,7 +117,13 @@ export default function Vocabulary() {
           if (entry.isIntersecting) {
             const index = entry.target.dataset.index;
             handleViewItem(index);
-            setViewedItems((prev) => new Set(prev).add(parseInt(index)));
+            setViewedItems((prev) => {
+              const newSet = new Set(prev).add(parseInt(index));
+              if (newSet.size === dayCurrent?.lessons?.length) {
+                setAllViewed(true);
+              }
+              return newSet;
+            });
           }
         });
       }, { threshold: 0.5 }); // Adjust threshold as needed
@@ -119,7 +133,7 @@ export default function Vocabulary() {
       return () => {
         itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
       };
-    }, [itemRefs.current]);
+    }, [itemRefs.current, dayCurrent?.lessons?.length]);
 
     useEffect(() => {
       if (dayCurrent?.lessons?.length === viewedItems.size) {
@@ -128,31 +142,29 @@ export default function Vocabulary() {
     }, [viewedItems, dayCurrent]);
 
     const handleComplete = async () => {
+      const userEncode = localStorage.getItem("user");
+      const token = userEncode ? JSON.parse(userEncode)?.token : '';
+      const accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
       const vocabularyIds = dayCurrent?.lessons?.map(lesson => lesson.vocab_id);
       try {
-        const userEncode = localStorage.getItem("user");
-        const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        const request = await axios.post('/update-all', {
-          accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: vocabularyIds,
+        await axios.post('/api/update-all', {
+          accountId,
+          vocabularyIds,
         }, {
           headers: {
             Authorization: token,
           },
         });
-        const response = request.data;
-     
-      console.log(response);
+        setLearnedVocab(new Set(vocabularyIds)); // Mark all vocabulary as learned
+        alert('All vocabulary marked as complete');
       } catch (error) {
-        console.error("Error update vocabulary process", error);
+        console.error("Error updating vocabulary progress", error);
         alert('An error occurred');
       }
     };
 
     const isLearned = (vocabId) => learnedVocab.has(vocabId);
-
     const isAllLearned = dayCurrent?.lessons?.every((lesson) => isLearned(lesson.vocab_id));
-
 
     return (
       <div>
@@ -239,7 +251,7 @@ export default function Vocabulary() {
         <div className="summary-section flex justify-center mt-4">
           {dayCurrent?.lessons
             ?.filter((item) => item.vocab_id)
-            ?.map((_, index) => (
+            ?.map((lesson, index) => (
               <div
                 key={index}
                 className={`w-6 h-6 m-1 rounded-full ${
@@ -252,7 +264,8 @@ export default function Vocabulary() {
           <div className="fixed bottom-5 right-10">
             <button
               onClick={handleComplete}
-              className="bg-green-500 text-white p-4 rounded-lg"
+              className={`bg-green-500 text-white p-4 rounded-lg ${isAllLearned ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500'}`}
+              disabled={isAllLearned}
             >
               Đánh dấu hoàn thành
             </button>
