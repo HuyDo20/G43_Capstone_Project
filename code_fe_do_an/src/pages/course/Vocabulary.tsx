@@ -126,12 +126,8 @@ export default function Vocabulary() {
           },
         });
         const response = request.data;
-        if(response.statusCode === 200){
-          alert('Marked as complete ');
-        }else{
-          alert('Marked as complete fail');
-        }
-      
+     
+      console.log(response);
       } catch (error) {
         console.error("Error update vocabulary process", error);
         alert('An error occurred');

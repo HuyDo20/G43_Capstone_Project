@@ -19,7 +19,7 @@ router.put("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), updateVocabById
 router.patch("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), deleteVocabById);
 
 router.post('/update',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.updateVocabularyProgress);
-router.get('/user/:userId',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.getUserVocabularyProgress);
+router.get('/user/:accountId',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.getUserVocabularyProgress);
 router.post('/update-all',  checkAuthAndRole([1, 2, 3, 4]),vocabularyProgressController.updateAllVocabularyProgress); 
 
 module.exports = router;

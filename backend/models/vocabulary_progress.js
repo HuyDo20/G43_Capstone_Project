@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "vocabulary",
-          key: "vocabulary_id",
+          key: "vocab_id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "vocabulary_progress",
-      timestamps: false,
+      timestamps: true, // Enable timestamps to match migration
     }
   );
 
