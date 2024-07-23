@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -121,7 +121,7 @@ export default function Vocabulary() {
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-
+  
     useEffect(() => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -129,23 +129,24 @@ export default function Vocabulary() {
             const index = entry.target.dataset.index;
             handleViewItem(index);
             setViewedItems((prev) => new Set(prev).add(parseInt(index)));
+            setActiveIndex(parseInt(index));
           }
         });
-      }, { threshold: 0.5 }); // Adjust threshold as needed
-
+      }, { threshold: 0.5 });
+  
       itemRefs.current.forEach((ref) => ref && observer.observe(ref));
-
+  
       return () => {
         itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
       };
     }, [itemRefs.current]);
-
+  
     useEffect(() => {
       if (dayCurrent?.lessons?.length === viewedItems.size) {
         setAllViewed(true);
       }
     }, [viewedItems, dayCurrent]);
-
+  
     const handleComplete = async () => {
       const vocabularyIds = dayCurrent?.lessons?.map(lesson => lesson.vocab_id);
       try {
@@ -164,27 +165,47 @@ export default function Vocabulary() {
         alert('An error occurred');
       }
     };
-
+  
     const isLearned = (vocabId) => learnedVocab.has(vocabId);
-
+  
     const isAllLearned = dayCurrent?.lessons?.every((lesson) => isLearned(lesson.vocab_id));
-
+  
     const handleSummaryClick = (index) => {
-      setActiveIndex(index);
-      const targetItem = itemRefs.current[index];
-      if (targetItem) {
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        setActiveIndex(index);
+        const targetItem = itemRefs.current[index];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    };
+  
+    const handleCarouselPrevious = () => {
+      if (activeIndex > 0) {
+        setActiveIndex(activeIndex - 1);
+        const targetItem = itemRefs.current[activeIndex - 1];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
       }
     };
-
+  
+    const handleCarouselNext = () => {
+      if (activeIndex < dayCurrent?.lessons?.length - 1) {
+        setActiveIndex(activeIndex + 1);
+        const targetItem = itemRefs.current[activeIndex + 1];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    };
+  
     return (
       <div>
-        <Carousel className="w-[1200px]">
+        <Carousel className="w-[1200px]" activeIndex={activeIndex}>
           <CarouselContent>
             {dayCurrent?.lessons
               ?.filter((item) => item.vocab_id)
               ?.map((lesson, index) => (
-                <CarouselItem key={index} active={index === currentIndex}>
+                <CarouselItem key={index} active={index === activeIndex}>
                   <div
                     className="p-1"
                     ref={(el) => (itemRefs.current[index] = el)}
@@ -238,7 +259,7 @@ export default function Vocabulary() {
                             </div>
                             <div>{lesson.vocab_meaning}</div>
                           </div>
-
+  
                           <div className="flex flex-col items-center gap-5 pt-10 basis-2/4 ">
                             <div className="flex flex-col items-center justify-center gap-3">
                               <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
@@ -256,42 +277,58 @@ export default function Vocabulary() {
                 </CarouselItem>
               ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <button
+        onClick={handleCarouselPrevious}
+        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 shadow-lg"
+      >
+        <HiOutlineChevronLeft size={30} />
+      </button>
+      <button
+        onClick={handleCarouselNext}
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 shadow-lg"
+      >
+        <HiOutlineChevronRight size={30} />
+      </button>
         </Carousel>
-        <div className="summary-section flex justify-center mt-4" style={{display: isAllLearned ? 'none' : 'normal' }}>
-        {dayCurrent?.lessons
-          ?.filter((item) => item.vocab_id)
-          ?.map((_, index) => (
-            <div
-              key={index}
-              onClick={() => handleSummaryClick(index)}
-              className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
-                viewedItems.has(index) ? 'bg-green-500' : 'bg-gray-300'
-              }`}
-            >
-              {index + 1}
-            </div>
-          ))}
-      </div>
-        {isAllLearned && (
-       <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg animate-bounce">
-      Đã hoàn thành
+        <div className="summary-section flex justify-center mt-4" style={{ display: isAllLearned ? 'none' : 'normal' }}>
+          {dayCurrent?.lessons
+            ?.filter((item) => item.vocab_id)
+            ?.map((_, index) => (
+              <div
+                key={index}
+                onClick={() => handleSummaryClick(index)}
+                className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
+                  index === activeIndex
+                    ? 'bg-blue-500'
+                    : viewedItems.has(index)
+                    ? 'bg-green-500'
+                    : 'bg-gray-300'
+                }`}
+              >
+                {index + 1}
+              </div>
+            ))}
         </div>
+        {isAllLearned && (
+          <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg animate-bounce">
+            Đã hoàn thành
+          </div>
         )}
+  
         {allViewed && !isAllLearned && (
           <div className="fixed bottom-5 right-10">
-                <button
-                onClick={handleComplete}
-                className={`bg-green-500 text-white p-4 rounded-lg`}
-                 >
-                Đánh dấu hoàn thành
-                </button>
+            <button
+              onClick={handleComplete}
+              className="bg-green-500 text-white p-4 rounded-lg"
+            >
+              Đánh dấu hoàn thành
+            </button>
           </div>
         )}
       </div>
     );
   };
+  
 
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
 
