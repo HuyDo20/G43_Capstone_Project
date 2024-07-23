@@ -120,6 +120,7 @@ export default function Vocabulary() {
     const [viewedItems, setViewedItems] = useState(new Set());
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
       const observer = new IntersectionObserver((entries) => {
@@ -168,6 +169,13 @@ export default function Vocabulary() {
 
     const isAllLearned = dayCurrent?.lessons?.every((lesson) => isLearned(lesson.vocab_id));
 
+    const handleSummaryClick = (index) => {
+      setActiveIndex(index);
+      const targetItem = itemRefs.current[index];
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    };
 
     return (
       <div>
@@ -252,23 +260,25 @@ export default function Vocabulary() {
           <CarouselNext />
         </Carousel>
         <div className="summary-section flex justify-center mt-4" style={{display: isAllLearned ? 'none' : 'normal' }}>
-          {dayCurrent?.lessons
-            ?.filter((item) => item.vocab_id)
-            ?.map((_, index) => (
-              <div
-                key={index}
-                className={`w-6 h-6 m-1 rounded-full ${
-                  viewedItems.has(index) ? 'bg-green-500' : 'bg-gray-300'
-                }`}
-              ></div>
-            ))}
-        </div>
+        {dayCurrent?.lessons
+          ?.filter((item) => item.vocab_id)
+          ?.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => handleSummaryClick(index)}
+              className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
+                viewedItems.has(index) ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            >
+              {index + 1}
+            </div>
+          ))}
+      </div>
         {isAllLearned && (
-          <div className="fixed bottom-5 right-10 bg-gray-600">
-                Đã hoàn thành
-          </div>
+       <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg animate-bounce">
+      Đã hoàn thành
+        </div>
         )}
-
         {allViewed && !isAllLearned && (
           <div className="fixed bottom-5 right-10">
                 <button
