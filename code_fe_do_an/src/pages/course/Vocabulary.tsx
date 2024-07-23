@@ -31,6 +31,8 @@ export default function Vocabulary() {
   const [dayCurrent, setDayCurrent] = useState({});
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
+  const [learnedVocab, setLearnedVocab] = useState(new Set());
+
   const navigate = useNavigate();
 
   const handleLearningByWeek = () => {
@@ -45,7 +47,7 @@ export default function Vocabulary() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-
+  
         setCourseData(result.courseData);
         setWeekSelected(
           result.weekData?.find((item) => item.week_id === parseInt(week_id))
@@ -72,11 +74,24 @@ export default function Vocabulary() {
         setDayCurrent(_dayCurrent);
       }
     };
+    const fetchLearnedVocab = async () => {
+      const userEncode = localStorage.getItem("user");
+      const accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      try {
+        const response = await axios.get(`/user/${accountId}`);
+        const learnedVocabIds = response.data.map((item) => item.vocabulary_id);
+        setLearnedVocab(new Set(learnedVocabIds));
+      } catch (error) {
+        console.error("Error fetching learned vocabulary: ", error);
+      }
+    };
     if (reload) {
       handleFetchData();
+      fetchLearnedVocab();
       setReload(false);
     }
   }, [reload]);
+  
 
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
@@ -133,6 +148,11 @@ export default function Vocabulary() {
         alert('An error occurred');
       }
     };
+
+    const isLearned = (vocabId) => learnedVocab.has(vocabId);
+
+    const isAllLearned = dayCurrent?.lessons?.every((lesson) => isLearned(lesson.vocab_id));
+
 
     return (
       <div>
