@@ -6,7 +6,8 @@ import {
   Select,
   Space,
   Table,
-  Tag
+  Tag,
+  Pagination
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -81,19 +82,17 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   }, [data]);
 
   const handleCreateAccount = async () => {
-    // Set default password if it is null or empty
     if (!userData.password) {
       userData.password = '12345678'; // Set your default password here
     }
   
-    // Adjusted validation check to ensure correct checking of null values
     if (
       !userData.full_name.trim() ||
       !userData.email.trim() ||
       !userData.phone_number.trim() ||
       !userData.password.trim() ||
       !userData.role_id ||
-      userData.point === null || // Ensure point is not null
+      userData.point === null || 
       !userData.dob.trim() ||
       !userData.status_id
     ) {
@@ -126,7 +125,6 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       console.error(error);
     }
   };
-  
 
   return (
     <Modal
@@ -219,6 +217,8 @@ const UserManagementPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState<User[]>([]);
   const [selectedItem, setSelectedItem] = useState<User | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleDeleteUser = async (id: number) => {};
 
@@ -247,7 +247,6 @@ const UserManagementPage: React.FC = () => {
       if (response.status === 200) {
         alert("Update successful");
         setReload(true);
-        // setIsModalOpen(false);
         setSelectedItem(null);
       } else {
         alert("Operation failed");
@@ -347,7 +346,6 @@ const UserManagementPage: React.FC = () => {
     },
     {
       title: "Status",
-      // dataIndex: "status_id",
       key: "status_id",
       render: (_: any, user: User) => {
         const { status_id, account_id } = user;
@@ -424,7 +422,6 @@ const UserManagementPage: React.FC = () => {
               <Space size="middle">
                 <a
                   onClick={() => {
-                    // setIsModalOpen(true);
                     setSelectedItem(record);
                   }}
                 >
@@ -432,10 +429,6 @@ const UserManagementPage: React.FC = () => {
                     style={{ fontSize: "20px", color: "orange" }}
                   />
                 </a>
-
-                {/* <a onClick={() => handleDeleteUser(record.id)}>
-                  <AiOutlineDelete style={{ fontSize: "20px", color: "red" }} />
-                </a> */}
               </Space>
             )}
           </>
@@ -444,7 +437,7 @@ const UserManagementPage: React.FC = () => {
     },
   ];
 
-  const handleFetchData = async () => {
+  const handleFetchData = async (page = 1) => {
     try {
       let token = "";
       const userEncode = localStorage.getItem("user");
@@ -452,7 +445,7 @@ const UserManagementPage: React.FC = () => {
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
       }
-      const request = await axios.get("/account", {
+      const request = await axios.get(`/account?page=${page}&pageSize=10`, {
         headers: {
           Authorization: token,
         },
@@ -460,6 +453,9 @@ const UserManagementPage: React.FC = () => {
       const response = request.data;
       if (response.statusCode === 200) {
         setData(response.data.data);
+        setTotalPages(response.data.total_pages);
+        setCurrentPage(page);
+        console.log(response.data.total_pages);
       }
     } catch (error) {
       console.error(error);
@@ -468,10 +464,10 @@ const UserManagementPage: React.FC = () => {
 
   useEffect(() => {
     if (reload) {
-      handleFetchData();
+      handleFetchData(currentPage);
       setReload(false);
     }
-  }, [reload]);
+  }, [reload, currentPage]);
 
   return (
     <>
@@ -489,7 +485,14 @@ const UserManagementPage: React.FC = () => {
         loading={reload}
         columns={columns}
         dataSource={data}
-        pagination={{ pageSize: 8, pageSizeOptions: [10, 20, 50, 100] }}
+        pagination={{
+          current: currentPage,
+          total: totalPages * 10,
+          onChange: (page) => {
+            setCurrentPage(page);
+            setReload(true);
+          },
+        }}
       />
       <ModalEdit
         isModalOpen={isModalOpen}
