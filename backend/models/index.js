@@ -86,4 +86,10 @@ db["KanjiProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
 
 db["Kanji"].hasMany(db["KanjiProgress"], { foreignKey: "kanji_id" });
 db["KanjiProgress"].belongsTo(db["Kanji"], { foreignKey: "kanji_id" });
+
+db["Account"].hasMany(db["GrammarProgress"], { foreignKey: "account_id" });
+db["GrammarProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+db["Grammar"].hasMany(db["GrammarProgress"], { foreignKey: "grammar_id" });
+db["GrammarProgress"].belongsTo(db["Grammar"], { foreignKey: "grammar_id" });
 module.exports = db;
