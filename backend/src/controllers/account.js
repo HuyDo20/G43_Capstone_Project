@@ -115,7 +115,7 @@ async function registerAccount(req, res) {
 	}
 }
 
-async function verifyOtp(req, res) {
+async function verifyOtpThenCreateNewAccount(req, res) {
     try {
         const { email, otp, full_name, password } = req.body; 
 
@@ -124,7 +124,6 @@ async function verifyOtp(req, res) {
 
         if (userVerifying === null) {
             // OTP does not exist or is incorrect
-            console.log(OTP_INVALID);
             return responseWithData(res,202, OTP_INVALID);
         }
 
@@ -132,7 +131,6 @@ async function verifyOtp(req, res) {
         const currentDate = new Date();
         if (currentDate > userVerifying.expires_at) {
             // OTP is expired
-            console.log(OTP_EXPIRED);
             return responseWithData(res, 202,OTP_EXPIRED);
         }
         // Hash the user's password
@@ -143,12 +141,40 @@ async function verifyOtp(req, res) {
             full_name,
             email,
             password: hashedPassword,
-            role_id: 4, // Adjust role_id as necessary
-            status_id: 2, // Adjust status_id as necessary
+            role_id: 4,
+            status_id: 2, 
         });
 
         // Return success response
         return ok(res, ACCOUNT_CREATED);
+        
+    } catch (err) {
+        console.error("Error during OTP verification:", err);
+        return error(res);
+    }
+}
+
+async function verifyOtp(req, res) {
+    try {
+        const { email, otp } = req.body; 
+
+        // Find OTP record matching the provided email and otp_code
+        let userVerifying = await Otp.findOne({ where: { email: email, otp_code: otp } });
+
+        if (userVerifying === null) {
+            // OTP does not exist or is incorrect
+            return responseWithData(res,202, OTP_INVALID);
+        }
+
+        // Check if the OTP has expired
+        const currentDate = new Date();
+        if (currentDate > userVerifying.expires_at) {
+            // OTP is expired
+            return responseWithData(res, 202,OTP_EXPIRED);
+        }
+
+        // Return success response
+        return ok(res, OTP_VERIFIED);
         
     } catch (err) {
         console.error("Error during OTP verification:", err);
@@ -437,6 +463,10 @@ module.exports = {
 	deleteUserById,
 	getUserById,
 	registerAccountSystem,
-	logoutAccount,verifyOtp,resendOtp,changePassword
+	logoutAccount,
+	verifyOtp,
+	resendOtp,
+	changePassword,
+	verifyOtpThenCreateNewAccount
 
 };
