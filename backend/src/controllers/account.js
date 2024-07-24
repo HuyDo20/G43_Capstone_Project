@@ -7,14 +7,14 @@ const {
 	forbidden,
 	ok,
 } = require("../handlers/response_handler");
-const { Account, Otp } = require("../../models");
+const { Account, Otp, PasswordResetToken } = require("../../models");
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../middleware/auth");
 const { omitPassword } = require("../helper/user");
 const RANDOM_OTP_CHARACTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS } = require("../messages/user");
+const crypto = require('crypto');
+const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS, OTP_VERIFIED } = require("../messages/user");
 
 const {
 	ACCOUNT_UPDATED,
@@ -95,6 +95,23 @@ async function logoutAccount(req, res) {
 		return error(res);
 	}
 }
+
+
+async function exitingAccount(req, res) {
+	console.log("check exit email");
+	try {
+		const { Email } = req.body;
+		const user = await Account.findOne({ where: { Email } });
+		if (!user) {
+			return notfound(res);
+		}
+		return ok(res, "Account founded!");
+	} catch (err) {
+		console.log("Error during check exiting account", err);
+		return error(res);
+	}
+}
+
 
 async function registerAccount(req, res) {
 	try {
@@ -182,6 +199,57 @@ async function verifyOtp(req, res) {
     }
 }
 
+async function verifyOtpRecoverPassword(req, res) {
+    try {
+        const { email, otp } = req.body;
+
+        // Find OTP record matching the provided email and otp_code
+        let userVerifying = await Otp.findOne({ where: { email: email, otp_code: otp } });
+
+        if (!userVerifying) {
+            // OTP does not exist or is incorrect
+            return responseWithData(res, 202, 'OTP_INVALID');
+        }
+
+        // Check if the OTP has expired
+        const currentDate = new Date();
+        if (currentDate > userVerifying.expires_at) {
+            // OTP is expired
+            return responseWithData(res, 202, 'OTP_EXPIRED');
+        }
+
+        // Generate a secure password reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const tokenExpiry = new Date(Date.now() + 3600000); // Token expires in 1 hour
+
+        // Find the user's account by email
+        const account = await Account.findOne({ where: { email: email } });
+
+        if (!account) {
+            // Account does not exist (though it should if OTP was found)
+            return responseWithData(res, 202, 'ACCOUNT_NOT_FOUND');
+        }
+
+        // Store the password reset token in the database
+        await PasswordResetToken.create({
+            account_id: account.account_id,
+            token: resetToken,
+            expires_at: tokenExpiry
+        });
+
+        // Optional: Send the token to the user's email or provide it in the response
+        // sendPasswordResetEmail(email, resetToken); // Implement this function
+
+        // Return success response with the reset token (optional, if not sending via email)
+        return responseWithData(res, 200, resetToken );
+
+    } catch (err) {
+        console.error("Error during OTP verification:", err);
+        return error(res);
+    }
+}
+
+
 async function resendOtp(req, res) {
     try {
         const { email } = req.body; 
@@ -211,6 +279,22 @@ otp_code: otp,
 expires_at: expireTime
 });
 }
+
+async function getOtpExpiration(req, res) {
+	 try {
+		 const { email } = req.body; 
+	     let userVerifying = await Otp.findOne({ where: { email: email} });
+		 if (userVerifying === null) {
+			  return notfound(res);
+		 }
+		 
+        return ok(res, userVerifying.expires_at);
+    } catch (err) {
+        console.error("Error during get OTP expire time:", err);
+        return error(res);
+    }
+  }
+
 function getOtp() {
 	let result = '';
 	for (let i = 0; i < 6; i++) {
@@ -365,7 +449,52 @@ async function changePassword(req, res) {
 	  console.error("Error changing password:", err);
 	  return error(res);
 	}
-  }
+}
+  
+async function recoverPassword(req, res) {
+    try {
+		const { token, password } = req.body;
+        // Find the token record
+        const resetTokenRecord = await PasswordResetToken.findOne({ where: { token } });
+
+        if (!resetTokenRecord) {
+            // Token not found
+            return responseWithData(res, 404, 'INVALID_TOKEN');
+        }
+
+        // Check if the token has expired
+        const currentDate = new Date();
+        if (currentDate > resetTokenRecord.expires_at) {
+            // Token is expired
+            return responseWithData(res, 410, 'TOKEN_EXPIRED');
+        }
+
+        // Find the user account associated with the token
+        const account = await Account.findOne({ where: { account_id: resetTokenRecord.account_id } });
+
+        if (!account) {
+            // Account not found
+            return responseWithData(res, 404, 'ACCOUNT_NOT_FOUND');
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Update the user's password in the database
+        account.password = hashedPassword;
+        await account.save();
+
+        // Optionally, delete the used password reset token
+        await resetTokenRecord.destroy();
+
+        // Respond with success
+        return ok(res, 'PASSWORD_UPDATED_SUCCESSFULLY');
+    } catch (err) {
+        console.error("Error updating password:", err);
+        return error(res);
+    }
+}
+
   
 
 async function deleteUserById(req, res) {
@@ -410,7 +539,6 @@ async function getUserById(req, res) {
 async function registerAccountSystem(req, res) {
 	try {
 		const password = "123456";
-
 		const hashedPassword = await bcrypt.hash(password, 10);
 
 		const userSystem = [
@@ -467,6 +595,10 @@ module.exports = {
 	verifyOtp,
 	resendOtp,
 	changePassword,
-	verifyOtpThenCreateNewAccount
+	verifyOtpThenCreateNewAccount,
+	exitingAccount,
+	getOtpExpiration,
+	verifyOtpRecoverPassword,
+	recoverPassword
 
 };
