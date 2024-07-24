@@ -83,7 +83,7 @@ export default function Kanji() {
           token = userDecode?.token;
           accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
         }
-        const request = await axios.get(`/user/${accountId}`, {
+        const request = await axios.get(`/user-kanji-learned/${accountId}`, {
           headers: {
             Authorization: token,
           },
@@ -152,7 +152,7 @@ export default function Kanji() {
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        await axios.post('/update-all', {
+        await axios.post('/update-all-kanji-learned', {
           accountId: JSON.parse(userEncode)?.account_id,
           kanjiIds: kanjiIds,
         }, {

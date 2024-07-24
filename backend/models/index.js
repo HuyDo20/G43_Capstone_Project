@@ -69,13 +69,11 @@ db["VideoOption"].belongsTo(db["VideoQuestion"], { foreignKey: "video_question_i
 db["Day"].hasMany(db["Vocabulary"], { foreignKey: "day_id" });
 db["Vocabulary"].belongsTo(db["Day"], { foreignKey: "day_id" });
 
-// Add associations for CourseEnrollment
 db.Account.hasMany(db.CourseEnrollment, { foreignKey: "account_id" });
 db.CourseEnrollment.belongsTo(db.Account, { foreignKey: "account_id" });
 
 db.Course.hasMany(db.CourseEnrollment, { foreignKey: "course_id" });
 db.CourseEnrollment.belongsTo(db.Course, { foreignKey: "course_id" });
-
 
 db["Account"].hasMany(db["VocabularyProgress"], { foreignKey: "account_id" });
 db["VocabularyProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
@@ -83,5 +81,9 @@ db["VocabularyProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
 db["Vocabulary"].hasMany(db["VocabularyProgress"], { foreignKey: "vocabulary_id" });
 db["VocabularyProgress"].belongsTo(db["Vocabulary"], { foreignKey: "vocabulary_id" });
 
+db["Account"].hasMany(db["KanjiProgress"], { foreignKey: "account_id" });
+db["KanjiProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
 
+db["Kanji"].hasMany(db["KanjiProgress"], { foreignKey: "kanji_id" });
+db["KanjiProgress"].belongsTo(db["Kanji"], { foreignKey: "kanji_id" });
 module.exports = db;

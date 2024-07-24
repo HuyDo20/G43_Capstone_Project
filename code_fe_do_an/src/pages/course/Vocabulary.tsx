@@ -82,7 +82,7 @@ export default function Vocabulary() {
           token = userDecode?.token;
           accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
         }
-        const request = await axios.get(`/user/${accountId}`, {
+        const request = await axios.get(`/user-vocabulary-learned/${accountId}`, {
           headers: {
             Authorization: token,
           },
@@ -153,7 +153,7 @@ export default function Vocabulary() {
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        await axios.post('/update-all', {
+        await axios.post('/update-all-vocabulary-learned', {
           accountId: JSON.parse(userEncode)?.account_id,
           vocabularyIds: vocabularyIds,
         }, {
