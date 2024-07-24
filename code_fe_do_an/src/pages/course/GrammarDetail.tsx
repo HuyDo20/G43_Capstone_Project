@@ -10,22 +10,23 @@ import {
 import Header from "@/layout/header/Header";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
 export default function GrammarDetail() {
   const [reload, setReload] = useState(true);
   const [courseData, setCourseData] = useState([]);
-
   const [weekSelected, setWeekSelected] = useState({});
   const [dayCurrent, setDayCurrent] = useState({});
   const [grammarCurrent, setGrammarCurrent] = useState({});
+  const [isLearned, setIsLearned] = useState(false); // State for learned status
+
   const { handleFetch } = useAuth();
   const { id, week_id, day_id, grammar_id } = useParams();
 
-  useEffect(() => {
+ useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
         method: "get",
@@ -44,11 +45,44 @@ export default function GrammarDetail() {
         );
       }
     };
+
+    const fetchGrammarProgress = async () => {
+      try {
+        let token = "";
+        let accountId ;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        }
+        const request = await axios.get(`/user-kanji-learned/${accountId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (request.status === 200) {
+         const progress = response.data.find(
+            (item) => item.grammar_id === parseInt(grammar_id)
+          );   
+           if (progress) {
+            setIsLearned(progress.learned);
+          }
+        }
+        else{
+          alert("fail");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (reload) {
       handleFetchData();
+      fetchGrammarProgress();
       setReload(false);
     }
-  }, [reload]);
+  }, [reload, handleFetch, id, week_id, day_id, grammar_id]);
 
   useEffect(() => {
     setGrammarCurrent(
@@ -67,69 +101,85 @@ export default function GrammarDetail() {
     navigate(`/${id}/${week_id}/${day_id}/grammar`);
   };
 
+  const markAsLearned = async () => {
+     try {
+        let token = "";
+        let accountId ;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        }
+       const request = await axios.post('/update-grammar-learned', {
+          accountId:accountId,
+          grammarId: id,
+        }, {
+          headers: {
+            Authorization: token,
+          },
+       });
+       
+       const response = request.data;
+        if (response.status === 200) {
+        setIsLearned(true);
+      }
+      } catch (error) {
+        console.error(error);
+      }
+  };
   return (
     <div>
-      {/* Header */}
       <div className="bg-[#f2fae9]">
         <Header />
       </div>
-      {/* Body*/}
       <div className="flex flex-row">
-        {/* DaySchedule*/}
         <div className="p-5 shadow-md basis-1/6 h-[830px]">
           <DaySchedule weekSelected={weekSelected} id={id} />
         </div>
-        {/* Content*/}
         <div className="flex flex-col basis-5/6 pt-7 pl-11">
-          {/* Breadcrumb*/}
-          <div className="">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    href="/course"
-                    className="text-2xl font-semibold"
-                  >
-                    Khóa học
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink
-                    onClick={handleLearningByWeek}
-                    className="text-2xl font-semibold"
-                  >
-                    {courseData?.course_name}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-2xl font-semibold">
-                    {weekSelected?.week_name}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-2xl font-semibold">
-                    {dayCurrent?.day_name}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-2xl font-semibold">
-                    Ngữ Pháp
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-2xl font-semibold">
-                    {grammarCurrent.grammar_name}
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-          {/* Grammar Detail*/}
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/course" className="text-2xl font-semibold">
+                  Khóa học
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  onClick={handleLearningByWeek}
+                  className="text-2xl font-semibold"
+                >
+                  {courseData?.course_name}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-2xl font-semibold">
+                  {weekSelected?.week_name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-2xl font-semibold">
+                  {dayCurrent?.day_name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-2xl font-semibold">
+                  Ngữ Pháp
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-2xl font-semibold">
+                  {grammarCurrent.grammar_name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <div className="w-[1200px] h-[700px] ml-28 bg-[#d1eeb0] mt-5 rounded-lg flex flex-col gap-5 pb-5">
             <div className="basis-[10%] bg-[#4b9c47] rounded-t-md flex flex-row justify-between items-center px-10">
               <div className="flex items-center justify-center text-xl text-white ">
@@ -159,10 +209,6 @@ export default function GrammarDetail() {
                 </div>
               </div>
               <div className="basis-1/4 p-7">
-                {/* - Cấu trúc này dùng để làm cái này, diễn tả cái nọ Cấu trúc này
-                dùng để làm cái này, diễn tả cái nọ...............
-                <br />- Rồi thế này thế nọ vân vân và mây mây Rồi thế này thế nọ
-                vân vân và mây mây ......................... */}
                 {grammarCurrent.grammar_description
                   ?.split(".")
                   ?.map((item, index) => (
@@ -179,6 +225,20 @@ export default function GrammarDetail() {
                     </div>
                   ))}
                 </div>
+              </div>
+              <div className="flex justify-center p-5">
+                {isLearned ? (
+                  <div className="text-lg font-semibold text-green-600">
+                    Đã hoàn thành
+                  </div>
+                ) : (
+                  <button
+                    onClick={markAsLearned}
+                    className="bg-blue-500 text-white px-5 py-2 rounded-md shadow-md hover:bg-blue-700"
+                  >
+                    Đánh dấu hoàn thành
+                  </button>
+                )}
               </div>
             </div>
           </div>

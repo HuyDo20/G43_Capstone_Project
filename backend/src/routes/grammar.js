@@ -18,6 +18,7 @@ router.patch("/grammar/:grammar_id", checkAuthAndRole([1, 2, 3]), deleteGrammarB
 
 //grammar progress
 router.post('/update-grammar-learned',  checkAuthAndRole([1, 2, 3, 4]),grammarProgressController.updateGrammarProgress);
-router.get('/user-grammar-learned/:accountId',  checkAuthAndRole([1, 2, 3, 4]),grammarProgressController.getUserGrammarProgress);
+router.get('/user-grammars-learned/:accountId', checkAuthAndRole([1, 2, 3, 4]), grammarProgressController.getUserGrammarProgress);
+
 
 module.exports = router;

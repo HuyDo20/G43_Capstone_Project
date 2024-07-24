@@ -2,7 +2,8 @@
 const grammarProgressService = require('../services/grammarProgressService');
 
 const updateGrammarProgress = async (req, res) => {
-  const { accountId, grammarId } = req.body;
+    const { accountId, grammarId } = req.body;
+    console.log("Update gramma:" + accountId, grammarId);
   try {
     const progress = await grammarProgressService.updateGrammarProgress(accountId, grammarId);
     return res.status(200).json(progress);
