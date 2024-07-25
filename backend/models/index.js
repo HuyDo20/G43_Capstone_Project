@@ -10,34 +10,35 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-	sequelize = new Sequelize(process.env[NODE_ENV], config);
+  sequelize = new Sequelize(process.env[NODE_ENV], config);
 } else {
-	sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
 fs.readdirSync(__dirname)
-	.filter((file) => {
-		return (
-			file.indexOf(".") !== 0 &&
-			file !== basename &&
-			file.slice(-3) === ".js" &&
-			file.indexOf(".test.js") === -1
-		);
-	})
-	.forEach((file) => {
-		const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-		db[model.name] = model;
-	});
+  .filter((file) => {
+    return (
+      file.indexOf(".") !== 0 &&
+      file !== basename &&
+      file.slice(-3) === ".js" &&
+      file.indexOf(".test.js") === -1
+    );
+  })
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
 
 Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
-	}
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// Define associations
 db["Course"].hasMany(db["Week"], { foreignKey: "course_id" });
 db["Week"].belongsTo(db["Course"], { foreignKey: "course_id" });
 
@@ -68,4 +69,27 @@ db["VideoOption"].belongsTo(db["VideoQuestion"], { foreignKey: "video_question_i
 db["Day"].hasMany(db["Vocabulary"], { foreignKey: "day_id" });
 db["Vocabulary"].belongsTo(db["Day"], { foreignKey: "day_id" });
 
+db.Account.hasMany(db.CourseEnrollment, { foreignKey: "account_id" });
+db.CourseEnrollment.belongsTo(db.Account, { foreignKey: "account_id" });
+
+db.Course.hasMany(db.CourseEnrollment, { foreignKey: "course_id" });
+db.CourseEnrollment.belongsTo(db.Course, { foreignKey: "course_id" });
+
+db["Account"].hasMany(db["VocabularyProgress"], { foreignKey: "account_id" });
+db["VocabularyProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+db["Vocabulary"].hasMany(db["VocabularyProgress"], { foreignKey: "vocabulary_id" });
+db["VocabularyProgress"].belongsTo(db["Vocabulary"], { foreignKey: "vocabulary_id" });
+
+db["Account"].hasMany(db["KanjiProgress"], { foreignKey: "account_id" });
+db["KanjiProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+db["Kanji"].hasMany(db["KanjiProgress"], { foreignKey: "kanji_id" });
+db["KanjiProgress"].belongsTo(db["Kanji"], { foreignKey: "kanji_id" });
+
+db["Account"].hasMany(db["GrammarProgress"], { foreignKey: "account_id" });
+db["GrammarProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+db["Grammar"].hasMany(db["GrammarProgress"], { foreignKey: "grammar_id" });
+db["GrammarProgress"].belongsTo(db["Grammar"], { foreignKey: "grammar_id" });
 module.exports = db;

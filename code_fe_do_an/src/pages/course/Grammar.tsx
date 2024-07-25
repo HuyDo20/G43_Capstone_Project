@@ -13,12 +13,14 @@ import Header from "@/layout/header/Header";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from 'axios';
 
 export default function Grammar() {
   const [reload, setReload] = useState(true);
   const [courseData, setCourseData] = useState([]);
   const [weekSelected, setWeekSelected] = useState({});
   const [dayCurrent, setDayCurrent] = useState({});
+  const [learnedStatuses, setLearnedStatuses] = useState({});
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
 
@@ -63,26 +65,53 @@ export default function Grammar() {
         setDayCurrent(_dayCurrent);
       }
     };
+
+    const fetchLearnedStatuses = async () => {
+      try {
+         let token = "";
+        let accountId;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        }
+        
+          const response = await axios.get(`/user-grammars-learned/${accountId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        
+        if (response.status === 200) {
+          const statuses = response.data.reduce((acc, item) => {
+            acc[item.grammar_id] = item.learned;
+            return acc;
+          }, {});
+          setLearnedStatuses(statuses);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (reload) {
       handleFetchData();
+      fetchLearnedStatuses();
       setReload(false);
     }
-  }, [reload]);
+  }, [reload, handleFetch, id, week_id, day_id]);
+
   return (
     <div>
-      {/* Header */}
       <div className="bg-[#f2fae9]">
         <Header />
       </div>
-      {/* Body*/}
       <div className="flex flex-row">
-        {/* DaySchedule*/}
         <div className="p-5 shadow-md basis-1/6 h-[830px]">
           <DaySchedule weekSelected={weekSelected} id={id} />
         </div>
-        {/* Content*/}
         <div className="flex flex-col basis-5/6 pt-7 pl-11">
-          {/* Breadcrumb*/}
           <div className="mb-7">
             <Breadcrumb>
               <BreadcrumbList>
@@ -124,7 +153,6 @@ export default function Grammar() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          {/* Grammar List*/}
           <div className="w-[1300px] h-[650px] ml-16 bg-[#f2fae9] mt-5 rounded-md px-20 pt-10 flex flex-col gap-10">
             <div className="text-[#4b9c47] font-semibold text-xl">Ngữ pháp</div>
             <div className="flex flex-col gap-5 w-full h-[370px] ">
@@ -136,39 +164,11 @@ export default function Grammar() {
                     grammar_id={lesson.grammar_id}
                     grammar_structure={lesson.grammar_structure}
                     checkIsRepeat={parseInt(lesson.day_id) !== parseInt(day_id)}
+                    isLearned={learnedStatuses[lesson.grammar_id] || false}
                     key={index}
                   />
                 ))}
-              {/* <GrammarItem
-                grammar_name="Ngữ pháp 1"
-                grammar_structure="A は B ...."
-              />
-              <GrammarItem
-                grammar_name="Ngữ pháp 2"
-                grammar_structure="A は B ...."
-              />
-              <GrammarItem
-                grammar_name="Ngữ pháp 3"
-                grammar_structure="A は B ...."
-              />
-              <GrammarItem
-                grammar_name="Ngữ pháp 4"
-                grammar_structure="A は B ...."
-              /> */}
             </div>
-            {/* <div className="flex items-center justify-center">
-              <Button
-                size="lg"
-                className="text-base text-black bg-[#ffc267] hover:bg-[#f8b95a]"
-              >
-                <Dialog>
-                  <DialogTrigger>Luyện tập</DialogTrigger>
-                  <DialogContent>
-                    <Practice />
-                  </DialogContent>
-                </Dialog>
-              </Button>
-            </div> */}
           </div>
         </div>
       </div>
