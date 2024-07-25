@@ -85,11 +85,11 @@ const getAllCourseExtend = async (req, res) => {
 
 				for (const week of course.Weeks) {
 					for (const day of week.Days) {
-						// Filter items based on their respective status_id (assuming these fields exist and are required for filtering)
+						// Filter items based on their respective status_id
 						const vocabularies = day.Vocabularies.filter(v => v.vocab_status_id === 1);
-						const kanjis = day.Kanjis.filter(k => k.kanji_status_id === 1); // Assuming kanji_status_id exists
-						const grammars = day.Grammars.filter(g => g.grammar_status_id === 1); // Assuming grammar_status_id exists
-						const videos = day.Videos.filter(v => v.video_status_id === 1); // Assuming video_status_id exists
+						const kanjis = day.Kanjis.filter(k => k.kanji_status_id === 1);
+						const grammars = day.Grammars.filter(g => g.grammar_status_id === 1); 
+						const videos = day.Videos.filter(v => v.video_status_id === 1); 
 
 						totalItems += vocabularies.length + kanjis.length + grammars.length + videos.length;
 
@@ -130,9 +130,9 @@ const getAllCourseExtend = async (req, res) => {
 
 				const totalProgress = Object.values(learnedItems).reduce((a, b) => a + b, 0);
 				const progressPercentage = totalItems > 0 ? (totalProgress / totalItems) * 100 : 0;
-
+		
 				return {
-					...course.toJSON(), // Include all original course data
+					...course.toJSON(), 
 					progress: {
 						totalItems,
 						totalProgress,
