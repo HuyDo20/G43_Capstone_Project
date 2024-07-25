@@ -10,6 +10,7 @@ const ACCOUNT_LOGIN = "Đăng nhập thành công!";
 const OTP_GENERATED = "Tạo mã OTP đăng ký thành công!";
 const OTP_EXPIRED = "OTP đã hết hạn";
 const OTP_INVALID = "OTP không hợp lệ";
+const OTP_VERIFIED = "Xác thực OTP thành công";
 
 //change password
 const CHANGE_PASSWORD_SUCCESS= "Đổi mật khẩu thành công";
@@ -39,5 +40,6 @@ module.exports = {
 	OTP_INVALID,
 	ACCOUNT_DEACTIVE,
 	CURRENT_PASSWORD_WRONG,
-	CHANGE_PASSWORD_SUCCESS
+	CHANGE_PASSWORD_SUCCESS,
+	OTP_VERIFIED
 };

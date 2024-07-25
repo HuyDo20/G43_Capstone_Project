@@ -68,3 +68,35 @@ export default function Course() {
     </div>
   );
 }
+
+interface PaginationProps {
+  coursesPerPage: number;
+  totalCourses: number;
+  paginate: (pageNumber: number) => void;
+  currentPage: number;
+}
+
+const Pagination = ({ coursesPerPage, totalCourses, paginate, currentPage }: PaginationProps) => {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalCourses / coursesPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <nav>
+      <ul className="pagination flex justify-center mt-4 space-x-2">
+        {pageNumbers.map(number => (
+          <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
+            <button
+              onClick={() => paginate(number)}
+              className={`page-link px-3 py-1 rounded-md focus:outline-none ${number === currentPage ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            >
+              {number}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};

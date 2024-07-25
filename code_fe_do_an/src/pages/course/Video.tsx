@@ -15,9 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
@@ -35,7 +33,6 @@ export default function Video() {
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
   const navigate = useNavigate();
-
   const handleLearningByWeek = () => {
     navigate(`/learningByWeek/${id}`);
   };
@@ -48,7 +45,6 @@ export default function Video() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-
         setCourseData(result.courseData);
         setWeekSelected(
           result.weekData?.find((item) => item.week_id === parseInt(week_id))
@@ -105,25 +101,7 @@ export default function Video() {
       fetchCompletedVideos();
       setReload(false);
     }
-  }, [reload, handleFetch, id, week_id, day_id]);
-
-  const handleCompleteVideo = async (videoId) => {
-    try {
-      const userEncode = localStorage.getItem("user");
-      const token = userEncode ? JSON.parse(userEncode)?.token : '';
-      const accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
-      await axios.post('/update-video-learned', {
-        accountId,
-        videoId,
-      }, {
-        headers: { Authorization: token },
-      });
-      setCompletedVideos(new Set([...completedVideos, videoId]));
-    } catch (error) {
-      console.error("Error marking video as completed:", error);
-    }
-  };
-
+  }, [reload]);
   return (
     <div>
       {/* Header */}
@@ -132,13 +110,13 @@ export default function Video() {
       </div>
       {/* Body*/}
       <div className="flex flex-row">
-        {/* DaySchedule*/}
+        {/* DaySchedule */}
         <div className="p-5 shadow-md basis-1/6 h-[830px]">
           <DaySchedule weekSelected={weekSelected} id={id} />
         </div>
-        {/* Content*/}
+        {/* Content */}
         <div className="flex flex-col basis-5/6 pt-7 pl-11">
-          {/* Breadcrumb*/}
+          {/* Breadcrumb */}
           <div className="mb-7">
             <Breadcrumb>
               <BreadcrumbList>
@@ -181,6 +159,13 @@ export default function Video() {
             </Breadcrumb>
           </div>
           {/* Video Detail*/}
+          {/* <div className="w-[1200px] h-[690px] ml-32 bg-[#fff8e1] rounded-md px-20 pt-10 flex flex-col gap-5">
+            <div className="text-[#4b9c47] text-xl font-semibold">Video 1</div>
+            <div className="w-full h-[400px] px-20">
+              <div className="w-full h-full bg-green-200 rounded-lg"></div>
+            </div>
+            <div>Video_Description</div>
+          </div> */}
           <div className="flex justify-center w-full mt-7">
             <div className="">
               <Carousel className="w-[1200px]">
@@ -205,6 +190,11 @@ export default function Video() {
                                 <div className="flex flex-col items-center gap-5">
                                   <video
                                     className="h-[450px] w-[100%] rounded-md shadow-md"
+                                    // src={
+                                    //   lesson.vocab_image
+                                    //     ? lesson.vocab_image
+                                    //     : "/banner.png"
+                                    // }
                                     src={
                                       lesson?.video_link
                                         ? lesson?.video_link.split(", ")[0]

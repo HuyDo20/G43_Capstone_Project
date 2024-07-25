@@ -21,6 +21,7 @@ import Policy from "./pages/home/Policy";
 import AboutDNLS from "./pages/about/AboutDNLS";
 import AboutTextbook from "./pages/about/AboutTextbook";
 import DetailTextbook from "./pages/about/DetailTextbook";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 const contentStyle = {
   padding: 50,
@@ -58,7 +59,7 @@ function App() {
               path="/getAuthenticationCode"
               element={<GetAuthenticationCode />}
             />
-            <Route path="/getNewPassword" element={<GetNewPassword />} />
+            <Route path="/getNewPassword" element={<ProtectedRoute><GetNewPassword /></ProtectedRoute>} />
             <Route path="/getNewPWSuccess" element={<GetNewPWSuccess />} />
             <Route path="/userProfile" element={<UserProfile />} />
             <Route path="/aboutDNLS" element={<AboutDNLS />} />

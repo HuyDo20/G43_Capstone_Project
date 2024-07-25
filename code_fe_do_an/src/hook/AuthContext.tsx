@@ -27,19 +27,26 @@ interface User {
 
 type AuthContextType = {
   user: User | null;
-  setUser: Dispatch<SetStateAction<boolean>>;
-  // login: (email: string, password: string) => void;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  isOtpVerified: boolean;
+  verifyOtp: () => void;
   handleLogout: () => void;
   handleFetch: any;
 };
 
-// Khởi tạo context với giá trị mặc định
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState(
     () => JSON.parse(localStorage.getItem("user") || "{}") || null
   );
+
+  const [isOtpVerified, setOtpVerified] = useState<boolean>(false);
+  
+  const verifyOtp = () => {
+    setOtpVerified(true);
+  };
 
   const navigate = useNavigate();
 
@@ -99,7 +106,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, handleLogout, handleFetch }}>
+    <AuthContext.Provider value={{ user, setUser,isOtpVerified, verifyOtp, handleLogout, handleFetch }}>
       {children}
     </AuthContext.Provider>
   );

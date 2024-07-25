@@ -38,7 +38,7 @@ const OtpVerification = ({ email, full_name, password, onOtpVerified }: OtpVerif
 
   const handleOtpSubmit = async () => {
     try {
-      const request = await axios.post("/verify-otp", { email, otp, full_name, password });
+      const request = await axios.post("/verify-otp-account-create", { email, otp, full_name, password });
       const response = request.data;
       if (response.statusCode === 200) {
         alert(response.message);
