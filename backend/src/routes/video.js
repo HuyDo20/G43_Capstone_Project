@@ -19,6 +19,6 @@ router.put("/video/:video_id", checkAuthAndRole([1, 2, 3]), updateVideoById);
 router.patch("/video/:video_id", checkAuthAndRole([1, 2, 3]), deleteVideoById);
 
 router.post('/update-video-learned', videoProgressController.updateVideoProgress);
-router.get('/user-video-learned/:accountId', videoProgressController.getUserVideoProgress);
+router.get('/user-videos-learned/:accountId', videoProgressController.getUserVideoProgress);
 
 module.exports = router;
