@@ -272,7 +272,7 @@ async function createUser(req, res) {
 		avatar,
 		role_id: role_id || 4, 
 		point: point || 0, 
-		status_id: status_id || 2, 
+		status_id: 2, 
 	  });
   
 	  return created(res, ACCOUNT_CREATED, newAccount);
