@@ -310,7 +310,7 @@ function getOtp() {
   }
   
 
-async function getListUser(req, res) {
+  async function getListUser(req, res) {
 	try {
 		const { page = 1, pageSize = 10, email, full_name } = req.query;
 
@@ -319,7 +319,7 @@ async function getListUser(req, res) {
 			...(full_name && { full_name: { [Op.like]: `%${full_name}%` } }),
 		};
 
-		const limit = parseInt(pageSize);
+		const limit = parseInt(pageSize, 10);
 		const offset = (page - 1) * limit;
 
 		const { count, rows } = await Account.findAndCountAll({
@@ -337,19 +337,23 @@ async function getListUser(req, res) {
 				"point",
 				"status_id",
 			],
+			distinct: true,
 		});
 
 		const response = {
 			data: rows,
 			total_pages: Math.ceil(count / limit),
-			current_page: parseInt(page),
+			current_page: parseInt(page, 10),
 		};
+
+		console.log(JSON.stringify(response.total_pages));
 		return responseWithData(res, 200, response);
 	} catch (err) {
-		console.log("Error fetching users:", err);
-		return error(res);
+		console.error("Error fetching users:", err);
+		return error(res, 500, "An error occurred while fetching users.");
 	}
 }
+
 
 
 async function createUser(req, res) {
@@ -378,7 +382,7 @@ async function createUser(req, res) {
 		avatar,
 		role_id: role_id || 4, 
 		point: point || 0, 
-		status_id: status_id || 2, 
+		status_id: 2, 
 	  });
   
 	  return created(res, ACCOUNT_CREATED, newAccount);
