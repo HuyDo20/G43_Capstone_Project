@@ -128,7 +128,7 @@ export default function Vocabulary() {
             setActiveIndex(parseInt(index));
           }
         });
-      }, { threshold: 0.5 });
+      }, { threshold: 0.3 });
   
       itemRefs.current.forEach((ref) => ref && observer.observe(ref));
   
@@ -220,7 +220,7 @@ export default function Vocabulary() {
                     data-index={index}
                   >
                     <Card>
-                      <CardContent className="flex flex-row px-16 pt-10 h-[670px] w-[1200px] bg-[#f2fae9]">
+                      <CardContent className={`flex flex-row px-16 pt-10 h-[670px] w-[1200px] ${isAllLearned ? 'bg-[#e0f7fa]' : 'bg-[#f2fae9]'}`}>
                         <div className="flex flex-col gap-9 basis-2/5">
                           <div className="text-2xl text-[#7db660] font-semibold">
                             Từ vựng{" "}

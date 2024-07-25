@@ -32,4 +32,5 @@ export type GrammarItemList = {
   grammar_structure: string;
   grammar_id: string;
   checkIsRepeat: boolean;
+  isLearned: boolean;
 };
