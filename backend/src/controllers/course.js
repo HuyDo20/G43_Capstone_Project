@@ -55,98 +55,98 @@ const getAllCourse = async (req, res) => {
 const getAllCourseExtend = async (req, res) => {
 	try {
 		const { accountId } = req.body;
-	
-    const courses = await Course.findAll({
-      where: {
-        [Op.or]: [
-          { course_status_id: 1 },
-          { course_status_id: 2 }
-        ]
-      },
-      include: {
-        model: Week,
-        include: {
-          model: Day,
-          include: ['Vocabularies', 'Kanjis', 'Grammars', 'Videos']
-        }
-      },
-      order: [["course_id", "asc"]],
-    });
 
-    if (courses.length > 0) {
-      const coursesWithProgress = await Promise.all(courses.map(async (course) => {
-        let totalItems = 0;
-        let learnedItems = {
-          vocabulary: 0,
-          kanji: 0,
-          grammar: 0,
-          video: 0,
-        };
+		const courses = await Course.findAll({
+			where: {
+				[Op.or]: [
+					{ course_status_id: 1 },
+					{ course_status_id: 2 }
+				]
+			},
+			include: {
+				model: Week,
+				include: {
+					model: Day,
+					include: ['Vocabularies', 'Kanjis', 'Grammars', 'Videos']
+				}
+			},
+			order: [["course_id", "asc"]],
+		});
 
-        for (const week of course.Weeks) {
-          for (const day of week.Days) {
-            // Filter items based on their respective status_id (assuming these fields exist and are required for filtering)
-            const vocabularies = day.Vocabularies.filter(v => v.vocab_status_id === 1);
-            const kanjis = day.Kanjis.filter(k => k.kanji_status_id === 1); // Assuming kanji_status_id exists
-            const grammars = day.Grammars.filter(g => g.grammar_status_id === 1); // Assuming grammar_status_id exists
-            const videos = day.Videos.filter(v => v.video_status_id === 1); // Assuming video_status_id exists
+		if (courses.length > 0) {
+			const coursesWithProgress = await Promise.all(courses.map(async (course) => {
+				let totalItems = 0;
+				let learnedItems = {
+					vocabulary: 0,
+					kanji: 0,
+					grammar: 0,
+					video: 0,
+				};
 
-            totalItems += vocabularies.length + kanjis.length + grammars.length + videos.length;
+				for (const week of course.Weeks) {
+					for (const day of week.Days) {
+						// Filter items based on their respective status_id (assuming these fields exist and are required for filtering)
+						const vocabularies = day.Vocabularies.filter(v => v.vocab_status_id === 1);
+						const kanjis = day.Kanjis.filter(k => k.kanji_status_id === 1); // Assuming kanji_status_id exists
+						const grammars = day.Grammars.filter(g => g.grammar_status_id === 1); // Assuming grammar_status_id exists
+						const videos = day.Videos.filter(v => v.video_status_id === 1); // Assuming video_status_id exists
 
-            // Calculate progress for each category
-            learnedItems.vocabulary += await VocabularyProgress.count({
-              where: {
-                account_id: accountId,
-                learned: true,
-                vocabulary_id: vocabularies.map(v => v.vocab_id),
-              }
-            });
+						totalItems += vocabularies.length + kanjis.length + grammars.length + videos.length;
 
-            learnedItems.kanji += await KanjiProgress.count({
-              where: {
-                account_id: accountId,
-                learned: true,
-                kanji_id: kanjis.map(k => k.kanji_id),
-              }
-            });
+						// Calculate progress for each category
+						learnedItems.vocabulary += await VocabularyProgress.count({
+							where: {
+								account_id: accountId,
+								learned: true,
+								vocabulary_id: vocabularies.map(v => v.vocab_id),
+							}
+						});
 
-            learnedItems.grammar += await GrammarProgress.count({
-              where: {
-                account_id: accountId,
-                learned: true,
-                grammar_id: grammars.map(g => g.grammar_id),
-              }
-            });
+						learnedItems.kanji += await KanjiProgress.count({
+							where: {
+								account_id: accountId,
+								learned: true,
+								kanji_id: kanjis.map(k => k.kanji_id),
+							}
+						});
 
-            learnedItems.video += await VideoProgress.count({
-              where: {
-                account_id: accountId,
-                watched: true,
-                video_id: videos.map(v => v.video_id),
-              }
-            });
-          }
-        }
+						learnedItems.grammar += await GrammarProgress.count({
+							where: {
+								account_id: accountId,
+								learned: true,
+								grammar_id: grammars.map(g => g.grammar_id),
+							}
+						});
 
-        const totalProgress = Object.values(learnedItems).reduce((a, b) => a + b, 0);
-        const progressPercentage = totalItems > 0 ? (totalProgress / totalItems) * 100 : 0;
+						learnedItems.video += await VideoProgress.count({
+							where: {
+								account_id: accountId,
+								watched: true,
+								video_id: videos.map(v => v.video_id),
+							}
+						});
+					}
+				}
 
-        return {
-          ...course.toJSON(), // Include all original course data
-          progress: {
-            totalItems,
-            totalProgress,
-            learnedItems,
-            progressPercentage,
-			}
+				const totalProgress = Object.values(learnedItems).reduce((a, b) => a + b, 0);
+				const progressPercentage = totalItems > 0 ? (totalProgress / totalItems) * 100 : 0;
 
-        };
-      }));
+				return {
+					...course.toJSON(), // Include all original course data
+					progress: {
+						totalItems,
+						totalProgress,
+						learnedItems,
+						progressPercentage,
+					},
+					totalProgress:progressPercentage				
+				};
+			}));
 
-      return responseWithData(res, 200, coursesWithProgress);
-    } else {
-      return badRequest(res, 'COURSE_GET_FAILED');
-    }
+			return responseWithData(res, 200, coursesWithProgress);
+		} else {
+			return badRequest(res, 'COURSE_GET_FAILED');
+		}
 	} catch (e) {
 		console.error("getAllCourse", e);
 		return error(res);

@@ -7,12 +7,14 @@ const {
 	deleteCourseById,
 	getCourseDetailById,
 	updateCourseDetail,
+	getAllCourseExtend
 } = require("../controllers/course");
 const courseEnrollmentController = require("../controllers/courseEnrollmentController");
 const { checkAuthAndRole } = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/all_course", checkAuthAndRole([1, 2, 3, 4]), getAllCourse);
+router.post("/all_course_extend", checkAuthAndRole([1, 2, 3, 4]), getAllCourseExtend);
 router.get("/course/:course_id", checkAuthAndRole([1, 2, 3, 4]), getCourseById);
 router.post("/course", checkAuthAndRole([1, 3]), createNewCourse);
 router.put("/course/:course_id", checkAuthAndRole([1, 2, 3]), updateCourseById);
