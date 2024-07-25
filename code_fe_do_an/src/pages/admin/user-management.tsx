@@ -6,12 +6,11 @@ import {
   Select,
   Space,
   Table,
-  Tag,
-  Pagination
+  Tag,Pagination
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit } from "react-icons/ai";
 
 interface User {
   id: number;
@@ -488,12 +487,15 @@ const UserManagementPage: React.FC = () => {
         pagination={{
           current: currentPage,
           total: totalPages * 10,
+          showSizeChanger:false,
           onChange: (page) => {
             setCurrentPage(page);
             setReload(true);
           },
+          
         }}
       />
+       
       <ModalEdit
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
