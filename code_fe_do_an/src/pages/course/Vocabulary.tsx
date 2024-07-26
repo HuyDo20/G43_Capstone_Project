@@ -179,12 +179,15 @@ export default function Vocabulary() {
       ?.every((lesson) => isLearned(lesson.vocab_id));
 
     const handleSummaryClick = (index) => {
-        setActiveIndex(index);
-        const targetItem = itemRefs.current[index];
-        if (targetItem) {
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    };
+      console.log("is view have summary el" + viewedItems.has(index));
+  if (viewedItems.has(index)) {
+    setActiveIndex(index);
+    const targetItem = itemRefs.current[index];
+    if (targetItem) {
+      targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+};
   
     const handleCarouselPrevious = () => {
       if (activeIndex > 0) {
