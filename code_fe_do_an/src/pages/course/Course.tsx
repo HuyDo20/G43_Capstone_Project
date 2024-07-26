@@ -58,7 +58,7 @@ export default function Course() {
                 course_image={courseData.course_image}
                 description={courseData.description}
                 week={courseData.week}
-                totalProgress={courseData.totalProgress}
+                totalProgress={courseData.progress.progressPercentage}
               />
             ))}
           </div>

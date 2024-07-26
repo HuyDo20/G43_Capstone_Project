@@ -66,7 +66,7 @@ export default function LearningProcess() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center w-full mt-12">
+     <div className="flex items-center justify-center w-full mt-12">
       <div className="flex flex-col w-full h-full gap-3 p-10 bg-white shadow-sm rounded-3xl">
         <div className="mt-5 text-xl font-semibold text-center">TIẾN ĐỘ HỌC TẬP</div>
         <div className="flex flex-col gap-7">
@@ -85,23 +85,23 @@ export default function LearningProcess() {
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center gap-1">
                     <div className="basis-1/2">Từ vựng</div>
-                    <Progress className="h-[10px]" value={Math.round(course.progress.learnedItems.vocabulary / course.progress.totalItems * 100)} />
-                    <div className="text-[#9cda58]">{Math.round(course.progress.learnedItems.vocabulary / course.progress.totalItems * 100)}%</div>
+                    <Progress className="h-[10px]" value={Math.round(course.progress.vocabulary.percentage)} />
+                    <div className="text-[#9cda58]">{Math.round(course.progress.vocabulary.percentage)}%</div>
                   </div>
                   <div className="flex flex-row items-center gap-1">
                     <div className="basis-1/2">Kanji</div>
-                    <Progress className="h-[10px]" value={Math.round(course.progress.learnedItems.kanji / course.progress.totalItems * 100)} />
-                    <div className="text-[#9cda58]">{Math.round(course.progress.learnedItems.kanji / course.progress.totalItems * 100)}%</div>
+                    <Progress className="h-[10px]" value={Math.round(course.progress.kanji.percentage)} />
+                    <div className="text-[#9cda58]">{Math.round(course.progress.kanji.percentage)}%</div>
                   </div>
                   <div className="flex flex-row items-center gap-1">
                     <div className="basis-1/2">Ngữ pháp</div>
-                    <Progress className="h-[10px]" value={Math.round(course.progress.learnedItems.grammar / course.progress.totalItems * 100)} />
-                    <div className="text-[#9cda58]">{Math.round(course.progress.learnedItems.grammar / course.progress.totalItems * 100)}%</div>
+                    <Progress className="h-[10px]" value={Math.round(course.progress.grammar.percentage)} />
+                    <div className="text-[#9cda58]">{Math.round(course.progress.grammar.percentage)}%</div>
                   </div>
                   <div className="flex flex-row items-center gap-1">
                     <div className="basis-1/2">Video</div>
-                    <Progress className="h-[10px]" value={Math.round(course.progress.learnedItems.video / course.progress.totalItems * 100)} />
-                    <div className="text-[#9cda58]">{Math.round(course.progress.learnedItems.video / course.progress.totalItems * 100)}%</div>
+                    <Progress className="h-[10px]" value={Math.round(course.progress.video.percentage)} />
+                    <div className="text-[#9cda58]">{Math.round(course.progress.video.percentage)}%</div>
                   </div>
                 </div>
               </div>
