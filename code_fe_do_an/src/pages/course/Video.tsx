@@ -102,6 +102,34 @@ export default function Video() {
       setReload(false);
     }
   }, [reload]);
+
+    const handleCompleteVideo = async (video_id) => {
+    try {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      }
+      const request = await axios.post('/update-video-learned', {
+        accountId: accountId,
+        videoId: video_id,
+      }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+       
+      if (request.status === 200) {
+        setCompletedVideos(prevCompletedVideos => new Set(prevCompletedVideos).add(video_id));
+        setReload(true); 
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div>
       {/* Header */}
