@@ -119,24 +119,24 @@ export default function Kanji() {
     const [allViewed, setAllViewed] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
   
-    useEffect(() => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = entry.target.dataset.index;
-            handleViewItem(index);
-            setViewedItems((prev) => new Set(prev).add(parseInt(index)));
-            setActiveIndex(parseInt(index));
-          }
-        });
-      }, { threshold: 0.5 });
-  
-      itemRefs.current.forEach((ref) => ref && observer.observe(ref));
-  
-      return () => {
-        itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
-      };
-    }, [itemRefs.current]);
+       useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = parseInt(entry.target.dataset.index, 10);
+          handleViewItem(index);
+          setViewedItems((prev) => new Set(prev).add(index));
+          setActiveIndex(index);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    itemRefs.current.forEach((ref) => ref && observer.observe(ref));
+
+    return () => {
+      itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
+    };
+  }, [dayCurrent]);
   
     useEffect(() => {
       const numberOfKanji = dayCurrent?.lessons?.filter(lesson => lesson.kanji_id !== undefined).length;
@@ -176,48 +176,61 @@ export default function Kanji() {
     const isAllLearned = dayCurrent?.lessons
       ?.filter((lesson) => lesson.kanji_id !== undefined)
       ?.every((lesson) => isLearned(lesson.kanji_id));
-
-    const handleSummaryClick = (index) => {
-        setActiveIndex(index);
-        const targetItem = itemRefs.current[index];
-        if (targetItem) {
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    };
-  
-    const handleCarouselPrevious = () => {
-      if (activeIndex > 0) {
-        setActiveIndex(activeIndex - 1);
-        const targetItem = itemRefs.current[activeIndex - 1];
-        if (targetItem) {
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+    
+ const handleSummaryClick = (index) => {
+    if (viewedItems.has(index)) {
+      setActiveIndex(index);
+      const targetItem = itemRefs.current[index];
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       }
-    };
+    }
+  };
   
-    const handleCarouselNext = () => {
-      if (activeIndex < dayCurrent?.lessons?.length - 1) {
-        setActiveIndex(activeIndex + 1);
-        const targetItem = itemRefs.current[activeIndex + 1];
-        if (targetItem) {
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+      const handleCarouselPrevious = () => {
+    if (activeIndex > 0) {
+      setActiveIndex(activeIndex - 1);
+      const targetItem = itemRefs.current[activeIndex - 1];
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
       }
+    }
+  };
+  
+    
+     const handleCarouselNext = () => {
+    if (activeIndex < dayCurrent?.lessons?.length - 1) {
+      setActiveIndex(activeIndex + 1);
+      const targetItem = itemRefs.current[activeIndex + 1];
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }
     };
   
     return (
-      <div>
-        <Carousel className="w-[1200px]" activeIndex={activeIndex}>
+      <div className="flex items-center">
+        <button
+      onClick={handleCarouselPrevious}
+      className="bg-gray-200 rounded-full p-2 shadow-lg"
+    >
+      <HiOutlineChevronLeft size={30} />
+    </button>
+        <Carousel className="w-[1200px]" activeIndex={activeIndex} style={{ pointerEvents: 'none' }}>
           <CarouselContent>
             {dayCurrent?.lessons
               ?.filter((item) => item.kanji_id)
               ?.map((lesson, index) => (
-                <CarouselItem key={index} active={index === activeIndex}>
-                  <div
-                    className="p-1"
-                    ref={(el) => (itemRefs.current[index] = el)}
-                    data-index={index}
-                  >
+                <CarouselItem key={index} active={index === activeIndex} >
+                    <div
+                  className="p-1"
+                  ref={(el) => {
+                    if (el && !itemRefs.current[index]) {
+                      itemRefs.current[index] = el;
+                    }
+                  }}
+                  data-index={index}
+                >
                     <Card>
                       <CardContent className={`flex flex-row px-16 pt-10 h-[670px] w-[1200px] ${isAllLearned ? 'bg-[#e0f7fa]' : 'bg-[#f2fae9]'}`}>
                         <div className="flex flex-col gap-9 basis-2/5">
@@ -308,20 +321,15 @@ export default function Kanji() {
                 </CarouselItem>
               ))}
           </CarouselContent>
-          <button
-        onClick={handleCarouselPrevious}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 shadow-lg"
-      >
-        <HiOutlineChevronLeft size={30} />
-      </button>
-      <button
-        onClick={handleCarouselNext}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 shadow-lg"
-      >
-        <HiOutlineChevronRight size={30} />
-      </button>
+          
         </Carousel>
-        <div className="summary-section flex justify-center mt-4" style={{ display: isAllLearned ? 'none' : 'normal' }}>
+        <button
+      onClick={handleCarouselNext}
+      className="bg-gray-200 rounded-full p-2 shadow-lg"
+    >
+      <HiOutlineChevronRight size={30} />
+    </button>
+        <div className="summary-section block justify-center mt-4" style={{ display: isAllLearned ? 'none' : 'normal' }}>
           {dayCurrent?.lessons
             ?.filter((item) => item.kanji_id)
             ?.map((_, index) => (
