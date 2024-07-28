@@ -8,6 +8,7 @@ const {
 	ok,
 } = require("../handlers/response_handler");
 const { Account } = require("../../models");
+const { Notification } = require("../../models")
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../middleware/auth");
@@ -45,11 +46,17 @@ async function loginAccount(req, res) {
 		if (!isMatch) {
 			return badRequest(res, INVALID_PASSWORD);
 		}
+		
+		// lay thong tin user 
 		let userData = omitPassword(user);
+
+		// update token moi cho user
 		const token = generateToken(userData, false);
 		const refreshToken = generateToken(userData, true);
 		user.refresh_token = refreshToken;
 		await user.save();
+		
+		// tao data de tra ve
 		res.cookie("refresh_token", refreshToken, {
 			httpOnly: true,
 			secure: true,
@@ -61,6 +68,8 @@ async function loginAccount(req, res) {
 			data: userData,
 			message: ACCOUNT_LOGIN,
 		};
+
+		// tra data 
 		return responseWithData(res, 200, result);
 	} catch (err) {
 		console.error("Error during login", err);

@@ -7,6 +7,10 @@ const grammarMessages = require("./grammar");
 const grammarExampleMessages = require("./grammar_example");
 const lessonMessages = require("./lesson");
 const quiz_Messages = require("./quiz");
+const noti_Messages = require("./notification");
+
+// Common messages
+const UNEXPECTED_ERROR = 'Unexpected error'
 
 module.exports = {
 	userMessages,
@@ -18,4 +22,6 @@ module.exports = {
 	grammarExampleMessages,
 	lessonMessages,
 	quiz_Messages,
+	noti_Messages,
+	UNEXPECTED_ERROR
 };

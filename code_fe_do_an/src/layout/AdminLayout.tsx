@@ -7,6 +7,7 @@ import {
   PlusOutlined,
   SettingOutlined,
   UserOutlined,
+  NotificationOutlined
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useState } from "react";
@@ -57,6 +58,9 @@ const AdminLayout = ({ children }) => {
               <Link to="/admin/course-management/create">Create</Link>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item key="5" icon={<NotificationOutlined />}>
+            <Link to="/admin/notification/list">Notification</Link>
+          </Menu.Item>
           <Menu.Item
             key="logout"
             onClick={handleLogout}

@@ -23,5 +23,6 @@ module.exports = [
 	require("./account_week"),
 	require("./video_question"),
 	require("./video_option"),
-	require("./upload_file")
+	require("./upload_file"),
+	require("./notification"),
 ];

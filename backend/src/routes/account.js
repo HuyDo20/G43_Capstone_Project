@@ -4,7 +4,7 @@ const { registerAccount, getListUser, updateUserById, deleteUserById, getUserByI
 const { checkAuthAndRole } = require("../middleware/auth");
 const { registerAccountSystem, logoutAccount } = require("../controllers/account");
 const router = express.Router();
-
+ 
 router.post("/login", loginAccount);
 router.post("/register", registerAccount);
 router.post("/create-account-system", registerAccountSystem);
