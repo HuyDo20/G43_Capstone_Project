@@ -11,6 +11,7 @@ const UPDATE_NOTI_FAILED = 'Can not update notification'
 // Common error messages
 const INVALID_NOTI_ID = 'Invalid notification id'
 const INVALID_NOTI_TYPE = 'Invalid notification fetching type'
+const INVALID_NOTI_GET_ID = 'Invalid notification fetching id'
 
 // guard messages
 const TITLE_GUARD = 'Title must be non-empty string'
@@ -30,6 +31,7 @@ module.exports = {
     UPDATE_NOTI_FAILED,
     INVALID_NOTI_ID,
     INVALID_NOTI_TYPE,
+    INVALID_NOTI_GET_ID,
     TITLE_GUARD,
     CONTENT_GUARD,
     ID_GUARD,

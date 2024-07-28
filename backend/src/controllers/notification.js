@@ -21,7 +21,8 @@ const {
 	NOTI_DATE_GUARD,
 	READ_GUARD,
 	TARGET_ID_GUARD,
-	SOURCE_ID_GUARD
+	SOURCE_ID_GUARD,
+	INVALID_NOTI_GET_ID
 } = require('../messages/notification');
 
 const NOTI_GET_TYPES = ['all','read','unread']
@@ -71,12 +72,14 @@ const createNoti = async (req, res) => {
 	}
 }
 
-const getNotiByTargetId = async (req, res) => {
+const getNotiById = async (req, res) => {
 	try {
-		const { target_id, type = "all", next_page = 1, limit = 10 } = req.body;
+		const { source_id, target_id, type = "all", next_page = 1, limit = 10 } = req.body;
 
 		// validate data // TODO: update if there is other way to guard data type
 		if( !NOTI_GET_TYPES.includes(type)) return badRequest(res, INVALID_NOTI_TYPE)
+		if( source_id && source_id.trim().length == 0 && target_id && target_id.trim().length == 0)
+			return badRequest(res, INVALID_NOTI_GET_ID)
 
 		// decide is_read condition
 		let readCondition = {}
@@ -91,9 +94,15 @@ const getNotiByTargetId = async (req, res) => {
 				break
 		}
 
+		const targetIdCondition = target_id && target_id.trim().length > 0 ? { target_id: target_id.trim() } : {}
+		const sourceIdCondition = source_id && source_id.trim().length > 0 ? { source_id: source_id.trim() } : {}
+
 		// get data
 		const { count, rows } = await Notification.findAndCountAll({ 
-			where: { target_id, ...readCondition },
+			where: { 
+				...targetIdCondition,
+				...sourceIdCondition,
+				...readCondition },
 			limit: limit,
 			offset: limit * (next_page - 1),
 			order: [
@@ -171,7 +180,7 @@ const updateNoti = async (req, res) => {
 }
 
 module.exports = {
-    getNotiByTargetId,
+    getNotiByTargetId: getNotiById,
     createNoti,
     updateNoti,
 }
