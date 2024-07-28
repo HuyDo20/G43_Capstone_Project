@@ -81,27 +81,32 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   }, [data]);
 
   const handleCreateAccount = async () => {
+    // Set default password if it is null or empty
+    if (!userData.password) {
+      userData.password = '12345678'; // Set your default password here
+    }
+  
+    // Adjusted validation check to ensure correct checking of null values
     if (
-      !userData.full_name ||
-      !userData.avatar ||
-      !userData.email ||
-      !userData.phone_number ||
-      !userData.password ||
+      !userData.full_name.trim() ||
+      !userData.email.trim() ||
+      !userData.phone_number.trim() ||
+      !userData.password.trim() ||
       !userData.role_id ||
-      !userData.point ||
-      !userData.dob ||
+      userData.point === null || // Ensure point is not null
+      !userData.dob.trim() ||
       !userData.status_id
     ) {
       alert("Please fill in all required fields");
       return;
     }
-
+  
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(userData.phone_number)) {
       alert("Phone number is invalid");
       return;
     }
-
+  
     try {
       let token = "";
       const userEncode = localStorage.getItem("user");
@@ -109,7 +114,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
       }
-      const response = await axios.post("/account", {...userData, role_id: userData.role_id});
+      const response = await axios.post("/account", { ...userData, role_id: userData.role_id });
       if (response.status === 201) {
         alert("Create successful");
         setReload(true);
@@ -121,6 +126,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       console.error(error);
     }
   };
+  
 
   return (
     <Modal
@@ -147,10 +153,11 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         </Form.Item>
 
         <Form.Item label="Password">
-          <Input.Password
-            value={userData.password}
-            onChange={handleChangeInput}
-            name="password"
+        <Input.Password
+        value={userData.password  ? userData.password : '12345678'}
+        onChange={handleChangeInput}
+        name="password"
+        readOnly
           />
         </Form.Item>
 
@@ -199,6 +206,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
             value={userData.point}
             onChange={handleChangeInput}
             name="point"
+            readOnly
           />
         </Form.Item>
       </Form>
@@ -326,7 +334,7 @@ const UserManagementPage: React.FC = () => {
                 }
                 value={selectedItem.role_id}
                 options={[
-                  { label: "Admin", value: 1 },
+              
                   { label: "Content Manager", value: 2 },
                   { label: "Content Creator", value: 3 },
                   { label: "User", value: 4 },
