@@ -29,13 +29,36 @@ export default function LearningByWeek() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
+        console.log(result);
         setCourseData(result.courseData);
         setWeekData(result.weekData);
         setWeekSelected(result.weekData[0]);
       }
     };
+
+    const handleFetchDetailCourseProgress = async () => {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userDecode?.account_id;
+      }
+      const request = await axios.post("/get_detail_course_progress_by_week", { accountId }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = request.data;
+      if (response.statusCode === 200) {
+        console.log(response);
+        setCourseList(response.data);
+      }
+    };
     if (reload) {
       handleFetchData();
+      handleFetchDetailCourseProgress();
       setReload(false);
     }
   }, [reload]);

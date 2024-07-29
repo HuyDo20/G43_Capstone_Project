@@ -30,8 +30,7 @@ export default function LearningProcess() {
 
         if (response.status === 200 && response.data.statusCode === 200) {
           // Access the correct data structure and filter enrolled courses
-          const coursesData = response.data.data;
-          console.log(coursesData);
+          const coursesData = response.data.data;       
           const enrolledCourses = [];
 
           for (const course of coursesData) {
