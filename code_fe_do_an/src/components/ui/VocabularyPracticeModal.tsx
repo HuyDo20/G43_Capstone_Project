@@ -2,22 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Carousel as AntCarousel, Button } from 'antd';
 import VocabularyTestItem from '@/components/ui/VocabularyTestItem';
 
-const VocabularyPracticeModal = ({ dayCurrent, isModalVisible, onClose }) => {
+const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
   const [userAnswers, setUserAnswers] = useState([]);
-  const [reload, setReload] = useState(true);
   const [practicalData, setPracticalData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const carouselRef = useRef(null); 
 
-  console.log("day cureent " + dayCurrent);
-
  useEffect(() => {
    const handleFetchPracticalData = async () => { 
-         const vocabularyIds = dayCurrent?.lessons
-        ?.filter((lesson) => lesson.vocab_id !== undefined)
-       ?.map((lesson) => lesson.vocab_id);
-     console.log("fetch quest data for list vocab id: " + vocabularyIds);
+     console.log("fetch quest data for list vocab id: " + vocabIds);
         const dataTest = [
           {
             "question": "What is the meaning of 'example'?",
@@ -52,12 +46,12 @@ const VocabularyPracticeModal = ({ dayCurrent, isModalVisible, onClose }) => {
         console.error("Error update vocabulary process", error);
         alert('An error occurred');
         }
-    };
-    if (reload) {
+   };
+   
+    if (isModalVisible) {
       handleFetchPracticalData();
-      setReload(false);
     }
-  }, [reload]);
+  }, [isModalVisible]);
 
   const onAnswerSelect = (isCorrect) => {
     if (userAnswers.length <= currentSlide) {

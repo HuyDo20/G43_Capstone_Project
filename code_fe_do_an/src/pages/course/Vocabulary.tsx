@@ -32,6 +32,7 @@ export default function Vocabulary() {
   const { id, week_id, day_id } = useParams();
   const [learnedVocab, setLearnedVocab] = useState(new Set());
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [practicalVocabularyIds, setPracticalVocabularyIds] = useState([]);
 
   const navigate = useNavigate();
 
@@ -173,10 +174,12 @@ export default function Vocabulary() {
       }
     };
 
-      const handlePractice = async () => {
-  
-        
-    setIsModalVisible(true);
+    const handlePractice = async () => {
+      const vocabularyIds = dayCurrent?.lessons
+        ?.filter((lesson) => lesson.vocab_id !== undefined)
+        ?.map((lesson) => lesson.vocab_id);
+      setPracticalVocabularyIds(vocabularyIds);
+      setIsModalVisible(true);
     };
 
     const isLearned = (vocabId) => {
@@ -426,7 +429,7 @@ export default function Vocabulary() {
               </div>
               <div>
                 <VocabularyPracticeModal
-                dayCurrent={dayCurrent}
+                vocabIds={practicalVocabularyIds}
                 isModalVisible={isModalVisible}
                 onClose={handleClose}
                 />
