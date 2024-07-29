@@ -21,6 +21,8 @@ import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
+// import VocabularyTestingCarousel from "@/components/ui/VocabularyTestingCarousel";
+import VocabularyTestItem from "@/components/ui/VocabularyTestItem";
 
 export default function Vocabulary() {
   const [reload, setReload] = useState(true);
@@ -45,7 +47,7 @@ export default function Vocabulary() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-  
+
         setCourseData(result.courseData);
         setWeekSelected(
           result.weekData?.find((item) => item.week_id === parseInt(week_id))
@@ -75,7 +77,7 @@ export default function Vocabulary() {
     const fetchLearnedVocab = async () => {
       try {
         let token = "";
-        let accountId ;
+        let accountId;
         const userEncode = localStorage.getItem("user");
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
@@ -88,10 +90,10 @@ export default function Vocabulary() {
           },
         });
         if (request.status === 200) {
-          const learnedVocabIds = request.data.map((item) => item.vocabulary_id);      
+          const learnedVocabIds = request.data.map((item) => item.vocabulary_id);
           setLearnedVocab(new Set(learnedVocabIds));
         }
-        else{
+        else {
           alert("fail");
         }
       } catch (error) {
@@ -105,51 +107,51 @@ export default function Vocabulary() {
       setReload(false);
     }
   }, [reload]);
-  
+
 
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
     audio.play();
   };
 
-  const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id}) => {
+  const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id }) => {
     const [viewedItems, setViewedItems] = useState(new Set([0]));
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-  
-      useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const index = parseInt(entry.target.dataset.index, 10);
-          handleViewItem(index);
-          setViewedItems((prev) => new Set(prev).add(index));
-          setActiveIndex(index);
-        }
-      });
-    }, { threshold: 0.3 });
 
-    itemRefs.current.forEach((ref) => ref && observer.observe(ref));
+    useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.index, 10);
+            handleViewItem(index);
+            setViewedItems((prev) => new Set(prev).add(index));
+            setActiveIndex(index);
+          }
+        });
+      }, { threshold: 0.3 });
 
-    return () => {
-      itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
-    };
-  }, [dayCurrent]);
+      itemRefs.current.forEach((ref) => ref && observer.observe(ref));
 
-  
-    
+      return () => {
+        itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
+      };
+    }, [dayCurrent]);
+
+
+
     useEffect(() => {
       const numberOfVocabulary = dayCurrent?.lessons?.filter(lesson => lesson.vocab_id !== undefined).length;
       if (numberOfVocabulary === viewedItems.size) {
         setAllViewed(true);
       }
     }, [viewedItems, dayCurrent]);
-  
+
     const handleComplete = async () => {
       const vocabularyIds = dayCurrent?.lessons
-      ?.filter((lesson) => lesson.vocab_id !== undefined)
-      ?.map((lesson) => lesson.vocab_id);
+        ?.filter((lesson) => lesson.vocab_id !== undefined)
+        ?.map((lesson) => lesson.vocab_id);
 
       try {
         const userEncode = localStorage.getItem("user");
@@ -168,145 +170,128 @@ export default function Vocabulary() {
         alert('An error occurred');
       }
     };
- 
+
     const isLearned = (vocabId) => {
       const learned = learnedVocab.has(vocabId);
       return learned;
     };
-  
+
     // Filter lessons with defined vocab_id and check if all are learned
     const isAllLearned = dayCurrent?.lessons
       ?.filter((lesson) => lesson.vocab_id !== undefined)
       ?.every((lesson) => isLearned(lesson.vocab_id));
 
-         const handleSummaryClick = (index) => {
-    if (viewedItems.has(index)) {
-      setActiveIndex(index);
-      const targetItem = itemRefs.current[index];
-      if (targetItem) {
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    const handleSummaryClick = (index) => {
+      if (viewedItems.has(index)) {
+        setActiveIndex(index);
+        const targetItem = itemRefs.current[index];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        }
       }
-    }
-  };
-  
-      const handleCarouselPrevious = () => {
-    if (activeIndex > 0) {
-      setActiveIndex(activeIndex - 1);
-      const targetItem = itemRefs.current[activeIndex - 1];
-      if (targetItem) {
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-      }
-    }
-  };
-  
-    
-     const handleCarouselNext = () => {
-    if (activeIndex < dayCurrent?.lessons?.length - 1) {
-      setActiveIndex(activeIndex + 1);
-      const targetItem = itemRefs.current[activeIndex + 1];
-      if (targetItem) {
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-      }
-    }
     };
-  
+
+    const handleCarouselPrevious = () => {
+      if (activeIndex > 0) {
+        setActiveIndex(activeIndex - 1);
+        const targetItem = itemRefs.current[activeIndex - 1];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        }
+      }
+    };
+
+
+    const handleCarouselNext = () => {
+      if (activeIndex < dayCurrent?.lessons?.length - 1) {
+        setActiveIndex(activeIndex + 1);
+        const targetItem = itemRefs.current[activeIndex + 1];
+        if (targetItem) {
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        }
+      }
+    };
+
     return (
       <div className="flex items-center">
-            <button
-      onClick={handleCarouselPrevious}
-      className="bg-gray-200 rounded-full p-2 shadow-lg"
-    >
-      <HiOutlineChevronLeft size={30} />
-    </button>
+        <button
+          onClick={handleCarouselPrevious}
+          className="bg-gray-200 rounded-full p-2 shadow-lg"
+        >
+          <HiOutlineChevronLeft size={30} />
+        </button>
+           {isAllLearned ? (
+          // <VocabularyTestingCarousel activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+           <Carousel className="w-[1200px]" activeIndex={activeIndex} >
+      <CarouselContent>
+        <CarouselItem active={true}>
+          <VocabularyTestItem
+            question="What is the meaning of 'example'?"
+            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
+            correctAnswer="Example 2"
+            onAnswerSelect={handleAnswerSelect}
+          />
+              </CarouselItem>
+                <CarouselItem active={true}>
+          <VocabularyTestItem
+            question="What is the meaning of 'example'?"
+            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
+            correctAnswer="Example 2"
+            onAnswerSelect={handleAnswerSelect}
+          />
+              </CarouselItem>
+                <CarouselItem active={true}>
+          <VocabularyTestItem
+            question="What is the meaning of 'example'?"
+            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
+            correctAnswer="Example 2"
+            onAnswerSelect={handleAnswerSelect}
+          />
+        </CarouselItem>
+          <CarouselItem active={true}>
+          <VocabularyTestItem
+            question="What is the meaning of 'example'?"
+            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
+            correctAnswer="Example 2"
+            onAnswerSelect={handleAnswerSelect}
+          />
+        </CarouselItem>
+      </CarouselContent>
+    </Carousel>
+      ) : (
         <Carousel className="w-[1200px]" activeIndex={activeIndex} style={{ pointerEvents: 'none' }}>
           <CarouselContent>
             {dayCurrent?.lessons
               ?.filter((item) => item.vocab_id)
               ?.map((lesson, index) => (
-                <CarouselItem key={index} active={index === activeIndex} >
-                    <div
-                  className="p-1"
-                  ref={(el) => {
-                    if (el && !itemRefs.current[index]) {
-                      itemRefs.current[index] = el;
-                    }
-                  }}
-                  data-index={index}
-                >
+                <CarouselItem key={index} active={index === activeIndex}>
+                  <div
+                    className="p-1"
+                    ref={(el) => {
+                      if (el && !itemRefs.current[index]) {
+                        itemRefs.current[index] = el;
+                      }
+                    }}
+                    data-index={index}
+                  >
                     <Card>
                       <CardContent className={`flex flex-row px-16 pt-10 h-[670px] w-[1200px] ${isAllLearned ? 'bg-[#e0f7fa]' : 'bg-[#f2fae9]'}`}>
-                        <div className="flex flex-col gap-9 basis-2/5">
-                          <div className="text-2xl text-[#7db660] font-semibold">
-                            Từ vựng{" "}
-                            {parseInt(lesson.day_id) !== parseInt(day_id) && (
-                              <>
-                                &ensp; <Tag color="green">Nhắc lại</Tag>
-                              </>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-center gap-5">
-                            <img
-                              className="h-[450px] w-[450px] rounded-md shadow-md"
-                              src={
-                                lesson?.vocab_image
-                                  ? lesson?.vocab_image.split(", ")[0]
-                                  : "/banner.png"
-                              }
-                            />
-                            <HiMiniSpeakerWave
-                              size={30}
-                              className="cursor-pointer"
-                              onClick={() => handlePlayAudio(lesson.vocab_audio)}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col p-16 basis-3/5">
-                          <div className="flex flex-row basis-1/4">
-                            <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
-                                Từ vựng
-                              </div>
-                              <div>{lesson.vocab_name}</div>
-                            </div>
-                            <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
-                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
-                                Kanji
-                              </div>
-                              <div>{lesson.vocab_kanji}</div>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-center justify-center gap-3 basis-1/4">
-                            <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
-                              Nghĩa
-                            </div>
-                            <div>{lesson.vocab_meaning}</div>
-                          </div>
-  
-                          <div className="flex flex-col items-center gap-5 pt-10 basis-2/4 ">
-                            <div className="flex flex-col items-center justify-center gap-3">
-                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
-                                Ví dụ
-                              </div>
-                              <div className="flex flex-col gap-2">
-                                <div>{lesson.vocab_example}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        {/* Your existing lesson CarouselItem code */}
                       </CardContent>
                     </Card>
                   </div>
                 </CarouselItem>
               ))}
           </CarouselContent>
-         
         </Carousel>
+        )}
+        
         <button
-      onClick={handleCarouselNext}
-      className="bg-gray-200 rounded-full p-2 shadow-lg"
-    >
-      <HiOutlineChevronRight size={30} />
-    </button>
+          onClick={handleCarouselNext}
+          className="bg-gray-200 rounded-full p-2 shadow-lg"
+        >
+          <HiOutlineChevronRight size={30} />
+        </button>
         <div className="summary-section block justify-center mt-4" style={{ display: isAllLearned ? 'none' : 'normal' }}>
           {dayCurrent?.lessons
             ?.filter((item) => item.vocab_id)
@@ -314,13 +299,12 @@ export default function Vocabulary() {
               <div
                 key={index}
                 onClick={() => handleSummaryClick(index)}
-                className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
-                  index === activeIndex
+                className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${index === activeIndex
                     ? 'bg-blue-500'
                     : viewedItems.has(index)
-                    ? 'bg-green-500'
-                    : 'bg-gray-300'
-                }`}
+                      ? 'bg-green-500'
+                      : 'bg-gray-300'
+                  }`}
               >
                 {index + 1}
               </div>
@@ -331,7 +315,7 @@ export default function Vocabulary() {
             Đã hoàn thành
           </div>
         )}
-  
+
         {allViewed && !isAllLearned && (
           <div className="fixed bottom-5 right-10">
             <button
@@ -345,7 +329,7 @@ export default function Vocabulary() {
       </div>
     );
   };
-  
+
 
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
 
@@ -418,7 +402,7 @@ export default function Vocabulary() {
                   currentIndex={0}
                   handleViewItem={(index) => console.log('View item', index)}
                   handlePlayAudio={(audioUrl) => handlePlayAudio(audioUrl)}
-                  day_id={day_id}         
+                  day_id={day_id}
                 />
               </div>
             </div>
