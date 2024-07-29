@@ -50,7 +50,7 @@ export default function Course() {
             <div className="text-2xl font-semibold text-[#78b24d]">
               KHÓA HỌC
             </div>
-            {courseList.map((courseData: CourseResponse, index) => (
+            {courseList.map((courseData: any, index) => (
               <CourseItem
                 key={index}
                 course_name={courseData.course_name}

@@ -12,8 +12,8 @@ export type CourseResponse = {
     course_name: string;
     description: string;
     course_image: string;
-  week: number;
-  totalProgress: number;
+    week: number;
+    totalProgress: number;
     
 };
 export type WeekResponse = {
