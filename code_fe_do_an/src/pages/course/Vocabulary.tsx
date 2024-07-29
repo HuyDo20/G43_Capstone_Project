@@ -21,8 +21,7 @@ import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-// import VocabularyTestingCarousel from "@/components/ui/VocabularyTestingCarousel";
-import VocabularyTestItem from "@/components/ui/VocabularyTestItem";
+import VocabularyPracticeModal from "@/components/ui/VocabularyPracticeModal";
 
 export default function Vocabulary() {
   const [reload, setReload] = useState(true);
@@ -32,11 +31,17 @@ export default function Vocabulary() {
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
   const [learnedVocab, setLearnedVocab] = useState(new Set());
+  const [practiceData, setPracticeData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLearningByWeek = () => {
     navigate(`/learningByWeek/${id}`);
+  };
+
+  const handleClose = () => {
+    setIsModalVisible(false);
   };
 
   useEffect(() => {
@@ -171,6 +176,48 @@ export default function Vocabulary() {
       }
     };
 
+      const handlePractice = async () => {
+      const vocabularyIds = dayCurrent?.lessons
+        ?.filter((lesson) => lesson.vocab_id !== undefined)
+          ?.map((lesson) => lesson.vocab_id);
+        const dataTest = [
+          {
+            "question": "What is the meaning of 'example'?",
+            "options": ["Example 1", "Example 2", "Example 3", "Example 4"],
+            "correctAnswer": "Example 2"
+          },
+          {
+            "question": "Which Kanji represents 'water'?",
+            "options": ["水", "火", "木", "土"],
+            "correctAnswer": "水"
+          },
+          {
+            "question": "Translate 'neko' into English.",
+            "options": ["Dog", "Cat", "Bird", "Fish"],
+            "correctAnswer": "Cat"
+          }
+        ];
+      try {
+        const userEncode = localStorage.getItem("user");
+        const token = userEncode ? JSON.parse(userEncode)?.token : '';
+        // await axios.post('/update-all-vocabulary-learned', {
+        //   accountId: JSON.parse(userEncode)?.account_id,
+        //   vocabularyIds: vocabularyIds,
+        // }, {
+        //   headers: {
+        //     Authorization: token,
+        //   },
+        // });
+      setPracticeData(dataTest);
+
+      } catch (error) {
+        console.error("Error update vocabulary process", error);
+        alert('An error occurred');
+        }
+        
+    setIsModalVisible(true);
+    };
+
     const isLearned = (vocabId) => {
       const learned = learnedVocab.has(vocabId);
       return learned;
@@ -220,45 +267,6 @@ export default function Vocabulary() {
         >
           <HiOutlineChevronLeft size={30} />
         </button>
-           {isAllLearned ? (
-          // <VocabularyTestingCarousel activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-           <Carousel className="w-[1200px]" activeIndex={activeIndex} >
-      <CarouselContent>
-        <CarouselItem active={true}>
-          <VocabularyTestItem
-            question="What is the meaning of 'example'?"
-            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
-            correctAnswer="Example 2"
-            onAnswerSelect={handleAnswerSelect}
-          />
-              </CarouselItem>
-                <CarouselItem active={true}>
-          <VocabularyTestItem
-            question="What is the meaning of 'example'?"
-            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
-            correctAnswer="Example 2"
-            onAnswerSelect={handleAnswerSelect}
-          />
-              </CarouselItem>
-                <CarouselItem active={true}>
-          <VocabularyTestItem
-            question="What is the meaning of 'example'?"
-            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
-            correctAnswer="Example 2"
-            onAnswerSelect={handleAnswerSelect}
-          />
-        </CarouselItem>
-          <CarouselItem active={true}>
-          <VocabularyTestItem
-            question="What is the meaning of 'example'?"
-            options={['Example 1', 'Example 2', 'Example 3', 'Example 4']}
-            correctAnswer="Example 2"
-            onAnswerSelect={handleAnswerSelect}
-          />
-        </CarouselItem>
-      </CarouselContent>
-    </Carousel>
-      ) : (
         <Carousel className="w-[1200px]" activeIndex={activeIndex} style={{ pointerEvents: 'none' }}>
           <CarouselContent>
             {dayCurrent?.lessons
@@ -276,6 +284,64 @@ export default function Vocabulary() {
                   >
                     <Card>
                       <CardContent className={`flex flex-row px-16 pt-10 h-[670px] w-[1200px] ${isAllLearned ? 'bg-[#e0f7fa]' : 'bg-[#f2fae9]'}`}>
+                        <div className="flex flex-col gap-9 basis-2/5">
+                          <div className="text-2xl text-[#7db660] font-semibold">
+                            Từ vựng{" "}
+                            {parseInt(lesson.day_id) !== parseInt(day_id) && (
+                              <>
+                                &ensp; <Tag color="green">Nhắc lại</Tag>
+                              </>
+                            )}
+                          </div>
+                          <div className="flex flex-col items-center gap-5">
+                            <img
+                              className="h-[450px] w-[450px] rounded-md shadow-md"
+                              src={
+                                lesson?.vocab_image
+                                  ? lesson?.vocab_image.split(", ")[0]
+                                  : "/banner.png"
+                              }
+                            />
+                            <HiMiniSpeakerWave
+                              size={30}
+                              className="cursor-pointer"
+                              onClick={() => handlePlayAudio(lesson.vocab_audio)}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col p-16 basis-3/5">
+                          <div className="flex flex-row basis-1/4">
+                            <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
+                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                Từ vựng
+                              </div>
+                              <div>{lesson.vocab_name}</div>
+                            </div>
+                            <div className="flex flex-col items-center justify-center gap-3 basis-1/2">
+                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                Kanji
+                              </div>
+                              <div>{lesson.vocab_kanji}</div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-center justify-center gap-3 basis-1/4">
+                            <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                              Nghĩa
+                            </div>
+                            <div>{lesson.vocab_meaning}</div>
+                          </div>
+  
+                          <div className="flex flex-col items-center gap-5 pt-10 basis-2/4 ">
+                            <div className="flex flex-col items-center justify-center gap-3">
+                              <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
+                                Ví dụ
+                              </div>
+                              <div className="flex flex-col gap-2">
+                                <div>{lesson.vocab_example}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         {/* Your existing lesson CarouselItem code */}
                       </CardContent>
                     </Card>
@@ -284,8 +350,6 @@ export default function Vocabulary() {
               ))}
           </CarouselContent>
         </Carousel>
-        )}
-        
         <button
           onClick={handleCarouselNext}
           className="bg-gray-200 rounded-full p-2 shadow-lg"
@@ -319,13 +383,18 @@ export default function Vocabulary() {
         {allViewed && !isAllLearned && (
           <div className="fixed bottom-5 right-10">
             <button
-              onClick={handleComplete}
+              onClick={handlePractice}
               className="bg-green-500 text-white p-4 rounded-lg"
             >
               Đánh dấu hoàn thành
             </button>
           </div>
         )}
+         <VocabularyPracticeModal
+        practiceData={practiceData}
+        isModalVisible={isModalVisible}
+        onClose={handleClose}
+      />
       </div>
     );
   };
