@@ -31,7 +31,6 @@ export default function Vocabulary() {
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
   const [learnedVocab, setLearnedVocab] = useState(new Set());
-  const [practiceData, setPracticeData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -119,7 +118,7 @@ export default function Vocabulary() {
     audio.play();
   };
 
-  const VocabularyCarousel = ({ dayCurrent, currentIndex, handleViewItem, handlePlayAudio, day_id }) => {
+  const VocabularyCarousel = ({ dayCurrent, handleViewItem, handlePlayAudio, day_id }) => {
     const [viewedItems, setViewedItems] = useState(new Set([0]));
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
@@ -144,14 +143,12 @@ export default function Vocabulary() {
       };
     }, [dayCurrent]);
 
-
-
-    useEffect(() => {
-      const numberOfVocabulary = dayCurrent?.lessons?.filter(lesson => lesson.vocab_id !== undefined).length;
-      if (numberOfVocabulary === viewedItems.size) {
-        setAllViewed(true);
-      }
-    }, [viewedItems, dayCurrent]);
+    // useEffect(() => {
+    //   const numberOfVocabulary = dayCurrent?.lessons?.filter(lesson => lesson.vocab_id !== undefined).length;
+    //   if (numberOfVocabulary === viewedItems.size) {
+    //     setAllViewed(true);
+    //   }
+    // }, [viewedItems, dayCurrent]);
 
     const handleComplete = async () => {
       const vocabularyIds = dayCurrent?.lessons
@@ -177,43 +174,7 @@ export default function Vocabulary() {
     };
 
       const handlePractice = async () => {
-      const vocabularyIds = dayCurrent?.lessons
-        ?.filter((lesson) => lesson.vocab_id !== undefined)
-          ?.map((lesson) => lesson.vocab_id);
-        const dataTest = [
-          {
-            "question": "What is the meaning of 'example'?",
-            "options": ["Example 1", "Example 2", "Example 3", "Example 4"],
-            "correctAnswer": "Example 2"
-          },
-          {
-            "question": "Which Kanji represents 'water'?",
-            "options": ["水", "火", "木", "土"],
-            "correctAnswer": "水"
-          },
-          {
-            "question": "Translate 'neko' into English.",
-            "options": ["Dog", "Cat", "Bird", "Fish"],
-            "correctAnswer": "Cat"
-          }
-        ];
-      try {
-        const userEncode = localStorage.getItem("user");
-        const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        // await axios.post('/update-all-vocabulary-learned', {
-        //   accountId: JSON.parse(userEncode)?.account_id,
-        //   vocabularyIds: vocabularyIds,
-        // }, {
-        //   headers: {
-        //     Authorization: token,
-        //   },
-        // });
-      setPracticeData(dataTest);
-
-      } catch (error) {
-        console.error("Error update vocabulary process", error);
-        alert('An error occurred');
-        }
+  
         
     setIsModalVisible(true);
     };
@@ -229,13 +190,11 @@ export default function Vocabulary() {
       ?.every((lesson) => isLearned(lesson.vocab_id));
 
     const handleSummaryClick = (index) => {
-      if (viewedItems.has(index)) {
         setActiveIndex(index);
         const targetItem = itemRefs.current[index];
         if (targetItem) {
           targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
         }
-      }
     };
 
     const handleCarouselPrevious = () => {
@@ -342,7 +301,6 @@ export default function Vocabulary() {
                             </div>
                           </div>
                         </div>
-                        {/* Your existing lesson CarouselItem code */}
                       </CardContent>
                     </Card>
                   </div>
@@ -365,9 +323,7 @@ export default function Vocabulary() {
                 onClick={() => handleSummaryClick(index)}
                 className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${index === activeIndex
                     ? 'bg-blue-500'
-                    : viewedItems.has(index)
-                      ? 'bg-green-500'
-                      : 'bg-gray-300'
+                    :'bg-green-500'
                   }`}
               >
                 {index + 1}
@@ -380,21 +336,16 @@ export default function Vocabulary() {
           </div>
         )}
 
-        {allViewed && !isAllLearned && (
-          <div className="fixed bottom-5 right-10">
+        {!isAllLearned && !isModalVisible && (
+          <div className="fixed bottom-3 left-1/2 ">
             <button
               onClick={handlePractice}
               className="bg-green-500 text-white p-4 rounded-lg"
             >
-              Đánh dấu hoàn thành
+              Làm bài luyện tập
             </button>
           </div>
-        )}
-         <VocabularyPracticeModal
-        practiceData={practiceData}
-        isModalVisible={isModalVisible}
-        onClose={handleClose}
-      />
+        )}  
       </div>
     );
   };
@@ -465,16 +416,23 @@ export default function Vocabulary() {
             </div>
             {/* Vocab Card */}
             <div className="flex justify-center w-full mt-7">
-              <div className="">
+              <div>
                 <VocabularyCarousel
                   dayCurrent={dayCurrent}
-                  currentIndex={0}
                   handleViewItem={(index) => console.log('View item', index)}
                   handlePlayAudio={(audioUrl) => handlePlayAudio(audioUrl)}
                   day_id={day_id}
                 />
               </div>
+              <div>
+                <VocabularyPracticeModal
+                dayCurrent={dayCurrent}
+                isModalVisible={isModalVisible}
+                onClose={handleClose}
+                />
+              </div>
             </div>
+     
           </div>
         </div>
       </div>
