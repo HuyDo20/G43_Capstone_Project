@@ -130,6 +130,72 @@ async function deleteVocabById(req, res) {
 	}
 }
 
+async function generatePracticeData(req, res) {
+    try {
+        const { vocabularyIds } = req.body;
+
+        // Fetch vocabulary entries from the database
+        const vocabEntries = await Vocabulary.findAll({
+            where: { vocab_id: vocabularyIds }
+        });
+
+        // Generate a single question for each vocabulary entry, alternating between Kanji and meaning
+        const questions = vocabEntries.map((vocab, index) => {
+            return index % 2 === 0 ?
+                createKanjiQuestion(vocab, vocabEntries) :
+                createMeaningQuestion(vocab, vocabEntries);
+        }).filter(question => question); // Filter out any undefined questions
+
+        // Return the questions with a successful HTTP status
+        return responseWithData(res, 200, questions);
+    } catch (error) {
+        console.error("Error generating practice data:", error);
+        return responseWithError(res, 500, "Failed to generate practice data");
+    }
+}
+
+function createKanjiQuestion(vocab, allVocabs) {
+    const validDistractors = allVocabs.filter(item => item.vocab_id !== vocab.vocab_id && item.vocab_kanji && item.vocab_kanji.trim() !== '');
+    const options = generateOptions(vocab, validDistractors, 'kanji');
+
+    if (!options || options.length < 4) return null;
+
+    return {
+        question: `Which Kanji represents "${vocab.vocab_meaning}"?`,
+        options: options,
+        correctAnswer: vocab.vocab_kanji
+    };
+}
+
+function createMeaningQuestion(vocab, allVocabs) {
+    const validDistractors = allVocabs.filter(item => item.vocab_id !== vocab.vocab_id && item.vocab_meaning && item.vocab_meaning.trim() !== '');
+    const options = generateOptions(vocab, validDistractors, 'meaning');
+
+    if (!options || options.length < 4) return null;
+
+    return {
+        question: `What is the meaning of "${vocab.vocab_name}"?`,
+        options: options,
+        correctAnswer: vocab.vocab_meaning
+    };
+}
+
+function generateOptions(correctVocab, distractors, type) {
+    const correctOption = type === 'kanji' ? correctVocab.vocab_kanji : correctVocab.vocab_meaning;
+    const wrongOptions = distractors
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3)
+        .map(item => (type === 'kanji' ? item.vocab_kanji : item.vocab_meaning))
+        .filter(option => option && option.trim() !== '');
+
+    if (!correctOption || correctOption.trim() === '') {
+        return [];
+    }
+
+    const options = [correctOption, ...wrongOptions].sort(() => 0.5 - Math.random());
+    return options;
+}
+
 module.exports = {
 	getAllVocab,
 	getVocabById,
@@ -137,4 +203,5 @@ module.exports = {
 	getAllVocabByDayId,
 	updateVocabById,
 	deleteVocabById,
+	generatePracticeData
 };

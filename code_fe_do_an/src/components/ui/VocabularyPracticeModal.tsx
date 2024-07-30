@@ -2,47 +2,44 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Carousel as AntCarousel, Button } from 'antd';
 import VocabularyTestItem from '@/components/ui/VocabularyTestItem';
 import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import axios from 'axios';
 
 const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
-  const { width, height } = useWindowSize(); // Hook to get the window size
   const [userAnswers, setUserAnswers] = useState([]);
   const [practicalData, setPracticalData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [showResult, setShowResult] = useState(false);
-  const carouselRef = useRef(null); 
-
+  const carouselRef = useRef(null);
+  const [passThreshold, setPassThreshold] = useState(0);
+ 
   useEffect(() => {
     const handleFetchPracticalData = async () => {
-      console.log("fetch quest data for list vocab id: " + vocabIds);
-      const dataTest = [
-        {
-          "question": "What is the meaning of 'example'?",
-          "options": ["Example 1", "Example 2", "Example 3", "Example 4"],
-          "correctAnswer": "Example 2"
-        },
-        {
-          "question": "Which Kanji represents 'water'?",
-          "options": ["水", "火", "木", "土"],
-          "correctAnswer": "水"
-        },
-        {
-          "question": "Translate 'neko' into English.",
-          "options": ["Dog", "Cat", "Bird", "Fish"],
-          "correctAnswer": "Cat"
-        }
-      ];
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        setPracticalData(dataTest);
+        const request = await axios.post('/generate-vocabulary-practice-data', {
+          accountId: JSON.parse(userEncode)?.account_id,
+          vocabularyIds: vocabIds,
+        }, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const response = request.data;
+        console.log(response);
+        if (response.statusCode === 200) {
+          setPracticalData(response.data);
+        }
+        else {
+          alert("fail");
+        }
       } catch (error) {
         console.error("Error update vocabulary process", error);
         alert('An error occurred');
       }
     };
-    
+
     if (isModalVisible) {
       handleFetchPracticalData();
     }
@@ -54,6 +51,7 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
     }
 
     setFeedback(isCorrect ? "Correct!" : "Incorrect, try again!");
+    setPassThreshold(practicalData.length);
 
     setTimeout(() => {
       setFeedback(null);
@@ -67,8 +65,11 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
   };
 
   const handleSummaryClick = (index) => {
-    setCurrentSlide(index);
-    carouselRef.current.goTo(index);
+
+    if (index === 0 || userAnswers[index-1] !== undefined) { // Check if the question at this index has been answered
+      setCurrentSlide(index);
+      carouselRef.current.goTo(index);
+    }
   };
 
   const handleRetry = () => {
@@ -78,16 +79,17 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
     carouselRef.current.goTo(0);
   };
 
+  const handleSubmitClick = () => {
+  }
+
+  const correctAnswersCount = userAnswers.filter(answer => answer).length;
+  const hasPassed = correctAnswersCount >= passThreshold;
   return (
     <Modal
       title="Practice Vocabulary"
       visible={isModalVisible}
       onCancel={onClose}
-      footer={[
-        <Button key="submit" type="primary" onClick={onClose}>
-          OK
-        </Button>
-      ]}
+      footer={[]}
       width={800}
       centered
     >
@@ -112,26 +114,28 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
           ))}
         </AntCarousel>
       ) : (
-        <div className="result-section text-center p-5">
-          {userAnswers.every(answer => answer) ? (
-            <div className="congratulations relative">
-              <Confetti width={width} height={height} />
-              <div className="relative z-10">
-                <h2 className="text-2xl font-bold mb-4">Congratulations! You passed the test!</h2>
-                <p className="text-lg">You've answered all the questions correctly. Great job!</p>
-                <Button type="primary" onClick={onClose} className="mt-4">Finish</Button>
-              </div>
-            </div>
-          ) : (
-            <div className="try-again">
-              <h2 className="text-2xl font-bold mb-4">You didn't pass this time.</h2>
-              <p className="text-lg mb-4">Don't worry, you can try again to improve your score!</p>
-              <Button type="primary" onClick={handleRetry} className="mt-4">Try Again</Button>
-            </div>
+        <div className="result-section text-center p-5 relative">
+          {hasPassed && (
+            <Confetti width={800} height={300} recycle={false} numberOfPieces={500} />
           )}
+          <div className="relative z-10">
+            {hasPassed ? (
+              <div className="congratulations">
+                <h2 className="text-2xl font-bold mb-4">Congratulations! You passed the test!</h2>
+                <p className="text-lg">You've answered {correctAnswersCount} questions correctly. Great job!</p>
+                <Button type="primary" onClick={handleSubmitClick} className="mt-4">Finish</Button>
+              </div>
+            ) : (
+              <div className="try-again">
+                <h2 className="text-2xl font-bold mb-4">You didn't pass this time.</h2>
+                <p className="text-lg mb-4">You answered {correctAnswersCount} questions correctly. Don't worry, you can try again to improve your score!</p>
+                <Button type="primary" onClick={handleRetry} className="mt-4">Try Again</Button>
+              </div>
+            )}
+          </div>
         </div>
       )}
-      <div className="summary-section flex justify-center mt-4">
+      {!hasPassed && (<div className="summary-section flex justify-center mt-4">
         {practicalData.map((_, index) => (
           <div
             key={index}
@@ -149,7 +153,7 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
             {index + 1}
           </div>
         ))}
-      </div>
+      </div>)}
     </Modal>
   );
 };

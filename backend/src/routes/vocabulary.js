@@ -6,6 +6,7 @@ const {
 	createNewVocab,
 	updateVocabById,
 	deleteVocabById,
+	generatePracticeData
 } = require("../controllers/vocabulary");
 const vocabularyProgressController = require('../controllers/vocabularyProgress');
 const router = express.Router();
@@ -15,6 +16,7 @@ router.get("/all_vocabulary", checkAuthAndRole([1, 2, 3, 4]), getAllVocab);
 router.get("/vocabulary", checkAuthAndRole([1, 2, 3, 4]), getAllVocabByDayId);
 router.get("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3, 4]), getVocabById);
 router.post("/vocabulary", checkAuthAndRole([1, 3]), createNewVocab);
+router.post("/generate-vocabulary-practice-data", checkAuthAndRole([1, 2, 3, 4]), generatePracticeData);
 router.put("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), updateVocabById);
 router.patch("/vocabulary/:vocab_id", checkAuthAndRole([1, 2, 3]), deleteVocabById);
 
