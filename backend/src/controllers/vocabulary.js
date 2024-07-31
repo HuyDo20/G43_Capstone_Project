@@ -133,19 +133,16 @@ async function deleteVocabById(req, res) {
 async function generatePracticeData(req, res) {
     try {
         const { vocabularyIds } = req.body;
-
         // Fetch vocabulary entries from the database
         const vocabEntries = await Vocabulary.findAll({
             where: { vocab_id: vocabularyIds }
         });
-
         // Generate a single question for each vocabulary entry, alternating between Kanji and meaning
         const questions = vocabEntries.map((vocab, index) => {
             return index % 2 === 0 ?
                 createKanjiQuestion(vocab, vocabEntries) :
                 createMeaningQuestion(vocab, vocabEntries);
-        }).filter(question => question); // Filter out any undefined questions
-
+		}).filter(question => question); 
         // Return the questions with a successful HTTP status
         return responseWithData(res, 200, questions);
     } catch (error) {
@@ -161,7 +158,7 @@ function createKanjiQuestion(vocab, allVocabs) {
     if (!options || options.length < 4) return null;
 
     return {
-        question: `Which Kanji represents "${vocab.vocab_meaning}"?`,
+        question: `Chọn Kanji tương ứng với nghĩa "${vocab.vocab_meaning}"?`,
         options: options,
         correctAnswer: vocab.vocab_kanji
     };
@@ -174,7 +171,7 @@ function createMeaningQuestion(vocab, allVocabs) {
     if (!options || options.length < 4) return null;
 
     return {
-        question: `What is the meaning of "${vocab.vocab_name}"?`,
+        question: `Chọn nghĩa của từ "${vocab.vocab_name}"?`,
         options: options,
         correctAnswer: vocab.vocab_meaning
     };

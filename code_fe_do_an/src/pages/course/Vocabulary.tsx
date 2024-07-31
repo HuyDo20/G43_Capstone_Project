@@ -21,7 +21,7 @@ import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-import VocabularyPracticeModal from "@/components/ui/VocabularyPracticeModal";
+import PracticeModal from "@/components/ui/PracticeModal";
 
 export default function Vocabulary() {
   const [reload, setReload] = useState(true);
@@ -32,7 +32,8 @@ export default function Vocabulary() {
   const { id, week_id, day_id } = useParams();
   const [learnedVocab, setLearnedVocab] = useState(new Set());
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [practicalVocabularyIds, setPracticalVocabularyIds] = useState([]);
+  const [currentDayVocabularyIds, setCurrentDayVocabularyIds] = useState([]);
+  const [practicalData, setPracticalData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -43,6 +44,10 @@ export default function Vocabulary() {
   const handleClose = () => {
     setIsModalVisible(false);
   };
+
+    const handleSubmitClick = () => {
+      setIsModalVisible(false);
+  }
 
   useEffect(() => {
     const handleFetchData = async () => {
@@ -76,7 +81,13 @@ export default function Vocabulary() {
             ];
           });
         }
+
+        const vocabularyIds = _dayCurrent?.lessons
+        ?.filter((lesson) => lesson.vocab_id !== undefined)
+        ?.map((lesson) => lesson.vocab_id);
+
         setDayCurrent(_dayCurrent);
+        setCurrentDayVocabularyIds(vocabularyIds);
       }
     };
     const fetchLearnedVocab = async () => {
@@ -113,13 +124,32 @@ export default function Vocabulary() {
     }
   }, [reload]);
 
+      const handleComplete = async () => {
+      try {
+        const userEncode = localStorage.getItem("user");
+        const token = userEncode ? JSON.parse(userEncode)?.token : '';
+        await axios.post('/update-all-vocabulary-learned', {
+          accountId: JSON.parse(userEncode)?.account_id,
+          vocabularyIds: currentDayVocabularyIds,
+        }, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setReload(true);
+      } catch (error) {
+        console.error("Error update vocabulary process", error);
+        alert('An error occurred');
+      }
+    };
+
 
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
     audio.play();
   };
 
-  const VocabularyCarousel = ({ dayCurrent, handleViewItem, handlePlayAudio, day_id }) => {
+  const VocabularyCarousel = ({ dayCurrent, handlePlayAudio, day_id }) => {
     const [viewedItems, setViewedItems] = useState(new Set([0]));
     const itemRefs = useRef([]);
     const [allViewed, setAllViewed] = useState(false);
@@ -130,7 +160,6 @@ export default function Vocabulary() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.dataset.index, 10);
-            handleViewItem(index);
             setViewedItems((prev) => new Set(prev).add(index));
             setActiveIndex(index);
           }
@@ -151,36 +180,40 @@ export default function Vocabulary() {
     //   }
     // }, [viewedItems, dayCurrent]);
 
-    const handleComplete = async () => {
-      const vocabularyIds = dayCurrent?.lessons
-        ?.filter((lesson) => lesson.vocab_id !== undefined)
-        ?.map((lesson) => lesson.vocab_id);
+    const handlePractice = async () => {
+      await fetchPracticalData();
+      if (practicalData) {        
+          setIsModalVisible(true);
+      }
+    };
 
+    const fetchPracticalData = async () => {
+  
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        await axios.post('/update-all-vocabulary-learned', {
+        const request = await axios.post('/generate-vocabulary-practice-data', {
           accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: vocabularyIds,
+          vocabularyIds: currentDayVocabularyIds,
         }, {
           headers: {
             Authorization: token,
           },
         });
-        setReload(true);
+        const response = request.data;
+        if (response.statusCode === 200) {
+          console.log(response.data);
+          setPracticalData(response.data);
+        }
+        else {
+          alert("fail");
+        }
       } catch (error) {
         console.error("Error update vocabulary process", error);
         alert('An error occurred');
       }
     };
 
-    const handlePractice = async () => {
-      const vocabularyIds = dayCurrent?.lessons
-        ?.filter((lesson) => lesson.vocab_id !== undefined)
-        ?.map((lesson) => lesson.vocab_id);
-      setPracticalVocabularyIds(vocabularyIds);
-      setIsModalVisible(true);
-    };
 
     const isLearned = (vocabId) => {
       const learned = learnedVocab.has(vocabId);
@@ -422,16 +455,18 @@ export default function Vocabulary() {
               <div>
                 <VocabularyCarousel
                   dayCurrent={dayCurrent}
-                  handleViewItem={(index) => console.log('View item', index)}
                   handlePlayAudio={(audioUrl) => handlePlayAudio(audioUrl)}
                   day_id={day_id}
                 />
               </div>
               <div>
-                <VocabularyPracticeModal
-                vocabIds={practicalVocabularyIds}
-                isModalVisible={isModalVisible}
-                onClose={handleClose}
+                <PracticeModal
+                  title={"Luyện tập từ vựng"}
+                  practiceData={practicalData}
+                  isModalVisible={isModalVisible}
+                  onSubmit={handleSubmitClick}
+                  onClose={handleClose}
+                  onPass={handleComplete}
                 />
               </div>
             </div>

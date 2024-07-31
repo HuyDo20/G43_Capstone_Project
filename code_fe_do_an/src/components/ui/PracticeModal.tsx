@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Carousel as AntCarousel, Button } from 'antd';
-import VocabularyTestItem from '@/components/ui/VocabularyTestItem';
+import PracticeItem from '@/components/ui/PracticeItem';
 import Confetti from 'react-confetti';
-import axios from 'axios';
 
-const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
+const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit,onClose, onPass }) => {
   const [userAnswers, setUserAnswers] = useState([]);
   const [practicalData, setPracticalData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,44 +14,27 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
  
   useEffect(() => {
     const handleFetchPracticalData = async () => {
-      try {
-        const userEncode = localStorage.getItem("user");
-        const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        const request = await axios.post('/generate-vocabulary-practice-data', {
-          accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: vocabIds,
-        }, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        const response = request.data;
-        console.log(response);
-        if (response.statusCode === 200) {
-          setPracticalData(response.data);
-        }
-        else {
-          alert("fail");
-        }
-      } catch (error) {
-        console.error("Error update vocabulary process", error);
-        alert('An error occurred');
+      if (practiceData === null) {
+      alert("Test data is null");
       }
+      setPracticalData(practiceData);
+      setPassThreshold(practiceData.length);
     };
-
     if (isModalVisible) {
       handleFetchPracticalData();
     }
+
+     if (showResult && hasPassed) {
+      onPass(); 
+    }
+
   }, [isModalVisible]);
 
   const onAnswerSelect = (isCorrect) => {
     if (userAnswers.length <= currentSlide) {
       setUserAnswers([...userAnswers, isCorrect]);
     }
-
-    setFeedback(isCorrect ? "Correct!" : "Incorrect, try again!");
-    setPassThreshold(practicalData.length);
-
+    setFeedback(isCorrect ? "Chính xác!" : "Sai rồi!");
     setTimeout(() => {
       setFeedback(null);
       if (currentSlide < practicalData.length - 1) {
@@ -66,7 +48,7 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
 
   const handleSummaryClick = (index) => {
 
-    if (index === 0 || userAnswers[index-1] !== undefined) { // Check if the question at this index has been answered
+    if (index === 0 || userAnswers[index - 1] !== undefined) { 
       setCurrentSlide(index);
       carouselRef.current.goTo(index);
     }
@@ -79,14 +61,11 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
     carouselRef.current.goTo(0);
   };
 
-  const handleSubmitClick = () => {
-  }
-
   const correctAnswersCount = userAnswers.filter(answer => answer).length;
   const hasPassed = correctAnswersCount >= passThreshold;
   return (
     <Modal
-      title="Practice Vocabulary"
+      title={title}
       visible={isModalVisible}
       onCancel={onClose}
       footer={[]}
@@ -103,11 +82,12 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
         >
           {practicalData.map((item, index) => (
             <div key={index} className="practice-item">
-              <VocabularyTestItem
+              <PracticeItem
                 question={item.question}
                 options={item.options}
                 correctAnswer={item.correctAnswer}
                 onAnswerSelect={onAnswerSelect}
+                image={item.image}
               />
               {feedback && <div className="feedback">{feedback}</div>}
             </div>
@@ -121,15 +101,15 @@ const VocabularyPracticeModal = ({ vocabIds, isModalVisible, onClose }) => {
           <div className="relative z-10">
             {hasPassed ? (
               <div className="congratulations">
-                <h2 className="text-2xl font-bold mb-4">Congratulations! You passed the test!</h2>
-                <p className="text-lg">You've answered {correctAnswersCount} questions correctly. Great job!</p>
-                <Button type="primary" onClick={handleSubmitClick} className="mt-4">Finish</Button>
+                <h2 className="text-2xl font-bold mb-4">Chúc mừng! Bạn đã vượt qua bài luyện tập!</h2>
+                <p className="text-lg">Ban đã trả lời đúng {correctAnswersCount} câu hỏi. Làm tốt lắm!</p>
+                <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
               </div>
             ) : (
               <div className="try-again">
-                <h2 className="text-2xl font-bold mb-4">You didn't pass this time.</h2>
-                <p className="text-lg mb-4">You answered {correctAnswersCount} questions correctly. Don't worry, you can try again to improve your score!</p>
-                <Button type="primary" onClick={handleRetry} className="mt-4">Try Again</Button>
+                <h2 className="text-2xl font-bold mb-4">Trượt ròi</h2>
+                    <p className="text-lg mb-4">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Bạn cần trả lời đúng ít nhất {passThreshold} câu để hoàn thiện bài luyện tập</p>
+                <Button type="primary" onClick={handleRetry} className="mt-4">Thử lại</Button>
               </div>
             )}
           </div>

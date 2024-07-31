@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa'; 
 
-const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect }) => {
+const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, image }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-
   const handleAnswerClick = (answer) => {
     if (selectedAnswer === null) {
       setSelectedAnswer(answer);
@@ -18,16 +17,16 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect }
         <div className="flex">
           <div className="w-1/2 flex items-center justify-center">
             <div>
-              <img
+              {image !== undefined &&(  <img
                 src="/path/to/image.png"
                 alt="Vocabulary"
                 className="mb-4"
-              />
+              />)}
               <div className="text-2xl font-bold">{question}</div>
             </div>
           </div>
           <div className="w-1/2 p-4">
-            <div className="text-lg mb-4">Please select the correct answer:</div>
+            <div className="text-lg mb-4">Hãy chọn đáp án đúng:</div>
             <div className="grid grid-cols-2 gap-4">
               {options.map((option, index) => {
                 const isCorrect = option === correctAnswer;
