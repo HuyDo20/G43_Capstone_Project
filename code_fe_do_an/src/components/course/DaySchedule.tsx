@@ -4,12 +4,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() =>
     weekSelected?.days ? weekSelected?.days[0] : {}
   );
+  const [dayData, setDayData] = useState([]);
   const { pathname } = useLocation();
 
 
@@ -27,6 +30,37 @@ export default function DaySchedule({ weekSelected, id = null }) {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/video`;
   };
 
+  const getBackgroundColor = (percentage) => {
+    return percentage === 100 ? "bg-green-200" : "bg-red-200";
+  };
+
+  const handleFetchDetailCourseProgress = async (dayId) => {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userDecode?.account_id;
+      }
+      const request = await axios.post("/get_detail_course_progress_by_day", { accountId, dayId:  dayId}, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    const response = request.data; 
+      if (response.statusCode === 200) {
+        setDayData(response.data);
+      }
+  };
+
+  useEffect(() => { 
+
+    if (daySelected.day_id) {
+      handleFetchDetailCourseProgress(daySelected.day_id);
+    }
+  },[daySelected])
+
   return (
     <div>
       <Accordion
@@ -43,58 +77,30 @@ export default function DaySchedule({ weekSelected, id = null }) {
             <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
               Ngày {index + 1}: {day?.day_name}
             </AccordionTrigger>
-            {daySelected?.lessons?.filter((item) => item.vocab_id)?.length >
-              0 && (
-              <AccordionContent
-                onClick={handleClickVocab}
-                className={
-                  pathname?.includes("vocabulary")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
-                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
-                }
-              >
-                Từ mới
-              </AccordionContent>
-            )}
-            {daySelected?.lessons?.filter((item) => item.grammar_id)?.length >
-              0 && (
-              <AccordionContent
-                onClick={handleClickGrammar}
-                className={
-                  pathname?.includes("grammar")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
-                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
-                }
-              >
-                Ngữ pháp
-              </AccordionContent>
-            )}
-            {daySelected?.lessons?.filter((item) => item.video_id)?.length >
-              0 && (
-              <AccordionContent
-                onClick={handleClickVideo}
-                className={
-                  pathname?.includes("video")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
-                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
-                }
-              >
-                Video bổ trợ
-              </AccordionContent>
-            )}
-            {daySelected?.lessons?.filter((item) => item.kanji_id)?.length >
-              0 && (
-              <AccordionContent
-                onClick={handleClickKanji}
-                className={
-                  pathname?.includes("kanji")
-                    ? "pt-4 pl-20 mt-1 cursor-pointer bg-[#effdee]"
-                    : "bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer hover:bg-[#e4fde1]"
-                }
-              >
-                Kanji
-              </AccordionContent>
-            )}
+            <AccordionContent
+              onClick={handleClickVocab}
+              className={`${getBackgroundColor(dayData.vocabulary?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+            >
+              Từ mới
+            </AccordionContent>
+            <AccordionContent
+              onClick={handleClickGrammar}
+              className={`${getBackgroundColor(dayData.grammar?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+            >
+              Ngữ pháp
+            </AccordionContent>
+            <AccordionContent
+              onClick={handleClickVideo}
+              className={`${getBackgroundColor(dayData.video?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+            >
+              Video bổ trợ
+            </AccordionContent>
+            <AccordionContent
+              onClick={handleClickKanji}
+              className={`${getBackgroundColor(dayData.kanji?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+            >
+              Kanji
+            </AccordionContent>
           </AccordionItem>
         ))}
         <AccordionItem value="item-7">

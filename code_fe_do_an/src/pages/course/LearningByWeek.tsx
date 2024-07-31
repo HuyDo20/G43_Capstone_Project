@@ -12,6 +12,7 @@ import { useAuth } from "@/hook/AuthContext";
 import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function LearningByWeek() {
   const { id } = useParams();
@@ -22,6 +23,7 @@ export default function LearningByWeek() {
   const [weekSelected, setWeekSelected] = useState([]);
 
   useEffect(() => {
+    console.log(weekSelected?.week_id);
     const handleFetchData = async () => {
       const response = await handleFetch({
         method: "get",
@@ -36,32 +38,14 @@ export default function LearningByWeek() {
       }
     };
 
-    const handleFetchDetailCourseProgress = async () => {
-      let token = "";
-      let accountId;
-      const userEncode = localStorage.getItem("user");
-      if (userEncode) {
-        const userDecode = JSON.parse(userEncode);
-        token = userDecode?.token;
-        accountId = userDecode?.account_id;
-      }
-      const request = await axios.post("/get_detail_course_progress_by_week", { accountId }, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      const response = request.data;
-      if (response.statusCode === 200) {
-        console.log(response);
-        setCourseList(response.data);
-      }
-    };
+   
+
     if (reload) {
       handleFetchData();
-      handleFetchDetailCourseProgress();
-      setReload(false);
-    }
-  }, [reload]);
+   setReload(false);
+      }
+    
+  }, [reload,weekSelected]);
   return (
  
     <div>

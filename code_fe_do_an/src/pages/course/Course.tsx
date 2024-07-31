@@ -10,6 +10,8 @@ export default function Course() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
 
   useEffect(() => {
+     
+    
     const handleFetchData = async () => {
       let token = "";
       let accountId;
@@ -18,7 +20,7 @@ export default function Course() {
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
         accountId = userDecode?.account_id;
-      }
+       }
       const request = await axios.post("/all_course_extend", { accountId }, {
         headers: {
           Authorization: token,
@@ -30,6 +32,7 @@ export default function Course() {
         setCourseList(response.data);
       }
     };
+
     handleFetchData();
   }, []);
 
