@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Carousel as AntCarousel, Button } from 'antd';
 import PracticeItem from '@/components/ui/PracticeItem';
 import Confetti from 'react-confetti';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
 
-const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit,onClose, onPass }) => {
+const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose, onPass }) => {
   const [userAnswers, setUserAnswers] = useState([]);
   const [practicalData, setPracticalData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,24 +13,24 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
   const [showResult, setShowResult] = useState(false);
   const carouselRef = useRef(null);
   const [passThreshold, setPassThreshold] = useState(0);
- 
+
   useEffect(() => {
     const handleFetchPracticalData = async () => {
-      if (practiceData === null) {
-      alert("Test data is null");
+      if (!practiceData) {
+        alert("Test data is null");
+        return;
       }
       setPracticalData(practiceData);
-      setPassThreshold(practiceData.length);
+      setPassThreshold(Math.ceil(practiceData.length * 0.7)); // Set threshold to 70% of questions
     };
     if (isModalVisible) {
       handleFetchPracticalData();
     }
 
-     if (showResult && hasPassed) {
-      onPass(); 
+    if (showResult && hasPassed) {
+      onPass();
     }
-
-  }, [isModalVisible]);
+  }, [isModalVisible, showResult]);
 
   const onAnswerSelect = (isCorrect) => {
     if (userAnswers.length <= currentSlide) {
@@ -47,8 +49,7 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
   };
 
   const handleSummaryClick = (index) => {
-
-    if (index === 0 || userAnswers[index - 1] !== undefined) { 
+    if (index === 0 || userAnswers[index - 1] !== undefined) {
       setCurrentSlide(index);
       carouselRef.current.goTo(index);
     }
@@ -63,6 +64,20 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
 
   const correctAnswersCount = userAnswers.filter(answer => answer).length;
   const hasPassed = correctAnswersCount >= passThreshold;
+  const totalQuestions = practicalData.length;
+  const incorrectAnswersCount = totalQuestions - correctAnswersCount;
+
+  const pieData = {
+    labels: ['Đám án chính xác', 'Đáp án sai'],
+    datasets: [
+      {
+        data: [correctAnswersCount, incorrectAnswersCount],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+        hoverBackgroundColor: ['#36A2EB', '#FF6384']
+      }
+    ]
+  };
+
   return (
     <Modal
       title={title}
@@ -96,44 +111,56 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
       ) : (
         <div className="result-section text-center p-5 relative">
           {hasPassed && (
-            <Confetti width={800} height={300} recycle={false} numberOfPieces={500} />
+            <Confetti width={800} height={auto} recycle={false} numberOfPieces={500} />
           )}
           <div className="relative z-10">
             {hasPassed ? (
               <div className="congratulations">
                 <h2 className="text-2xl font-bold mb-4">Chúc mừng! Bạn đã vượt qua bài luyện tập!</h2>
-                <p className="text-lg">Ban đã trả lời đúng {correctAnswersCount} câu hỏi. Làm tốt lắm!</p>
+                <p className="text-lg">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Làm tốt lắm!</p>
                 <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
               </div>
             ) : (
               <div className="try-again">
-                <h2 className="text-2xl font-bold mb-4">Trượt ròi</h2>
-                    <p className="text-lg mb-4">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Bạn cần trả lời đúng ít nhất {passThreshold} câu để hoàn thiện bài luyện tập</p>
-                <Button type="primary" onClick={handleRetry} className="mt-4">Thử lại</Button>
+                <h2 className="text-2xl font-bold mb-4">Trượt rồi</h2>
+                <p className="text-lg mb-4">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Bạn cần trả lời đúng ít nhất {passThreshold} câu để hoàn thiện bài luyện tập.</p>
               </div>
             )}
           </div>
+          
         </div>
       )}
-      {!hasPassed && (<div className="summary-section flex justify-center mt-4">
-        {practicalData.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => handleSummaryClick(index)}
-            className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
-              index === currentSlide
-                ? 'bg-blue-500'
-                : userAnswers[index] === true
-                ? 'bg-green-500'
-                : userAnswers[index] === false
-                ? 'bg-red-500'
-                : 'bg-gray-300'
-            }`}
-          >
-            {index + 1}
+    {showResult && (
+  <div className="result-summary-container flex">
+    <div className="pie-chart-section flex-1">
+      <Pie data={pieData} />
+    </div>
+    <div className="summary-section flex-1 ml-4 overflow-auto max-h-64">
+      {practicalData.map((item, index) => (
+        <div key={index} className="summary-item mt-2">
+          <div className="summary-question font-bold">
+            {index + 1}. {item.question}
           </div>
-        ))}
-      </div>)}
+          <div className="summary-result">
+            {userAnswers[index] === true ? (
+              <span className="text-green-500">Correct</span>
+            ) : (
+              <span className="text-red-500">
+                Incorrect - Correct answer: {item.correctAnswer}
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+      {!hasPassed && showResult && (
+        <div className="flex justify-center mt-4">
+          <Button type="primary" onClick={handleRetry}>Thử lại</Button>
+        </div>
+      )}
     </Modal>
   );
 };
