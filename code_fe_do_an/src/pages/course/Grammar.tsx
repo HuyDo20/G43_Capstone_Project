@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 
+  
 export default function Grammar() {
   const [reload, setReload] = useState(true);
   const [courseData, setCourseData] = useState([]);
@@ -24,6 +25,7 @@ export default function Grammar() {
   const [learnedStatuses, setLearnedStatuses] = useState({});
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
+
 
   const navigate = useNavigate();
 

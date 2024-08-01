@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import PracticeModal from "@/components/ui/PracticeModal";
 
 export default function GrammarDetail() {
   const [reload, setReload] = useState(true);
@@ -23,10 +24,19 @@ export default function GrammarDetail() {
   const [dayCurrent, setDayCurrent] = useState({});
   const [grammarCurrent, setGrammarCurrent] = useState({});
   const [isLearned, setIsLearned] = useState(false);
-
+  const [PracticeModal, setPracticalData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { handleFetch } = useAuth();
   const { id, week_id, day_id, grammar_id } = useParams();
 
+
+  const handleClose = () => {
+    setIsModalVisible(false);
+  };
+
+    const handleSubmitClick = () => {
+      setIsModalVisible(false);
+  }
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -131,6 +141,41 @@ export default function GrammarDetail() {
     }
   };
 
+    const handlePractice = async () => {
+      await fetchPracticalData();
+      if (practicalData) {        
+          setIsModalVisible(true);
+      }
+  };
+  
+   const fetchPracticalData = async () => {
+  
+      try {
+        const userEncode = localStorage.getItem("user");
+        const token = userEncode ? JSON.parse(userEncode)?.token : '';
+        const grammar_ids = [grammar_id];
+        const request = await axios.post('/generate-grammar-practice-data', {
+          accountId: JSON.parse(userEncode)?.account_id,
+          grammarIds: grammar_ids,
+        }, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const response = request.data;
+        if (response.statusCode === 200) {
+          console.log(response.data);
+          setPracticalData(response.data);
+        }
+        else {
+          alert("fail");
+        }
+      } catch (error) {
+        console.error("Error update vocabulary process", error);
+        alert('An error occurred');
+      }
+    };
+
   return (
     <div>
       <div className="bg-[#f2fae9]">
@@ -230,19 +275,33 @@ export default function GrammarDetail() {
                 </div>
               </div>
               <div className="flex justify-center p-5">
-                {isLearned ? (
+                {isLearned && (
                   <div className="text-lg font-semibold text-green-600">
                     Đã hoàn thành
                   </div>
-                ) : (
-                  <button
-                    onClick={markAsLearned}
-                    className="bg-blue-500 text-white px-5 py-2 rounded-md shadow-md hover:bg-blue-700"
-                  >
-                    Đánh dấu hoàn thành
-                  </button>
                 )}
+
+                  {!isLearned && !isModalVisible && (
+                   <div className="fixed bottom-3 left-1/2 ">
+                   <button
+                    onClick={handlePractice}
+                   className="bg-green-500 text-white p-4 rounded-lg"
+                    >
+                     Làm bài luyện tập
+                    </button>
+                      </div>
+                   )} 
               </div>
+            </div>
+            <div>
+              <PracticeModal
+                  title={"Luyện tập ngữ pháp"}
+                  practiceData={practicalData}
+                  isModalVisible={isModalVisible}
+                  onSubmit={handleSubmitClick}
+                  onClose={handleClose}
+                  onPass={markAsLearned}
+                />
             </div>
           </div>
         </div>

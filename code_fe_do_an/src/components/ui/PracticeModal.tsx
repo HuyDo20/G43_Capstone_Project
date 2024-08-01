@@ -5,7 +5,7 @@ import Confetti from 'react-confetti';
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose, onPass }) => {
+const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose, onPass }) => {
   const [userAnswers, setUserAnswers] = useState([]);
   const [practicalData, setPracticalData] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -21,7 +21,13 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
         return;
       }
       setPracticalData(practiceData);
-      setPassThreshold(Math.ceil(practiceData.length * 0.7)); // Set threshold to 70% of questions
+      if (practiceData.length > 1)
+      {
+        setPassThreshold(Math.ceil(practiceData.length * 0.7)); 
+      } else {
+         setPassThreshold(1); 
+      }
+
     };
     if (isModalVisible) {
       handleFetchPracticalData();
@@ -165,4 +171,4 @@ const VocabularyPracticeModal = ({ title, practiceData, isModalVisible, onSubmit
   );
 };
 
-export default VocabularyPracticeModal;
+export default PracticeModal;

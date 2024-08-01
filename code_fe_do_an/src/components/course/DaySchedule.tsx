@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { MdCheck } from 'react-icons/md';
+import React from 'react';
 
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() =>
@@ -60,7 +61,9 @@ export default function DaySchedule({ weekSelected, id = null }) {
     if (daySelected.day_id) {
       handleFetchDetailCourseProgress(daySelected.day_id);
     }
-  },[daySelected])
+  }, [daySelected])
+  
+  console.log("daySelected.day_id" + daySelected.day_id + JSON.stringify(dayData));
 
   return (
     <div>
@@ -75,39 +78,48 @@ export default function DaySchedule({ weekSelected, id = null }) {
             key={index}
             onClick={() => setDaySelected(day)}
           >
+       
             <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
               Ngày {index + 1}: {day?.day_name}
             </AccordionTrigger>
-            <AccordionContent
+
+            {dayData.vocabulary?.total !== 0 && (
+              <AccordionContent
               onClick={handleClickVocab}
               className={`${getBackgroundColor(dayData.vocabulary?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Từ mới
               {dayData.vocabulary?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
               
-            </AccordionContent>
+              </AccordionContent>)}
             
-            <AccordionContent
+              {dayData.grammar?.total !== 0 && (
+              <AccordionContent
               onClick={handleClickGrammar}
               className={`${getBackgroundColor(dayData.grammar?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Ngữ pháp
                  {dayData.grammar?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
-            </AccordionContent>
-            <AccordionContent
+              </AccordionContent>)}
+            
+            
+              {dayData.grammar?.total !== 0 && (
+                <AccordionContent
               onClick={handleClickVideo}
               className={`${getBackgroundColor(dayData.video?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Video bổ trợ
             {dayData.video?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
-            </AccordionContent>
-            <AccordionContent
+            </AccordionContent>)}
+            
+              {dayData.grammar?.total !== 0 && (
+                <AccordionContent
               onClick={handleClickKanji}
               className={`${getBackgroundColor(dayData.kanji?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Kanji
             {dayData.kanji?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
-            </AccordionContent>
+              </AccordionContent>)}
           </AccordionItem>
         ))}
         <AccordionItem value="item-7">
