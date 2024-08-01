@@ -7,13 +7,14 @@ import {
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { MdCheck } from 'react-icons/md';
 
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() =>
     weekSelected?.days ? weekSelected?.days[0] : {}
   );
   const [dayData, setDayData] = useState([]);
-  const { pathname } = useLocation();
+  const { FaCheck  } = useLocation();
 
 
   const handleClickVocab = () => {
@@ -31,7 +32,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
   const getBackgroundColor = (percentage) => {
-    return percentage === 100 ? "bg-green-200" : "bg-red-200";
+    return percentage === 100 ? "bg-[#e0f7fa]" : "bg-green-100";
   };
 
   const handleFetchDetailCourseProgress = async (dayId) => {
@@ -82,24 +83,28 @@ export default function DaySchedule({ weekSelected, id = null }) {
               className={`${getBackgroundColor(dayData.vocabulary?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Từ mới
+              {dayData.vocabulary?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
             </AccordionContent>
             <AccordionContent
               onClick={handleClickGrammar}
               className={`${getBackgroundColor(dayData.grammar?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Ngữ pháp
+                 {dayData.grammar?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
             </AccordionContent>
             <AccordionContent
               onClick={handleClickVideo}
               className={`${getBackgroundColor(dayData.video?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Video bổ trợ
+            {dayData.video?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
             </AccordionContent>
             <AccordionContent
               onClick={handleClickKanji}
               className={`${getBackgroundColor(dayData.kanji?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
             >
               Kanji
+            {dayData.kanji?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
             </AccordionContent>
           </AccordionItem>
         ))}
