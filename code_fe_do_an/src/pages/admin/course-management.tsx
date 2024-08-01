@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-import React from 'react';
+
 interface Course {
   course_id: number;
   course_name: string;

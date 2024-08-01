@@ -103,7 +103,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
               </AccordionContent>)}
             
             
-              {dayData.grammar?.total !== 0 && (
+              {dayData.video?.total !== 0 && (
                 <AccordionContent
               onClick={handleClickVideo}
               className={`${getBackgroundColor(dayData.video?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
@@ -112,7 +112,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData.video?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
             </AccordionContent>)}
             
-              {dayData.grammar?.total !== 0 && (
+              {dayData.kanji?.total !== 0 && (
                 <AccordionContent
               onClick={handleClickKanji}
               className={`${getBackgroundColor(dayData.kanji?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}

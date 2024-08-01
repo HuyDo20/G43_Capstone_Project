@@ -146,7 +146,7 @@ async function generateKanjiPracticeData(req, res) {
         if (kanjiEntries.length < 4) {
             const additionalKanjis = await Kanji.findAll({
                 where: { kanji_id: { [Op.notIn]: kanjiIds } },
-                limit: 10  // Adjust the limit as needed
+                limit: 10  
             });
             allKanjis = kanjiEntries.concat(additionalKanjis);
         }

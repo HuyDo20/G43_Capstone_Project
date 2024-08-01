@@ -21,14 +21,10 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
         return;
       }
       setPracticalData(practiceData);
-      if (practiceData.length > 1)
-      {
-        setPassThreshold(Math.ceil(practiceData.length * 0.7)); 
-      } else {
-         setPassThreshold(1); 
-      }
-
+      setUserAnswers([]);
+      setPassThreshold(practiceData.length > 1 ? Math.ceil(practiceData.length * 0.7) : 1);
     };
+
     if (isModalVisible) {
       handleFetchPracticalData();
     }
@@ -55,10 +51,11 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
   };
 
   const handleSummaryClick = (index) => {
-    if (index === 0 || userAnswers[index - 1] !== undefined) {
+    if (index === 0 || userAnswers[index - 1] !== undefined && !showResult) {
       setCurrentSlide(index);
       carouselRef.current.goTo(index);
     }
+
   };
 
   const handleRetry = () => {
@@ -94,26 +91,44 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
       centered
     >
       {!showResult ? (
-        <AntCarousel
-          ref={carouselRef}
-          dots={false}
-          arrows
-          afterChange={(current) => setCurrentSlide(current)}
-          initialSlide={currentSlide}
-        >
-          {practicalData.map((item, index) => (
-            <div key={index} className="practice-item">
-              <PracticeItem
-                question={item.question}
-                options={item.options}
-                correctAnswer={item.correctAnswer}
-                onAnswerSelect={onAnswerSelect}
-                image={item.image}
-              />
-              {feedback && <div className="feedback">{feedback}</div>}
-            </div>
-          ))}
-        </AntCarousel>
+        <>
+          <AntCarousel
+            ref={carouselRef}
+            dots={false}
+            arrows
+            afterChange={(current) => setCurrentSlide(current)}
+            initialSlide={currentSlide}
+          >
+            {practicalData.map((item, index) => (
+              <div key={index} className="practice-item">
+                <PracticeItem
+                  question={item.question}
+                  options={item.options}
+                  correctAnswer={item.correctAnswer}
+                  onAnswerSelect={onAnswerSelect}
+                  image={item.image}
+                />
+                {feedback && <div className="feedback">{feedback}</div>}
+              </div>
+            ))}
+          </AntCarousel>
+          
+          {/* Summary Section for Navigation */}
+          <div className="summary-section flex justify-center mt-4">
+            {practicalData.map((_, index) => (
+              <div
+                key={index}
+                onClick={() => handleSummaryClick(index)}
+                className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${
+                  index === currentSlide ? 'bg-blue-500' : userAnswers[index] === undefined ?
+                  'bg-gray-500' : userAnswers[index] === true ? 'bg-green-500' : 'bg-red-500' 
+                }`}
+              >
+                {index + 1}
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="result-section text-center p-5 relative">
           {hasPassed && (
@@ -149,10 +164,10 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
           </div>
           <div className="summary-result">
             {userAnswers[index] === true ? (
-              <span className="text-green-500">Correct</span>
+              <span className="text-green-500">Đúng</span>
             ) : (
               <span className="text-red-500">
-                Incorrect - Correct answer: {item.correctAnswer}
+                Sai - Đáp án đúng: {item.correctAnswer}
               </span>
             )}
           </div>

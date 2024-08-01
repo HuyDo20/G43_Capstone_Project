@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
-import React from 'react';
+
 interface User {
   id: number;
   full_name: string;

@@ -17,12 +17,14 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
         <div className="flex">
           <div className="w-1/2 flex items-center justify-center">
             <div>
-              {image !== undefined &&(  <img
-                src="/path/to/image.png"
-                alt="Vocabulary"
-                className="mb-4"
-              />)}
               <div className="text-2xl font-bold">{question}</div>
+                {image !== undefined && (<img
+                width={200}
+                height={200}
+                src={image}
+                alt="Vocabulary"
+                className="mb-4 mt-4 ml-8"
+              />)}
             </div>
           </div>
           <div className="w-1/2 p-4">

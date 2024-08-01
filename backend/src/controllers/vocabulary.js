@@ -133,22 +133,71 @@ async function deleteVocabById(req, res) {
 async function generatePracticeData(req, res) {
     try {
         const { vocabularyIds } = req.body;
-        // Fetch vocabulary entries from the database
-        const vocabEntries = await Vocabulary.findAll({
+        console.log("Creating question data for " + vocabularyIds);
+
+        // Fetch vocabulary entries based on provided IDs
+        let vocabEntries = await Vocabulary.findAll({
             where: { vocab_id: vocabularyIds }
         });
-        // Generate a single question for each vocabulary entry, alternating between Kanji and meaning
-        const questions = vocabEntries.map((vocab, index) => {
-            return index % 2 === 0 ?
-                createKanjiQuestion(vocab, vocabEntries) :
-                createMeaningQuestion(vocab, vocabEntries);
-		}).filter(question => question); 
+
+        // If there are fewer than the provided vocabulary entries, fetch additional random vocabulary entries
+        if (vocabEntries.length < 4) {
+            const additionalVocabEntries = await Vocabulary.findAll({
+                where: { vocab_id: { [Op.notIn]: vocabularyIds } },
+                limit: 10
+            });
+            vocabEntries = vocabEntries.concat(additionalVocabEntries);
+        }
+
+        // Ensure each vocabulary entry generates a question
+        const questions = vocabEntries.map(vocab => {
+            let question = null;
+            let attempt = 0;
+            // Attempt to create a question up to 3 times
+            while (!question && attempt < 20) {
+                const questionType = Math.floor(Math.random() * 3);
+                switch (questionType) {
+                    case 0:
+                        question = createImageQuestion(vocab, vocabEntries);
+                        break;
+                    case 1:
+                        question = createMeaningQuestion(vocab, vocabEntries);
+                        break;
+                    case 2:
+                        question = createKanjiQuestion(vocab, vocabEntries);
+                        break;
+                }
+                attempt++;
+            }
+            return question;
+		}).filter(question => question);
+	
+
+        // Ensure the number of questions matches the number of vocabulary entries
+        if (questions.length < vocabularyIds.length) {
+            return notfound(res, 500, "Failed to generate sufficient questions");
+        }
+
         // Return the questions with a successful HTTP status
         return responseWithData(res, 200, questions);
     } catch (error) {
         console.error("Error generating practice data:", error);
-        return responseWithError(res, 500, "Failed to generate practice data");
+        return badRequest(res, "Failed to generate practice data");
     }
+}
+
+function createImageQuestion(vocab, allVocabs) {
+    const validDistractors = allVocabs.filter(item => item.vocab_id !== vocab.vocab_id && item.vocab_name && item.vocab_name.trim() !== '');
+    const options = generateOptions(vocab, validDistractors, 'name');
+
+    if (!options || options.length < 4) return null;
+
+    return {
+        question: `Chọn từ vựng đúng cho hình ảnh dưới đây:`,
+        image: vocab.vocab_image,
+        options: options,
+        correctAnswer: vocab.vocab_name
+    };
 }
 
 function createKanjiQuestion(vocab, allVocabs) {
@@ -178,20 +227,40 @@ function createMeaningQuestion(vocab, allVocabs) {
 }
 
 function generateOptions(correctVocab, distractors, type) {
-    const correctOption = type === 'kanji' ? correctVocab.vocab_kanji : correctVocab.vocab_meaning;
-    const wrongOptions = distractors
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3)
-        .map(item => (type === 'kanji' ? item.vocab_kanji : item.vocab_meaning))
-        .filter(option => option && option.trim() !== '');
-
-    if (!correctOption || correctOption.trim() === '') {
-        return [];
+    // Determine the correct option based on the question type
+    let correctOption;
+    if (type === 'kanji') {
+        correctOption = correctVocab.vocab_kanji;
+    } else if (type === 'name') {
+        correctOption = correctVocab.vocab_name;
+    } else {
+        correctOption = correctVocab.vocab_meaning;
     }
 
-    const options = [correctOption, ...wrongOptions].sort(() => 0.5 - Math.random());
+    // Shuffle distractors and filter to ensure they are distinct and not the same as the correct option
+    const wrongOptions = new Set();
+    distractors
+        .sort(() => 0.5 - Math.random())  // Shuffle distractors randomly
+        .forEach(item => {
+            // Extract the distractor option based on the question type
+            let option = type === 'kanji' ? item.vocab_kanji : (type === 'name' ? item.vocab_name : item.vocab_meaning);
+            // Add only non-empty, non-duplicate options
+            if (option && option.trim() !== '' && option !== correctOption && !wrongOptions.has(option)) {
+                wrongOptions.add(option);
+            }
+        });
+
+    // Ensure we have exactly 3 wrong options
+    if (wrongOptions.size < 3) return [];
+
+    // Convert Set to Array and take exactly 3 elements
+    const wrongOptionsArray = Array.from(wrongOptions).slice(0, 3);
+
+    // Combine correct option with wrong options and shuffle the final list
+    const options = [correctOption, ...wrongOptionsArray].sort(() => 0.5 - Math.random());
     return options;
 }
+
 
 module.exports = {
 	getAllVocab,

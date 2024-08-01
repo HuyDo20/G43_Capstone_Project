@@ -39,9 +39,6 @@ export default function LearningByWeek() {
         setWeekSelected(result.weekData[0]);
       }
     };
-
-   
-
     if (reload) {
       handleFetchData();
    setReload(false);

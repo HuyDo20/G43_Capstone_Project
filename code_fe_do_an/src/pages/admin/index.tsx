@@ -1,7 +1,7 @@
 import AdminLayout from "@/layout/AdminLayout";
 import { adminRoutes } from "@/router";
 import { Navigate, Route, Routes } from "react-router-dom";
-import React from 'react';
+
 function AdminRouter() {
   const AdminRouteComponent = adminRoutes.map((item, index) => {
     const path = item.path;
