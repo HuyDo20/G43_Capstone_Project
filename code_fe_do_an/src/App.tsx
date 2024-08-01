@@ -22,7 +22,7 @@ import AboutDNLS from "./pages/about/AboutDNLS";
 import AboutTextbook from "./pages/about/AboutTextbook";
 import DetailTextbook from "./pages/about/DetailTextbook";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
-
+import React from 'react';
 const contentStyle = {
   padding: 50,
   borderRadius: 4,

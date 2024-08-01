@@ -1,7 +1,7 @@
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
-
+import React from 'react';
 export default function AboutDNLS() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
   useEffect(() => {

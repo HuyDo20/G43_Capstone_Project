@@ -6,7 +6,7 @@ import { useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
-
+import React from 'react';
 export default function ForgotPassword() {
   const [Email, setEmail] = useState("");
   const navigate = useNavigate();

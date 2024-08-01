@@ -5,7 +5,7 @@ import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-
+import React from 'react';
 export default function GetNewPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

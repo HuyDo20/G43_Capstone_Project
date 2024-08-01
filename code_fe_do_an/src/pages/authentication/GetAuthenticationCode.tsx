@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/hook/AuthContext";
-
+import React from 'react';
 export default function GetAuthenticationCode() {
   const [authenticationCode, setAuthenticationCode] = useState("");
   const [resendAttempts, setResendAttempts] = useState(0);

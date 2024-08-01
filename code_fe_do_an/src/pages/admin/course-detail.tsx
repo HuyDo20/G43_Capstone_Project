@@ -4,7 +4,7 @@ import { Card, Steps, Typography, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
+import React from 'react';
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 function CourseDetailPage() {

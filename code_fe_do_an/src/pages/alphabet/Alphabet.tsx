@@ -17,6 +17,7 @@ import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import AlphabetPracticeComponent from "@/Practice/AlphabetPractice";
 import { useEffect, useState } from "react";
+import React from 'react';
 export default function Alphabet() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
   useEffect(() => {
