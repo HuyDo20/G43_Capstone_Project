@@ -117,7 +117,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
       ) : (
         <div className="result-section text-center p-5 relative">
           {hasPassed && (
-            <Confetti width={800} height={auto} recycle={false} numberOfPieces={500} />
+            <Confetti width={800} height={800} recycle={false} numberOfPieces={500} />
           )}
           <div className="relative z-10">
             {hasPassed ? (

@@ -24,7 +24,7 @@ export default function GrammarDetail() {
   const [dayCurrent, setDayCurrent] = useState({});
   const [grammarCurrent, setGrammarCurrent] = useState({});
   const [isLearned, setIsLearned] = useState(false);
-  const [PracticeModal, setPracticalData] = useState([]);
+  const [practicalData, setPracticalData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { handleFetch } = useAuth();
   const { id, week_id, day_id, grammar_id } = useParams();
