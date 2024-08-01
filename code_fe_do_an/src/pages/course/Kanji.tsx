@@ -1,4 +1,5 @@
 import { DaySchedule } from "@/components/course";
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -166,7 +167,7 @@ export default function Kanji() {
       }, { threshold: 0.3 });
 
       itemRefs.current.forEach((ref) => ref && observer.observe(ref));
-
+        
       return () => {
         itemRefs.current.forEach((ref) => ref && observer.unobserve(ref));
       };

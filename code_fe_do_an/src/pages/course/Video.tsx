@@ -1,4 +1,6 @@
 import { DaySchedule, Practice } from "@/components/course";
+import React from 'react';
+
 import {
   Breadcrumb,
   BreadcrumbItem,

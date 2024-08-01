@@ -1,4 +1,6 @@
 import { DaySchedule, ResetDeadline } from "@/components/course";
+import React from 'react';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -69,18 +71,6 @@ export default function LearningByWeek() {
                 {item?.week_name}
               </Button>
             ))}
-            {/* <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 2
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 3
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 4
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 5
-            </Button> */}
           </div>
         </div>
         <div className="basis-4/5 h-[800px] pt-7 pl-11 flex flex-col">

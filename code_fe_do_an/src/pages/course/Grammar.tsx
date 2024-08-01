@@ -1,4 +1,5 @@
 import { DaySchedule } from "@/components/course";
+import React from 'react';
 import GrammarItem from "@/components/course/GrammarItem";
 import {
   Breadcrumb,

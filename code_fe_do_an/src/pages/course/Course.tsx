@@ -1,4 +1,5 @@
 import { CourseItem } from "@/components/course";
+import React from 'react';
 import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { CourseResponse } from "@/type";

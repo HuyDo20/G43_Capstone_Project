@@ -84,7 +84,9 @@ export default function DaySchedule({ weekSelected, id = null }) {
             >
               Từ mới
               {dayData.vocabulary?.percentage === 100&&(<MdCheck className="inline ml-2" />)}
+              
             </AccordionContent>
+            
             <AccordionContent
               onClick={handleClickGrammar}
               className={`${getBackgroundColor(dayData.grammar?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
