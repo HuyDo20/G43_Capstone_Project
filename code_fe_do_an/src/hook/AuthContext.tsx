@@ -73,7 +73,6 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return request.data;
     } catch (error) {
       console.error(error);
-     
     }
   };
 

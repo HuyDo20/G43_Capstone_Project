@@ -137,7 +137,10 @@ export default function Vocabulary() {
         setReload(true);
       } catch (error) {
         console.error("Error update vocabulary process", error);
-        navigate('/error', { state: { message: error} });
+         notification.error({
+        message: "Failed to update kanji learned",
+        description: `Error: ${error}`,
+      });
       }
     };
 
@@ -185,13 +188,12 @@ export default function Vocabulary() {
     };
 
     const fetchPracticalData = async () => {
-  
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
         const request = await axios.post('/generate-vocabulary-practice-data', {
           accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: currentDayVocabularyIds,
+           vocabularyIds: currentDayVocabularyIds,
         }, {
           headers: {
             Authorization: token,
@@ -199,7 +201,6 @@ export default function Vocabulary() {
         });
         const response = request.data;
         if (response.statusCode === 200) {
-
           setPracticalData(response.data);
         }
       } catch (error) {

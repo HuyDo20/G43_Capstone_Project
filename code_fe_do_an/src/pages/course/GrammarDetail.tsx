@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
+import { notification } from "antd";
 import axios from 'axios';
 import PracticeModal from "@/components/ui/PracticeModal";
 
@@ -137,7 +138,10 @@ export default function GrammarDetail() {
         setReload(true); 
       }
     } catch (error) {
-       navigate('/error', { state: { message: error} });
+         notification.error({
+        message: "Failed to update grammar learned",
+        description: `Error: ${error}`,
+      });
     }
   };
 

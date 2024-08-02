@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import { useAuth } from "@/hook/AuthContext";
 import Header from "@/layout/header/Header";
-import { Tag } from "antd";
+import { Tag, notification } from "antd";
 import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
@@ -138,8 +138,10 @@ export default function Kanji() {
         });
         setReload(true);
       } catch (error) {
-        console.error("Error update kanji process", error);
-        navigate('/error', { state: { message: error} });
+         notification.error({
+        message: "Failed to update kanji learned",
+        description: `Error: ${error}`,
+      });
       }
     };
 

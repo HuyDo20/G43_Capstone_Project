@@ -21,7 +21,7 @@ import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tag } from "antd";
+import { Tag, notification } from "antd";
 import axios from 'axios';
 
 export default function Video() {
@@ -92,8 +92,10 @@ export default function Video() {
           alert("Failed to fetch completed videos.");
         }
       } catch (error) {
-        console.error("Error fetching completed videos:", error);
-          navigate('/error', { state: { message: error} });
+        notification.error({
+        message: "Failed to update kanji learned",
+        description: `Error: ${error}`,
+      });
       }
     };
 
@@ -129,7 +131,10 @@ export default function Video() {
       }
     } catch (error) {
       console.error(error);
-      navigate('/error', { state: { message: error} });
+        notification.error({
+        message: "Failed to update video learned",
+        description: `Error: ${error}`,
+      });
     }
   };
   return (
