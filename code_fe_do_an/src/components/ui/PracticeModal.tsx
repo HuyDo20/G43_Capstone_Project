@@ -37,12 +37,8 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
     }
   }, [isModalVisible, showResult]);
 
-  useEffect(() => {
-    console.log('User Answers:', userAnswers);
-  }, [userAnswers]);
-
   const onAnswerSelect = (isCorrect) => {
-    console.log("is correct :" + isCorrect);
+  
     if (userAnswers.length <= currentSlide) {
       setUserAnswers([...userAnswers, isCorrect]);
     }

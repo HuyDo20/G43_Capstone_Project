@@ -29,7 +29,6 @@ export default function Course() {
       });
       const response = request.data;
       if (response.statusCode === 200) {
-        console.log(response);
         setCourseList(response.data);
       }
     };

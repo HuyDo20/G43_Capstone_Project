@@ -454,7 +454,6 @@ const UserManagementPage: React.FC = () => {
         setData(response.data.data);
         setTotalPages(response.data.total_pages);
         setCurrentPage(page);
-        console.log(response.data.total_pages);
       }
     } catch (error) {
       console.error(error);

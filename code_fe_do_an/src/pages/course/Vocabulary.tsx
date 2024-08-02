@@ -203,7 +203,7 @@ export default function Vocabulary() {
         });
         const response = request.data;
         if (response.statusCode === 200) {
-          console.log(response.data);
+
           setPracticalData(response.data);
         }
         else {

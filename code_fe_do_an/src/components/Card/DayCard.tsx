@@ -26,7 +26,7 @@ function DayCard({
   setReload,
   mode,
 }) {
-  console.log(JSON.stringify(dayData));
+
   const handleOpenNewDay = (item, index) => {
     setVisibleNewDay(true);
     setDaySelected(item);

@@ -86,7 +86,6 @@ export default function Kanji() {
         ?.map((lesson) => lesson.kanji_id);
 
         setDayCurrent(_dayCurrent);
-        console.log(kanjiIds);
         setCurrentDayKanjiIds(kanjiIds);
       }
     };
@@ -187,7 +186,6 @@ export default function Kanji() {
       }
     };
     const fetchPracticalData = async () => {
-      console.log("get questions for " + currentDayKanjiIds);
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
@@ -201,7 +199,7 @@ export default function Kanji() {
         });
         const response = request.data;
         if (response.statusCode === 200) {
-          console.log(response);
+
           setPracticalData(response.data);
         }
         else {
