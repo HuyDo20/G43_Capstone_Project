@@ -22,6 +22,7 @@ import AboutDNLS from "./pages/about/AboutDNLS";
 import AboutTextbook from "./pages/about/AboutTextbook";
 import DetailTextbook from "./pages/about/DetailTextbook";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import ErrorPage from "./components/ui/errorPage";
 import React from 'react';
 const contentStyle = {
   padding: 50,
@@ -82,6 +83,14 @@ function App() {
               element={<GrammarDetail />}
             />
             <Route path="/admin/*" element={<AdminRoutes />} />
+             <Route
+             path="/error"
+             element={<ErrorPage />}
+              />
+              <Route
+               path="*"
+              element={<ErrorPage />}
+               />
           </Routes>
         </Suspense>
       </AuthProvider>

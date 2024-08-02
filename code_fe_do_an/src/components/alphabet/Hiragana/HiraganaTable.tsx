@@ -4,11 +4,11 @@ import CharacterCard from "../CharacterCard";
 import axios from "axios";
 import { AlphabetResponse } from "@/type";
 // import { hiragana } from "./HiraganaData";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function HiraganaTable() {
-
+  const navigate = useNavigate();
   const [hiraganaList, setHiraganaList] = useState<[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const fetchData = useAuthAPI()
@@ -39,6 +39,8 @@ export default function HiraganaTable() {
           if(confirm) {
             window.location.href = "/";
           }
+        } else {
+          navigate('/error', { state: { message:error} });
         }
       }
     };

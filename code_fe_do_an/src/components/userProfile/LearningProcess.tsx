@@ -10,9 +10,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Progress } from "@/components/ui/progress";
+import { useNavigate } from "react-router-dom";
 
 export default function LearningProcess() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export default function LearningProcess() {
         }
       } catch (error) {
         console.error("Error fetching learning progress", error);
+        navigate('/error', { state: { message: error} });
       }
     };
 

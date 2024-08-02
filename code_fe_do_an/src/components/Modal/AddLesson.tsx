@@ -9,6 +9,7 @@ import {
   Divider,
   Select,
   Upload,
+  notification
 } from "antd";
 const { Option } = Select;
 import ImgCrop from "antd-img-crop";
@@ -80,7 +81,11 @@ function AddLessonModal({
         },
       ]);
     } catch (error) {
-      console.error("Upload failed:", error);
+       notification.error({
+          message: "Upload failed:",
+          description: `Error: ${error.message}`,
+        });
+    
     }
   };
 

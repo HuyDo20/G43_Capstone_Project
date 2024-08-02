@@ -26,7 +26,7 @@ const CourseItem: React.FC<CourseResponse> = (course: CourseResponse) => {
         });
         setIsEnrolled(response.data.isEnrolled);
       } catch (error) {
-        console.error("Error checking enrollment in course", error);
+        navigate('/error', { state: { message: 'Error checking enrollment in course' } });
       }
     };
 
@@ -57,7 +57,7 @@ const CourseItem: React.FC<CourseResponse> = (course: CourseResponse) => {
       setModalIsOpen(false);
       navigate(`/learningByWeek/${course.course_id}`);
     } catch (error) {
-      console.error("Error enrolling in course", error);
+      navigate('/error', { state: { message: 'Error enrolling in course' } });
     }
   };
 

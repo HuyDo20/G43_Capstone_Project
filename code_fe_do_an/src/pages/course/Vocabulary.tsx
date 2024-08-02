@@ -144,7 +144,6 @@ export default function Vocabulary() {
       }
     };
 
-
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
     audio.play();
@@ -189,13 +188,13 @@ export default function Vocabulary() {
     };
 
     const fetchPracticalData = async () => {
-  
       try {
+
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
         const request = await axios.post('/generate-vocabulary-practice-data', {
           accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: currentDayVocabularyIds,
+          vocabularyIds: null,
         }, {
           headers: {
             Authorization: token,
@@ -210,8 +209,7 @@ export default function Vocabulary() {
           alert("fail");
         }
       } catch (error) {
-        console.error("Error update vocabulary process", error);
-        alert('An error occurred');
+      navigate('/error', { state: { message: 'An error occurred while fetching data. Please try again later.' } });
       }
     };
 

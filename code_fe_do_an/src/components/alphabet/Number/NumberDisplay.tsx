@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface AlphabetItem {
   alphabet_id: number;
@@ -13,6 +14,7 @@ interface AlphabetItem {
 export default function NumberDisplay() {
   const [numberList, setNumberList] = useState<AlphabetItem[]>([]);
   const [selectedNumber, setSelectedNumber] = useState<AlphabetItem | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleFetchData = async () => {
@@ -41,6 +43,8 @@ export default function NumberDisplay() {
           if(confirm) {
             window.location.href = "/";
           }
+        }else {
+          navigate('/error', { state: { message:error} });
         }
       }
     };

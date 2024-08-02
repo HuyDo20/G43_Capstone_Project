@@ -1,4 +1,4 @@
-import { Form, Input, Button, Upload } from "antd";
+import { Form, Input, Button, Upload, notification } from "antd";
 import ImgCrop from "antd-img-crop";
 import axios from "axios";
 import { useEffect } from "react";
@@ -54,7 +54,10 @@ const StepOne = ({
         },
       ]);
     } catch (error) {
-      console.error("Upload failed:", error);
+       notification.error({
+          message: "Upload failed:",
+          description: `Error: ${error.message}`,
+        });
     }
   };
 

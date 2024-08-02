@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import CharacterCard from '../CharacterCard';
 import { AlphabetResponse } from '@/type';
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function HiraganaAmGhepTable() {
   const [yoonHiraList, setYoonHiraList] = useState<[]>([]);
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const fetchData = useAuthAPI()
   useEffect(() => {
@@ -36,6 +37,8 @@ export default function HiraganaAmGhepTable() {
           if(confirm) {
             window.location.href = "/";
           }
+        }else {
+          navigate('/error', { state: { message:error} });
         }
       }
     };

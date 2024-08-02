@@ -11,8 +11,6 @@ export default function Course() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
 
   useEffect(() => {
-     
-    
     const handleFetchData = async () => {
       let token = "";
       let accountId;
