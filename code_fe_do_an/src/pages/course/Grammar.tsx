@@ -94,7 +94,7 @@ export default function Grammar() {
           setLearnedStatuses(statuses);
         }
       } catch (error) {
-        console.error(error);
+        navigate('/error', { state: { message: error } });
       }
     };
 

@@ -112,7 +112,7 @@ export default function Kanji() {
           alert("fail");
         }
       } catch (error) {
-        console.error(error);
+           navigate('/error', { state: { message: error} });
       }
     };
 
@@ -139,7 +139,7 @@ export default function Kanji() {
         setReload(true);
       } catch (error) {
         console.error("Error update kanji process", error);
-        alert('An error occurred');
+        navigate('/error', { state: { message: error} });
       }
     };
 
@@ -207,7 +207,7 @@ export default function Kanji() {
         }
       } catch (error) {
         console.error("Error update vocabulary process", error);
-        alert('An error occurred');
+          navigate('/error', { state: { message: error} });
       }
     };
 

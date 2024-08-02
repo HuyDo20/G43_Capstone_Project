@@ -84,7 +84,7 @@ export default function GrammarDetail() {
           alert("Failed to fetch grammar progress.");
         }
       } catch (error) {
-        console.error(error);
+        navigate('/error', { state: { message: error} });
       }
     };
 
@@ -137,7 +137,7 @@ export default function GrammarDetail() {
         setReload(true); 
       }
     } catch (error) {
-      console.error(error);
+       navigate('/error', { state: { message: error} });
     }
   };
 
@@ -170,8 +170,7 @@ export default function GrammarDetail() {
           alert("fail");
         }
       } catch (error) {
-        console.error("Error update vocabulary process", error);
-        alert('An error occurred');
+           navigate('/error', { state: { message: error} });
       }
     };
 

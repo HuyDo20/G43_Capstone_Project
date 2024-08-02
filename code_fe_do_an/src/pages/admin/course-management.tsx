@@ -143,6 +143,7 @@ const CoursesManagementPage: React.FC = () => {
         }
       } catch (error) {
         console.error(error);
+        navigate('/error', { state: { message: error} });
       }
     };
     if (reload) {

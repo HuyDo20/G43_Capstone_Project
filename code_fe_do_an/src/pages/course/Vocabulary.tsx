@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import { useAuth } from "@/hook/AuthContext";
 import Header from "@/layout/header/Header";
-import { Tag } from "antd";
+import { Tag, notification } from "antd";
 import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
@@ -110,11 +110,8 @@ export default function Vocabulary() {
           const learnedVocabIds = request.data.map((item) => item.vocabulary_id);
           setLearnedVocab(new Set(learnedVocabIds));
         }
-        else {
-          alert("fail");
-        }
       } catch (error) {
-        console.error(error);
+          navigate('/error', { state: { message: error} });
       }
     };
 
@@ -140,7 +137,7 @@ export default function Vocabulary() {
         setReload(true);
       } catch (error) {
         console.error("Error update vocabulary process", error);
-        alert('An error occurred');
+        navigate('/error', { state: { message: error} });
       }
     };
 
@@ -188,13 +185,13 @@ export default function Vocabulary() {
     };
 
     const fetchPracticalData = async () => {
+  
       try {
-
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
         const request = await axios.post('/generate-vocabulary-practice-data', {
           accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: null,
+          vocabularyIds: currentDayVocabularyIds,
         }, {
           headers: {
             Authorization: token,
@@ -205,11 +202,9 @@ export default function Vocabulary() {
 
           setPracticalData(response.data);
         }
-        else {
-          alert("fail");
-        }
       } catch (error) {
-      navigate('/error', { state: { message: 'An error occurred while fetching data. Please try again later.' } });
+        console.error("Error update vocabulary process", error);
+        navigate('/error', { state: { message: 'An error occurred while fetching data. Please try again later.' } });
       }
     };
 

@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   id: number;
@@ -52,7 +53,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   setReload,
 }) => {
   const [userData, setUserData] = useState<User>(UserDefaultData);
-
+  const navigate = useNavigate();
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -63,6 +64,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   };
 
   useEffect(() => {
+ 
     if (data) {
       setUserData({
         id: data.id,
@@ -122,6 +124,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       }
     } catch (error) {
       console.error(error);
+      navigate('/error', { state: { message: error} });
     }
   };
 

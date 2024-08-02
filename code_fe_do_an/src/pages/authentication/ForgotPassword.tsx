@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import Logo from "@/layout/Logo";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
+import { notification } from "antd";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
@@ -14,7 +15,10 @@ export default function ForgotPassword() {
   const handleSubmit = async () => {
     try {
       if (Email.length === 0) {
-        alert("Email is null");
+        notification.error({
+        message: "Lỗi khôi phục",
+        description: `Email trống`,
+      });
         return;
       }
       const request = await axios.post('/check-exiting-account', { Email });
@@ -25,14 +29,19 @@ export default function ForgotPassword() {
         if (responseSendOtp.statusCode === 200) {
              navigate(`/getAuthenticationCode?email=${encodeURIComponent(Email)}`);
         } else {
-          alert("Send otp fail");
-        }
-      } else {
-        alert("account is not exit");
+           notification.error({
+        message: "Lỗi khôi phục",
+        description: `Không thể gửi otp`,
+      });
       }
-        } catch (error) {
-            console.error("Error checking email:", error);
-            return false;
+      } else {
+        notification.error({
+        message: "Lỗi khôi phục",
+        description: `Tài khoản không tồn tại`,
+      });
+      }
+    } catch (error) {
+          navigate('/error', { state: { message: error} });
     }
   };
   return (

@@ -14,7 +14,7 @@ const { generateToken } = require("../middleware/auth");
 const { omitPassword } = require("../helper/user");
 const RANDOM_OTP_CHARACTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const crypto = require('crypto');
-const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS, OTP_VERIFIED } = require("../messages/user");
+const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS, ACCOUNT_NOT_EXISTED, OTP_VERIFIED } = require("../messages/user");
 
 const {
 	ACCOUNT_UPDATED,
@@ -98,14 +98,13 @@ async function logoutAccount(req, res) {
 
 
 async function exitingAccount(req, res) {
-	console.log("check exit email");
 	try {
 		const { Email } = req.body;
 		const user = await Account.findOne({ where: { Email } });
 		if (!user) {
-			return notfound(res);
+			return responseWithData(res,202, ACCOUNT_NOT_EXISTED);
 		}
-		return ok(res, "Account founded!");
+		return ok(res, ACCOUNT_EXISTED);
 	} catch (err) {
 		console.log("Error during check exiting account", err);
 		return error(res);

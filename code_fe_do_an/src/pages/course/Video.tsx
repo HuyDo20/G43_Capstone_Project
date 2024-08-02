@@ -93,6 +93,7 @@ export default function Video() {
         }
       } catch (error) {
         console.error("Error fetching completed videos:", error);
+          navigate('/error', { state: { message: error} });
       }
     };
 
@@ -128,6 +129,7 @@ export default function Video() {
       }
     } catch (error) {
       console.error(error);
+      navigate('/error', { state: { message: error} });
     }
   };
   return (
@@ -217,20 +219,17 @@ export default function Video() {
                                 </div>
                                 <div className="flex flex-col items-center gap-5">
                                   <video
-  className="h-[450px] w-[100%] rounded-md shadow-md"
-  src={
-                       lesson?.video_link
-      ? lesson?.video_link.split(", ")[0]
-      : "/banner.png"
+                                      className="h-[450px] w-[100%] rounded-md shadow-md"
+                                      src={
+                                      lesson?.video_link
+                                      ? lesson?.video_link.split(", ")[0]
+                                      : "/banner.png"
                                          }
-                             controls
+                                    controls
                                    onError={(e) => {
                                     console.error('Error loading video:', e.target.error, 'Video URL:', lesson?.video_link);
-                                       // You can set a fallback action or notify the user
-                                                }}
-                              />
-
-                                  
+                                     }}
+                                   />
                                   {!completedVideos.has(lesson.video_id) && (
                                     <Button
                                       className="mt-8"

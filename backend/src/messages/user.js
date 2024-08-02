@@ -5,6 +5,7 @@ const ACCOUNT_DEACTIVE = "Tài khoản của bạn đã bị vô hiệu hoá";
 
 //register
 const ACCOUNT_EXISTED = "Email đã tồn tại.";
+const ACCOUNT_NOT_EXISTED = "Email không tồn tại.";
 const ACCOUNT_CREATED = "Tạo tài khoảng thành công!";
 const ACCOUNT_LOGIN = "Đăng nhập thành công!";
 const OTP_GENERATED = "Tạo mã OTP đăng ký thành công!";

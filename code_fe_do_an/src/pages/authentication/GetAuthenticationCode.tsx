@@ -41,7 +41,6 @@ export default function GetAuthenticationCode() {
       }
     } catch (error) {
       setErrorMessage("Error fetching OTP expiration time.");
-      console.error(error);
     }
   };
 
@@ -69,7 +68,6 @@ export default function GetAuthenticationCode() {
       }
     } catch (error) {
       setErrorMessage("Error verifying OTP. Please try again.");
-      console.error("Error verifying OTP:", error);
     }
   };
 
@@ -92,7 +90,6 @@ export default function GetAuthenticationCode() {
       }
     } catch (error) {
       setErrorMessage("Error resending OTP. Please try again.");
-      console.error("Error resending OTP:", error);
     }
   };
 
