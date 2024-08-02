@@ -133,7 +133,6 @@ async function deleteVocabById(req, res) {
 async function generatePracticeData(req, res) {
     try {
         const { vocabularyIds } = req.body;
-        console.log("Creating question data for " + vocabularyIds);
 
         // Fetch vocabulary entries based on provided IDs
         let vocabEntries = await Vocabulary.findAll({
@@ -155,7 +154,7 @@ async function generatePracticeData(req, res) {
             let attempt = 0;
             // Attempt to create a question up to 3 times
             while (!question && attempt < 20) {
-                const questionType = Math.floor(Math.random() * 3);
+                const questionType = Math.floor(Math.random() * 7);
                 switch (questionType) {
                     case 0:
                         question = createImageQuestion(vocab, vocabEntries);
@@ -165,7 +164,18 @@ async function generatePracticeData(req, res) {
                         break;
                     case 2:
                         question = createKanjiQuestion(vocab, vocabEntries);
-                        break;
+						break;
+					case 3:
+                        question = createImageQuestion(vocab, vocabEntries);
+						break;
+					case 4:
+                        question = createImageQuestion(vocab, vocabEntries);
+						break;
+					case 5:
+                        question = createImageQuestion(vocab, vocabEntries);
+						break;
+					default:
+						break;
                 }
                 attempt++;
             }

@@ -4,6 +4,10 @@ import PracticeItem from '@/components/ui/PracticeItem';
 import Confetti from 'react-confetti';
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels'; // Import the plugin
+import { Chart } from 'chart.js';
+
+Chart.register(ChartDataLabels); // Register the plugin
 
 const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose, onPass }) => {
   const [userAnswers, setUserAnswers] = useState([]);
@@ -21,7 +25,6 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
         return;
       }
       setPracticalData(practiceData);
-      setUserAnswers([]);
       setPassThreshold(practiceData.length > 1 ? Math.ceil(practiceData.length * 0.7) : 1);
     };
 
@@ -34,7 +37,12 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
     }
   }, [isModalVisible, showResult]);
 
+  useEffect(() => {
+    console.log('User Answers:', userAnswers);
+  }, [userAnswers]);
+
   const onAnswerSelect = (isCorrect) => {
+    console.log("is correct :" + isCorrect);
     if (userAnswers.length <= currentSlide) {
       setUserAnswers([...userAnswers, isCorrect]);
     }
@@ -55,7 +63,6 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
       setCurrentSlide(index);
       carouselRef.current.goTo(index);
     }
-
   };
 
   const handleRetry = () => {
@@ -71,7 +78,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
   const incorrectAnswersCount = totalQuestions - correctAnswersCount;
 
   const pieData = {
-    labels: ['Đám án chính xác', 'Đáp án sai'],
+    labels: ['Đáp án chính xác', 'Đáp án sai'],
     datasets: [
       {
         data: [correctAnswersCount, incorrectAnswersCount],
@@ -81,15 +88,35 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
     ]
   };
 
+  const pieOptions = {
+    plugins: {
+      datalabels: {
+        formatter: (value, context) => {
+          const total = context.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);
+          const percentage = (value / total * 100).toFixed(2) + '%';
+          return percentage;
+        },
+        color: '#fff',
+        font: {
+          weight: 'bold',
+          size: 16
+        }
+      }
+    }
+  };
+
   return (
     <Modal
-      title={title}
-      visible={isModalVisible}
-      onCancel={onClose}
-      footer={[]}
-      width={800}
-      centered
+    title={<div style={{ textAlign: 'center', width: '100%', marginTop:'5px', fontSize:'20px' }}>{title}</div>}
+    visible={isModalVisible}
+    onCancel={onClose}
+    footer={[]}
+    width={800}
+    centered
     >
+      <div style={{ textAlign: 'center', fontSize: '15px', color: feedback === "Chính xác!" ? 'green' : 'red' }}>
+        {feedback}
+      </div>
       {!showResult ? (
         <>
           <AntCarousel
@@ -108,13 +135,11 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
                   onAnswerSelect={onAnswerSelect}
                   image={item.image}
                 />
-                {feedback && <div className="feedback">{feedback}</div>}
               </div>
             ))}
           </AntCarousel>
-          
           {/* Summary Section for Navigation */}
-          <div className="summary-section flex justify-center mt-4">
+          <div className="summary-section flex justify-center">
             {practicalData.map((_, index) => (
               <div
                 key={index}
@@ -151,31 +176,31 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
           
         </div>
       )}
-    {showResult && (
-  <div className="result-summary-container flex">
-    <div className="pie-chart-section flex-1">
-      <Pie data={pieData} />
-    </div>
-    <div className="summary-section flex-1 ml-4 overflow-auto max-h-64">
-      {practicalData.map((item, index) => (
-        <div key={index} className="summary-item mt-2">
-          <div className="summary-question font-bold">
-            {index + 1}. {item.question}
+      {showResult && (
+        <div className="result-summary-container flex">
+          <div className="pie-chart-section flex-1">
+            <Pie data={pieData} options={pieOptions} />
           </div>
-          <div className="summary-result">
-            {userAnswers[index] === true ? (
-              <span className="text-green-500">Đúng</span>
-            ) : (
-              <span className="text-red-500">
-                Sai - Đáp án đúng: {item.correctAnswer}
-              </span>
-            )}
+          <div className="summary-section flex-1 ml-4 overflow-auto max-h-64">
+            {practicalData.map((item, index) => (
+              <div key={index} className="summary-item mt-2">
+                <div className="summary-question font-bold">
+                  {index + 1}. {item.question}
+                </div>
+                <div className="summary-result">
+                  {userAnswers[index] === true ? (
+                    <span className="text-green-500">Đúng</span>
+                  ) : (
+                    <span className="text-red-500">
+                      Sai - Đáp án đúng: {item.correctAnswer}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-)}
+      )}
 
       {!hasPassed && showResult && (
         <div className="flex justify-center mt-4">

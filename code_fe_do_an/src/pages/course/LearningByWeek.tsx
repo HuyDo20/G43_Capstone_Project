@@ -25,7 +25,6 @@ export default function LearningByWeek() {
   const [weekSelected, setWeekSelected] = useState([]);
 
   useEffect(() => {
-    console.log(weekSelected?.week_id);
     const handleFetchData = async () => {
       const response = await handleFetch({
         method: "get",
@@ -33,7 +32,6 @@ export default function LearningByWeek() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-        console.log(result);
         setCourseData(result.courseData);
         setWeekData(result.weekData);
         setWeekSelected(result.weekData[0]);

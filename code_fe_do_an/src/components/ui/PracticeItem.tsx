@@ -12,8 +12,8 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
   };
 
   return (
-    <Card className="mb-4">
-      <CardContent className="p-4 bg-white rounded-lg shadow-md">
+    <Card className="m-8">
+      <CardContent className="p-8 bg-white rounded-lg shadow-md">
         <div className="flex">
           <div className="w-1/2 flex items-center justify-center">
             <div>
@@ -28,7 +28,7 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
             </div>
           </div>
           <div className="w-1/2 p-4">
-            <div className="text-lg mb-4">Hãy chọn đáp án đúng:</div>
+            <div className="text-lg mb-8 mt-4">Hãy chọn đáp án đúng:</div>
             <div className="grid grid-cols-2 gap-4">
               {options.map((option, index) => {
                 const isCorrect = option === correctAnswer;
@@ -48,6 +48,9 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
                 } else {
                   buttonClass += 'bg-white text-black hover:bg-gray-200';
                 }
+
+                // Apply fixed size
+                buttonClass += ' w-32 h-20';
 
                 return (
                   <button
