@@ -5,21 +5,59 @@ import { useAuth } from '@/hook/AuthContext';
 import { AiOutlinePlus } from 'react-icons/ai';
 import styled from 'styled-components';
 import MultiChoiceQuestion from '@/components/exam/MultiChoiceQuestion';
+import ReadingQuestion from '@/components/exam/ReadingQuestion';
+import ListeningQuestion from '@/components/exam/ListeningQuestion';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
-interface Question {
+interface MultiChoiceOption {
   id: number;
-  type: string;
   content: string;
-  options: any[];
+}
+
+interface SubQuestion {
+  id: number;
+  questionContent: string;
+  options: MultiChoiceOption[];
+  correctOptionId: number | null;
+  imageUrl: string | null;
+}
+
+interface MultiChoiceQuestionType {
+  id: number;
+  type: 'Multi-choice';
+  content: string;
+  options: MultiChoiceOption[];
   correctOptionId: number | null;
   imageUrl: string | null;
   confirmed: boolean;
 }
 
-const defaultQuestion: Question = {
+interface ReadingQuestionType {
+  id: number;
+  type: 'Reading';
+  content: string;
+  subQuestions: SubQuestion[];
+  imageUrl: string | null;
+  confirmed: boolean;
+}
+
+interface ListeningQuestionType {
+  id: number;
+  type: 'Listening';
+  subQuestions: SubQuestion[];
+  audioUrl: string | null;
+  confirmed: boolean;
+}
+
+type Question = MultiChoiceQuestionType | ReadingQuestionType | ListeningQuestionType;
+
+const generateRandomId = () => {
+  return Math.floor(100000 + Math.random() * 900000); 
+};
+
+const defaultMultiChoiceQuestion: MultiChoiceQuestionType = {
   id: 0,
-  type: '',
+  type: 'Multi-choice',
   content: '',
   options: [],
   correctOptionId: null,
@@ -27,15 +65,28 @@ const defaultQuestion: Question = {
   confirmed: false,
 };
 
-const generateRandomId = () => {
-  return Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit random number
+const defaultReadingQuestion: ReadingQuestionType = {
+  id: 0,
+  type: 'Reading',
+  content: '',
+  subQuestions: [],
+  imageUrl: null,
+  confirmed: false,
+};
+
+const defaultListeningQuestion: ListeningQuestionType = {
+  id: 0,
+  type: 'Listening',
+  subQuestions: [],
+  audioUrl: null,
+  confirmed: false,
 };
 
 const CourseExamCreate: React.FC = () => {
   const [examName, setExamName] = useState('');
-  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState<Question[]>([]);
-  const [readingQuestions, setReadingQuestions] = useState<Question[]>([]);
-  const [listeningQuestions, setListeningQuestions] = useState<Question[]>([]);
+  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState<MultiChoiceQuestionType[]>([]);
+  const [readingQuestions, setReadingQuestions] = useState<ReadingQuestionType[]>([]);
+  const [listeningQuestions, setListeningQuestions] = useState<ListeningQuestionType[]>([]);
   const [selectedType, setSelectedType] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
   const [reload, setReload] = useState(false);
@@ -45,30 +96,55 @@ const CourseExamCreate: React.FC = () => {
 
   useEffect(() => {
     if (reload) {
-      // fetch exam data if needed
       setReload(false);
     }
   }, [reload]);
+
   useEffect(() => {
-    console.log("current list data:" + JSON.stringify(multiChoiceQuestions));
+    console.log("current list data multi:" + JSON.stringify(multiChoiceQuestions));
   }, [multiChoiceQuestions]);
+
+    useEffect(() => {
+    console.log("current list data reading ques:" + JSON.stringify(readingQuestions));
+    }, [multiChoiceQuestions]);
+  
+    useEffect(() => {
+    console.log("current list data listning quest:" + JSON.stringify(listeningQuestions));
+  }, [multiChoiceQuestions]);
+
 
   const handleAddQuestion = () => {
     if (isEditingQuestion) {
       message.warning('Please confirm the current question before adding a new one.');
       return;
     }
-    const newQuestion = { ...defaultQuestion, type: 'Multi-choice', id: generateRandomId() };
-    setMultiChoiceQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    
+    let newQuestion: Question;
+
+    if (selectedType === 'Multi-choice') {
+      newQuestion = { ...defaultMultiChoiceQuestion, id: generateRandomId() };
+      setMultiChoiceQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    } else if (selectedType === 'Reading') {
+      newQuestion = { ...defaultReadingQuestion, id: generateRandomId() };
+      setReadingQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    } else if (selectedType === 'Listening') {
+      newQuestion = { ...defaultListeningQuestion, id: generateRandomId() };
+      setListeningQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    } else {
+      message.warning('Please select a question type before adding a question.');
+      return;
+    }
+
     setEditingQuestionId(newQuestion.id);
     setIsEditingQuestion(true);
   };
 
   const handleDeleteQuestion = (type: string, id: number) => {
-      if (isEditingQuestion) {
-      message.warning('Please confirm the current question before adding a new one.');
+    if (isEditingQuestion) {
+      message.warning('Please confirm the current question before deleting.');
       return;
     }
+
     if (type === 'Multi-choice') {
       setMultiChoiceQuestions(multiChoiceQuestions.filter((question) => question.id !== id));
     } else if (type === 'Reading') {
@@ -109,52 +185,114 @@ const CourseExamCreate: React.FC = () => {
     id: number,
     questionContent: string,
     options: any[],
-    correctOptionId: number,
-    imageUrl: string
+    correctOptionId: number | null,
+    imageUrl: string | null,
+    subQuestions?: any[],
+    audioUrl?: string | null
   ) => {
     if (type === 'Multi-choice') {
-      updateOrCreateQuestion(multiChoiceQuestions, setMultiChoiceQuestions, id, type, questionContent, options, correctOptionId, imageUrl);
+      updateOrCreateMultiChoiceQuestion(id, questionContent, options, correctOptionId, imageUrl);
     } else if (type === 'Reading') {
-      updateOrCreateQuestion(readingQuestions, setReadingQuestions, id, type, questionContent, options, correctOptionId, imageUrl);
+      updateOrCreateReadingQuestion(id, questionContent, subQuestions || [], imageUrl);
     } else if (type === 'Listening') {
-      updateOrCreateQuestion(listeningQuestions, setListeningQuestions, id, type, questionContent, options, correctOptionId, imageUrl);
+      updateOrCreateListeningQuestion(id, subQuestions || [], audioUrl || null);
     }
     setEditingQuestionId(null);
     setIsEditingQuestion(false);
   };
 
-  const updateOrCreateQuestion = (
-    questions: Question[],
-    setQuestions: React.Dispatch<React.SetStateAction<Question[]>>,
+  const updateOrCreateMultiChoiceQuestion = (
     id: number,
-    type: string,
     questionContent: string,
     options: any[],
-    correctOptionId: number,
-    imageUrl: string
+    correctOptionId: number | null,
+    imageUrl: string | null
   ) => {
-    const questionExists = questions.some((q) => q.id === id);
+    const questionExists = multiChoiceQuestions.some((q) => q.id === id);
     if (questionExists) {
-      setQuestions((prevQuestions) =>
+      setMultiChoiceQuestions((prevQuestions) =>
         prevQuestions.map((q) => (q.id === id ? { ...q, content: questionContent, options, correctOptionId, imageUrl, confirmed: true } : q))
       );
     } else {
       const newQuestion = {
-        ...defaultQuestion,
+        ...defaultMultiChoiceQuestion,
         id,
-        type,
         content: questionContent,
         options,
         correctOptionId,
         imageUrl,
         confirmed: true,
       };
-      setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+      setMultiChoiceQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
     }
   };
 
-  const handleEditQuestion = (id: number) => {
-    setEditingQuestionId(id);
+  const updateOrCreateReadingQuestion = (
+    id: number,
+    content: string,
+    subQuestions: any[],
+    imageUrl: string | null
+  ) => {
+    const questionExists = readingQuestions.some((q) => q.id === id);
+    if (questionExists) {
+      setReadingQuestions((prevQuestions) =>
+        prevQuestions.map((q) => (q.id === id ? { ...q, content, subQuestions, imageUrl, confirmed: true } : q))
+      );
+    } else {
+      const newQuestion = {
+        ...defaultReadingQuestion,
+        id,
+        content,
+        subQuestions,
+        imageUrl,
+        confirmed: true,
+      };
+      setReadingQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    }
+  };
+
+  const updateOrCreateListeningQuestion = (
+    id: number,
+    subQuestions: any[],
+    audioUrl: string | null
+  ) => {
+    const questionExists = listeningQuestions.some((q) => q.id === id);
+    if (questionExists) {
+      setListeningQuestions((prevQuestions) =>
+        prevQuestions.map((q) => (q.id === id ? { ...q, subQuestions, audioUrl, confirmed: true } : q))
+      );
+    } else {
+      const newQuestion = {
+        ...defaultListeningQuestion,
+        id,
+        subQuestions,
+        audioUrl,
+        confirmed: true,
+      };
+      setListeningQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    }
+  };
+
+  const handleEditQuestion = (type: string, id: number) => {
+    if (type === 'Multi-choice') {
+      const question = multiChoiceQuestions.find(q => q.id === id);
+      if (question) {
+        setEditingQuestionId(id);
+        setIsEditingQuestion(true);
+      }
+    } else if (type === 'Reading') {
+      const question = readingQuestions.find(q => q.id === id);
+      if (question) {
+        setEditingQuestionId(id);
+        setIsEditingQuestion(true);
+      }
+    } else if (type === 'Listening') {
+      const question = listeningQuestions.find(q => q.id === id);
+      if (question) {
+        setEditingQuestionId(id);
+        setIsEditingQuestion(true);
+      }
+    }
   };
 
   const renderQuestionsByType = (type: string, questions: Question[], setQuestions: React.Dispatch<React.SetStateAction<Question[]>>) => (
@@ -166,18 +304,40 @@ const CourseExamCreate: React.FC = () => {
             <Draggable key={question.id} draggableId={String(question.id)} index={index} isDragDisabled={!question.confirmed}>
               {(provided) => (
                 <div ref={provided.innerRef} {...provided.draggableProps} {...(question.confirmed ? provided.dragHandleProps : {})}>
-                  {question.type === 'Multi-choice' && (
+                  {type === 'Multi-choice' ? (
                     <MultiChoiceQuestion
                       questionId={question.id}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, content, options, correctOptionId, imageUrl) =>
                         handleConfirmQuestion(question.type, id, content, options, correctOptionId, imageUrl)
                       }
-                      onEdit={() => handleEditQuestion(question.id)}
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
                       isConfirmed={question.confirmed}
                       isEditing={editingQuestionId === question.id}
                     />
-                  )}
+                  ) : type === 'Reading' ? (
+                    <ReadingQuestion
+                      questionId={question.id}
+                      onDelete={() => handleDeleteQuestion(question.type, question.id)}
+                      onConfirm={(id, content, subQuestions, imageUrl) =>
+                        handleConfirmQuestion(question.type, id, content, [], null, imageUrl, subQuestions)
+                      }
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
+                      isConfirmed={question.confirmed}
+                      isEditing={editingQuestionId === question.id}
+                    />
+                  ) : type === 'Listening' ? (
+                    <ListeningQuestion
+                      questionId={question.id}
+                      onDelete={() => handleDeleteQuestion(question.type, question.id)}
+                      onConfirm={(id, subQuestions, audioUrl) =>
+                        handleConfirmQuestion(question.type, id, '', [], null, null, subQuestions, audioUrl)
+                      }
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
+                      isConfirmed={question.confirmed}
+                      isEditing={editingQuestionId === question.id}
+                    />
+                  ) : null}
                 </div>
               )}
             </Draggable>

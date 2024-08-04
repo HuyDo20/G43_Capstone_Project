@@ -195,7 +195,7 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
           Confirm
         </ConfirmButton>
       )}
-      {!isEditing && imageUrl !== null && <img src={imageUrl} width={50} height={50} alt="Uploaded" />}
+      {!isEditing && imageUrl !== null && <img src={imageUrl} width={50} height={50} alt="Uploaded"/>}
     </QuestionContainer>
   );
 };
