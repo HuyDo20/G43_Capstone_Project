@@ -16,13 +16,13 @@ interface Option {
 interface MultiChoiceQuestionProps {
   questionId: number;
   onDelete: (id: number) => void;
-  onConfirm: (id: number, questionContent: string, options: Option[], correctOptionId: number, imageUrl: string) => void;
+  onConfirm: (id: number, questionContent: string, options: Option[], correctOptionId: number, imageUrl: string | null) => void;
   onEdit: (id: number) => void;
   isConfirmed?: boolean;
-  isEditing: boolean;
+  isEditing?: boolean;
 }
 
-const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isConfirmed = false, isEditing }) => {
+const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isConfirmed = false, isEditing = true }) => {
   const [questionContent, setQuestionContent] = useState('');
   const [options, setOptions] = useState<Option[]>([]);
   const [correctOptionId, setCorrectOptionId] = useState<number | null>(null);
@@ -50,19 +50,12 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
   };
 
   const handleConfirm = () => {
-  if (questionContent.trim() === '' || options.length !== 4 || correctOptionId === null || options.some(option => option.content.trim() === '') || !imageUrl) {
-    alert('Please ensure the question is filled, exactly 4 options are provided, one correct option is selected, and an image is added.');
-    return;
-  }
-  console.log('Confirming question with data:', {
-    questionId,
-    questionContent,
-    options,
-    correctOptionId,
-    imageUrl
-  });
-  onConfirm(questionId, questionContent, options, correctOptionId, imageUrl);
-};
+    if (questionContent.trim() === '' || options.length !== 4 || correctOptionId === null || options.some(option => option.content.trim() === '')) {
+      message.warning('Please ensure the question is filled, exactly 4 options are provided, one correct option is selected, and an image is added.');
+      return;
+    }
+    onConfirm(questionId, questionContent, options, correctOptionId, imageUrl);
+  };
 
   const handleEdit = () => {
     onEdit(questionId);
@@ -72,6 +65,12 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
     if (info.file.status === 'done') {
       const newImageUrl = URL.createObjectURL(info.file.originFileObj as RcFile);
       setImageUrl(newImageUrl);
+      setFileList([{
+        uid: info.file.uid,
+        name: info.file.name,
+        status: 'done',
+        url: newImageUrl,
+      }]);
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
@@ -83,7 +82,6 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
 
     const formData = new FormData();
     formData.append('file', file);
-
     try {
       const response = await axios.post('http://localhost:5000/upload-file', formData, {
         headers: {
@@ -92,14 +90,12 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
       });
 
       const { filePath } = response.data;
-      setFileList([
-        {
-          uid: file.uid,
-          name: file.name,
-          status: 'done',
-          url: filePath,
-        },
-      ]);
+      setFileList([{
+        uid: file.uid,
+        name: file.name,
+        status: 'done',
+        url: filePath,
+      }]);
       setImageUrl(filePath);
     } catch (error) {
       message.error('Upload failed.');
@@ -112,6 +108,11 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
       return false;
     }
     return true;
+  };
+
+  const handleRemoveImage = () => {
+    setImageUrl(null);
+    setFileList([]);
   };
 
   return (
@@ -177,7 +178,7 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
               onChange={handleImageUpload}
               beforeUpload={beforeUpload}
               maxCount={1}
-              onRemove={() => setFileList([])}
+              onRemove={handleRemoveImage}
               showUploadList={{
                 showPreviewIcon: false,
                 showRemoveIcon: true,
@@ -194,6 +195,7 @@ const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, o
           Confirm
         </ConfirmButton>
       )}
+      {!isEditing && imageUrl !== null && <img src={imageUrl} width={50} height={50} alt="Uploaded" />}
     </QuestionContainer>
   );
 };

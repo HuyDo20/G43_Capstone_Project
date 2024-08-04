@@ -39,6 +39,7 @@ const CourseExamCreate: React.FC = () => {
   const [selectedType, setSelectedType] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
   const [reload, setReload] = useState(false);
+  const [isEditingQuestion, setIsEditingQuestion] = useState(false);
   const navigate = useNavigate();
   const { handleFetch } = useAuth();
 
@@ -48,14 +49,26 @@ const CourseExamCreate: React.FC = () => {
       setReload(false);
     }
   }, [reload]);
+  useEffect(() => {
+    console.log("current list data:" + JSON.stringify(multiChoiceQuestions));
+  }, [multiChoiceQuestions]);
 
   const handleAddQuestion = () => {
+    if (isEditingQuestion) {
+      message.warning('Please confirm the current question before adding a new one.');
+      return;
+    }
     const newQuestion = { ...defaultQuestion, type: 'Multi-choice', id: generateRandomId() };
     setMultiChoiceQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
-    setSelectedType('');
+    setEditingQuestionId(newQuestion.id);
+    setIsEditingQuestion(true);
   };
 
   const handleDeleteQuestion = (type: string, id: number) => {
+      if (isEditingQuestion) {
+      message.warning('Please confirm the current question before adding a new one.');
+      return;
+    }
     if (type === 'Multi-choice') {
       setMultiChoiceQuestions(multiChoiceQuestions.filter((question) => question.id !== id));
     } else if (type === 'Reading') {
@@ -63,6 +76,7 @@ const CourseExamCreate: React.FC = () => {
     } else if (type === 'Listening') {
       setListeningQuestions(listeningQuestions.filter((question) => question.id !== id));
     }
+    setIsEditingQuestion(false);
   };
 
   const handleSaveExam = async () => {
@@ -98,7 +112,6 @@ const CourseExamCreate: React.FC = () => {
     correctOptionId: number,
     imageUrl: string
   ) => {
-    console.log('Confirming question of type:', type);
     if (type === 'Multi-choice') {
       updateOrCreateQuestion(multiChoiceQuestions, setMultiChoiceQuestions, id, type, questionContent, options, correctOptionId, imageUrl);
     } else if (type === 'Reading') {
@@ -107,6 +120,7 @@ const CourseExamCreate: React.FC = () => {
       updateOrCreateQuestion(listeningQuestions, setListeningQuestions, id, type, questionContent, options, correctOptionId, imageUrl);
     }
     setEditingQuestionId(null);
+    setIsEditingQuestion(false);
   };
 
   const updateOrCreateQuestion = (
@@ -120,9 +134,7 @@ const CourseExamCreate: React.FC = () => {
     imageUrl: string
   ) => {
     const questionExists = questions.some((q) => q.id === id);
-
     if (questionExists) {
-      console.log('Updating existing question:', id);
       setQuestions((prevQuestions) =>
         prevQuestions.map((q) => (q.id === id ? { ...q, content: questionContent, options, correctOptionId, imageUrl, confirmed: true } : q))
       );
@@ -137,9 +149,7 @@ const CourseExamCreate: React.FC = () => {
         imageUrl,
         confirmed: true,
       };
-      console.log('Creating new question:', newQuestion);
       setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
-      console.log('list question now' + JSON.stringify(newQuestion));
     }
   };
 
@@ -201,13 +211,13 @@ const CourseExamCreate: React.FC = () => {
         {renderQuestionsByType('Reading', readingQuestions, setReadingQuestions)}
         {renderQuestionsByType('Listening', listeningQuestions, setListeningQuestions)}
       </DragDropContext>
-      <StyledButton type="dashed" onClick={handleAddQuestion} icon={<AiOutlinePlus />}>
+      <StyledButton type="dashed" onClick={handleAddQuestion} icon={<AiOutlinePlus />} disabled={isEditingQuestion}>
         Add Question
       </StyledButton>
       <Sidebar>
-        <Button onClick={() => setSelectedType('Multi-choice')}>Multi-choice</Button>
-        <Button onClick={() => setSelectedType('Reading')}>Reading</Button>
-        <Button onClick={() => setSelectedType('Listening')}>Listening</Button>
+        <Button onClick={() => setSelectedType('Multi-choice')} disabled={isEditingQuestion}>Multi-choice</Button>
+        <Button onClick={() => setSelectedType('Reading')} disabled={isEditingQuestion}>Reading</Button>
+        <Button onClick={() => setSelectedType('Listening')} disabled={isEditingQuestion}>Listening</Button>
       </Sidebar>
       <StyledButton type="primary" onClick={handleSaveExam}>
         Complete
@@ -235,10 +245,6 @@ const Sidebar = styled.div`
 const StyledButton = styled(Button)`
   display: block;
   margin: 10px 0;
-`;
-
-const ConfirmButton = styled(Button)`
-  margin-top: 10px;
 `;
 
 const QuestionSection = styled.div`
