@@ -16,7 +16,7 @@ const {
 	VOCABULARY_UPDATED,
 	VOCABULARY_DELETED,
 } = require("../messages/vocabulary");
-
+const { Op } = require("sequelize");
 async function getAllVocab(req, res) {
 	try {
 		const vocabs = await Vocabulary.findAll();
