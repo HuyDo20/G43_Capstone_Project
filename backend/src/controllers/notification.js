@@ -1,5 +1,5 @@
 const { Notification } = require('../../models');
-const { User } = require('../../models');
+const { Account } = require('../../models');
 const account = require('../../models/account');
 const {
 	responseWithData,
@@ -36,7 +36,8 @@ const createNoti = async (req, res) => {
 			action, 
 			target_id, 
 			source_id,
-			noti_date = new Date(),
+			noti_date = '2024-08-01', // TODO: update this to use helper format instead of hard code later
+			is_create_multiple = false
 		} = req.body;
 
 		// validate data // TODO: update this if there is any other way to guard data type
@@ -51,18 +52,49 @@ const createNoti = async (req, res) => {
 		
 		const notiDateTransfer = new Date(noti_date) // TODO: update to make it schedule able
 
-		const noti = await Notification.create({ 
-			title, 
-			content,
-			is_read: false,
-			action, 
-			target_id,
-			source_id, 
-			noti_date: notiDateTransfer,
-			created_at: new Date()
-		});
-		if (noti) {
-			return responseWithData(res, 201, { data: noti, message: CREATE_NOTI_SUCCESS }); // TODO: updat this message
+		const notiRes = []
+
+		if (is_create_multiple) {
+
+			// TODO: get all users
+			const userAccounts = await Account.find({ where: { role: 4 } });
+			if(userAccounts && userAccounts.length > 0) {
+				const userAccountIds = userAccounts.map(user => user.account_id)
+				console.log('\n=== debug user account ===\n', userAccountIds);
+				
+				// create 
+				let index = 0
+				await Promise.all(() => {
+					const noti = createOneNoti({ 
+						title, 
+						content,
+						is_read: false,
+						action, 
+						target_id,
+						source_id, 
+						noti_date: notiDateTransfer,
+						created_at: new Date()
+					})
+					notiRes.push(noti)
+				})
+			} 
+		} else {
+			const noti = await createOneNoti({ 
+				title, 
+				content,
+				is_read: false,
+				action, 
+				target_id,
+				source_id, 
+				noti_date: notiDateTransfer,
+				created_at: new Date()
+			})
+			notiRes.push(noti)
+		}
+
+		
+		if (notiRes && notiRes.length > 0) {
+			return responseWithData(res, 201, { data: notiRes, message: CREATE_NOTI_SUCCESS }); // TODO: updat this message
 		} else {
 			return badRequest(res, CREATE_NOTI_FAILED); // TODO: updat this message
 		}
@@ -70,6 +102,10 @@ const createNoti = async (req, res) => {
 		console.error(CREATE_NOTI_FAILED, e);
 		return badRequest(res, CREATE_NOTI_FAILED);
 	}
+}
+
+const createOneNoti = async (notiDTO) => {
+	return await Notification.create(notiDTO);
 }
 
 const getNotiById = async (req, res) => {
@@ -111,7 +147,8 @@ const getNotiById = async (req, res) => {
 			]
 		});
 
-		if (rows && rows.length > 0) {
+		if (rows) {
+			console.log('\n----data----\n', rows);
 			const response = {
 				data: rows,
 				total_pages: Math.ceil(count / limit),
