@@ -92,4 +92,16 @@ db["GrammarProgress"].belongsTo(db["Account"], { foreignKey: "account_id" });
 
 db["Grammar"].hasMany(db["GrammarProgress"], { foreignKey: "grammar_id" });
 db["GrammarProgress"].belongsTo(db["Grammar"], { foreignKey: "grammar_id" });
+
+db["Course"].belongsToMany(db["Exam"], {
+  through: "CourseExam",
+  foreignKey: "course_id",
+  otherKey: "exam_id",
+});
+db["Exam"].belongsToMany(db["Course"], {
+  through: "CourseExam",
+  foreignKey: "exam_id",
+  otherKey: "course_id",
+});
+
 module.exports = db;

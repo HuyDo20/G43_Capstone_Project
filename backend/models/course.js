@@ -42,12 +42,14 @@ module.exports = (sequelize, DataTypes) => {
 
   Course.associate = function (models) {
     Course.hasMany(models.CourseEnrollment, {
-        foreignKey: "course_id",
+      foreignKey: "course_id",
     });
-};
-
-
-
+    Course.belongsToMany(models.Exam, {
+      through: "CourseExam",
+      foreignKey: "course_id",
+      otherKey: "exam_id",
+    });
+  };
 
   return Course;
 };

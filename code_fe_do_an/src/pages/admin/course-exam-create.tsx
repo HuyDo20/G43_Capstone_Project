@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hook/AuthContext';
+import axios from 'axios';
 import { AiOutlinePlus } from 'react-icons/ai';
 import styled from 'styled-components';
 import MultiChoiceQuestion from '@/components/exam/MultiChoiceQuestion';
@@ -52,7 +52,7 @@ interface ListeningQuestionType {
 type Question = MultiChoiceQuestionType | ReadingQuestionType | ListeningQuestionType;
 
 const generateRandomId = () => {
-  return Math.floor(100000 + Math.random() * 900000); 
+  return Math.floor(100000 + Math.random() * 900000);
 };
 
 const defaultMultiChoiceQuestion: MultiChoiceQuestionType = {
@@ -92,7 +92,6 @@ const CourseExamCreate: React.FC = () => {
   const [reload, setReload] = useState(false);
   const [isEditingQuestion, setIsEditingQuestion] = useState(false);
   const navigate = useNavigate();
-  const { handleFetch } = useAuth();
 
   useEffect(() => {
     if (reload) {
@@ -100,25 +99,24 @@ const CourseExamCreate: React.FC = () => {
     }
   }, [reload]);
 
-  useEffect(() => {
-    console.log("current list data multi:" + JSON.stringify(multiChoiceQuestions));
-  }, [multiChoiceQuestions]);
+  // useEffect(() => {
+  //   console.log("current list data multi:" + JSON.stringify(multiChoiceQuestions));
+  // }, [multiChoiceQuestions]);
 
-    useEffect(() => {
-    console.log("current list data reading ques:" + JSON.stringify(readingQuestions));
-    }, [multiChoiceQuestions]);
-  
-    useEffect(() => {
-    console.log("current list data listning quest:" + JSON.stringify(listeningQuestions));
-  }, [multiChoiceQuestions]);
+  // useEffect(() => {
+  //   console.log("current list data reading ques:" + JSON.stringify(readingQuestions));
+  // }, [readingQuestions]);
 
+  // useEffect(() => {
+  //   console.log("current list data listning quest:" + JSON.stringify(listeningQuestions));
+  // }, [listeningQuestions]);
 
   const handleAddQuestion = () => {
     if (isEditingQuestion) {
       message.warning('Please confirm the current question before adding a new one.');
       return;
     }
-    
+
     let newQuestion: Question;
 
     if (selectedType === 'Multi-choice') {
@@ -156,19 +154,39 @@ const CourseExamCreate: React.FC = () => {
   };
 
   const handleSaveExam = async () => {
-    const examData = {
-      name: examName,
-      multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
-      readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
-      listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
-    };
-
     try {
-      await handleFetch('/api/save-exam', 'POST', examData);
-      message.success('Exam saved successfully!');
-      setReload(true);
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      }
+
+      const examData = {
+        exam_name: examName,
+        account_id: accountId,
+        questions: {
+          multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
+          readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
+          listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
+        },
+      };
+
+      const request = await axios.post(`/exams`, {account_id:accountId, exam_data:examData }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (request.status === 201) {
+        message.success('Exam saved successfully!');
+        setReload(true);
+      }
     } catch (error) {
       message.error('Failed to save exam.');
+      navigate('/error', { state: { message: error.message } });
     }
   };
 
