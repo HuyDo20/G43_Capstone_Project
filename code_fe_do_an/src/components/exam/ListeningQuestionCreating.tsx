@@ -6,7 +6,7 @@ import ImgCrop from 'antd-img-crop';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import styled from 'styled-components';
 import axios from 'axios';
-import MultiChoiceQuestion from './MultiChoiceQuestion';
+import MultiChoiceQuestion from './MultiChoiceQuestionCreating';
 
 interface ListeningQuestionProps {
   questionId: number;
@@ -17,7 +17,7 @@ interface ListeningQuestionProps {
   isConfirmed?: boolean;
 }
 
-const ListeningQuestion: React.FC<ListeningQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
+const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [fileList, setFileList] = useState([]);

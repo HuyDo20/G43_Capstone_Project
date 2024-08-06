@@ -12,7 +12,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
   const [weekData, setWeekData] = useState([]);
   const [dayData, setDayData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showExam, setShowExam] = useState(false);
   const { FaCheck } = useLocation();
 
  const EmptyCircleIcon = () => (
@@ -145,7 +144,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
   }
 };
 
-
   const handleClickKanji = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/kanji`;
   };
@@ -159,12 +157,9 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
   const handleClickExam = () => {
-    setShowExam(true);
+    window.location.href = `/${id}/${weekSelected.week_id}/weeklyExam`;
   };
 
-  const handleCloseExam = () => {
-    setShowExam(false);
-  };
 
   const getBackgroundAccordionColor = (index) => {
     if (!weekData || weekData.length === 0) {
@@ -246,14 +241,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
 
   return (
     <div>
-      {showExam && (
-        <ExamTakingPopup
-          courseTitle={testData.courseTitle}
-          examTitle={testData.examTitle}
-          questions={testData.examData}
-           onClose={handleCloseExam}
-        />
-      )}
       <Accordion
         type="single"
         collapsible
@@ -356,8 +343,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
     </div>
   </AccordionContent>
 )}
-
-
           </AccordionItem>
         ))}
         <AccordionItem value="item-7">

@@ -16,7 +16,7 @@ import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import { notification } from "antd";
 import axios from 'axios';
-import PracticeModal from "@/components/ui/PracticeModal";
+import PracticeModal from "@/components/Modal/PracticeModal";
 
 export default function GrammarDetail() {
   const [reload, setReload] = useState(true);

@@ -4,7 +4,7 @@ import ImgCrop from 'antd-img-crop';
 import { AiOutlinePlus, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import styled from 'styled-components';
 import axios from 'axios';
-import MultiChoiceQuestion from './MultiChoiceQuestion';
+import MultiChoiceQuestion from './MultiChoiceQuestionCreating';
 
 interface ReadingQuestionProps {
   questionId: number;
@@ -15,7 +15,7 @@ interface ReadingQuestionProps {
   isConfirmed?: boolean;
 }
 
-const ReadingQuestion: React.FC<ReadingQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
+const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
   const [readingContent, setReadingContent] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);

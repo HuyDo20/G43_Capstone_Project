@@ -23,7 +23,7 @@ import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"; 
-import PracticeModal from "@/components/ui/PracticeModal";
+import PracticeModal from "@/components/Modal/PracticeModal";
 
 export default function Kanji() {
   const [reload, setReload] = useState(true);

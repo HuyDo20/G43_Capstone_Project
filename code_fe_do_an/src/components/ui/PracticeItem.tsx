@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa'; 
 
-const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, image }) => {
+const PracticeItem = ({ question, options, correctAnswer, onAnswerSelect, image }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const handleAnswerClick = (answer) => {
     if (selectedAnswer === null) {
@@ -73,4 +73,4 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
   );
 };
 
-export default VocabularyTestItem;
+export default PracticeItem;

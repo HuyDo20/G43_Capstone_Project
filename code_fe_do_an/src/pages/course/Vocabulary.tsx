@@ -22,7 +22,7 @@ import { useEffect, useState, useRef } from "react";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-import PracticeModal from "@/components/ui/PracticeModal";
+import PracticeModal from "@/components/Modal/PracticeModal";
 
 export default function Vocabulary() {
   const [reload, setReload] = useState(true);

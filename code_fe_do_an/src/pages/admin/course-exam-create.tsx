@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AiOutlinePlus } from 'react-icons/ai';
 import styled from 'styled-components';
-import MultiChoiceQuestion from '@/components/exam/MultiChoiceQuestion';
-import ReadingQuestion from '@/components/exam/ReadingQuestion';
-import ListeningQuestion from '@/components/exam/ListeningQuestion';
+import MultiChoiceQuestionCreating from "@/components/exam/MultiChoiceQuestionCreating"
+import ReadingQuestionCreating from '@/components/exam/ReadingQuestionCreating';
+import ListeningQuestionCreating from '@/components/exam/ListeningQuestionCreating';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 interface MultiChoiceOption {
@@ -323,7 +323,7 @@ const CourseExamCreate: React.FC = () => {
               {(provided) => (
                 <div ref={provided.innerRef} {...provided.draggableProps} {...(question.confirmed ? provided.dragHandleProps : {})}>
                   {type === 'Multi-choice' ? (
-                    <MultiChoiceQuestion
+                    <MultiChoiceQuestionCreating
                       questionId={question.id}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, content, options, correctOptionId, imageUrl) =>
@@ -334,7 +334,7 @@ const CourseExamCreate: React.FC = () => {
                       isEditing={editingQuestionId === question.id}
                     />
                   ) : type === 'Reading' ? (
-                    <ReadingQuestion
+                    <ReadingQuestionCreating
                       questionId={question.id}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, content, subQuestions, imageUrl) =>
@@ -345,7 +345,7 @@ const CourseExamCreate: React.FC = () => {
                       isEditing={editingQuestionId === question.id}
                     />
                   ) : type === 'Listening' ? (
-                    <ListeningQuestion
+                    <ListeningQuestionCreating
                       questionId={question.id}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, subQuestions, audioUrl) =>

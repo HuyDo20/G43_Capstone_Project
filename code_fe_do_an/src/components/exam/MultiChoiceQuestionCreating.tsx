@@ -22,7 +22,7 @@ interface MultiChoiceQuestionProps {
   isEditing?: boolean;
 }
 
-const MultiChoiceQuestion: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isConfirmed = false, isEditing = true }) => {
+const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isConfirmed = false, isEditing = true }) => {
   const [questionContent, setQuestionContent] = useState('');
   const [options, setOptions] = useState<Option[]>([]);
   const [correctOptionId, setCorrectOptionId] = useState<number | null>(null);
