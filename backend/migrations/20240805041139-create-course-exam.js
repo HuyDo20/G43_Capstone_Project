@@ -7,28 +7,48 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       course_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'course',
-          key: 'course_id',
+          model: 'Course',
+          key: 'course_id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       exam_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'exam',
-          key: 'exam_id',
+          model: 'Exam',
+          key: 'exam_id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
       },
+      week_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Week',
+          key: 'week_id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
     });
   },
 

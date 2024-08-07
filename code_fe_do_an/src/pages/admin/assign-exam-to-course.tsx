@@ -11,15 +11,22 @@ interface Course {
   course_name: string;
 }
 
+interface Week {
+  week_id: number;
+  week_name: string;
+}
+
 interface Exam {
   exam_id: number;
   exam_name: string;
 }
 
-const AssignExamToCourse: React.FC = () => {
+const AssignWeeklyExamToCourse: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [weeks, setWeeks] = useState<Week[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
+  const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
   const [selectedExam, setSelectedExam] = useState<number | null>(null);
   const navigate = useNavigate();
   const { handleFetch } = useAuth();
@@ -29,30 +36,37 @@ const AssignExamToCourse: React.FC = () => {
     fetchExams();
   }, []);
 
-  const fetchCourses = async () => {
-      try {
-        let token = "";
-        const userEncode = localStorage.getItem("user");
-        if (userEncode) {
-          const userDecode = JSON.parse(userEncode);
-          token = userDecode?.token;
-        }
-        const request = await axios.get("/all_course", {
-          headers: {
-            Authorization: token,
-          },
-        });
-          const response = request.data;
-        if (response.statusCode === 200) {
-          setCourses(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-        navigate('/error', { state: { message: error} });
-      }
-    };
+  useEffect(() => {
+    if (selectedCourse) {
+      fetchWeeksByCourse(selectedCourse);
+    }
+  }, [selectedCourse]);
 
-      const fetchExams = async () => {
+  const fetchCourses = async () => {
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      const request = await axios.get("/all_course", {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = request.data;
+      console.log(response.data);
+      if (response.statusCode === 200) {
+        setCourses(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+      navigate('/error', { state: { message: error} });
+    }
+  };
+
+  const fetchExams = async () => {
     try {
       let token = "";
       const userEncode = localStorage.getItem("user");
@@ -66,7 +80,7 @@ const AssignExamToCourse: React.FC = () => {
           Authorization: token,
         },
       });
-        if (request.status === 200) {
+      if (request.status === 200) {
         setExams(request.data.data.data); 
       } else {
         setExams([]);
@@ -77,12 +91,37 @@ const AssignExamToCourse: React.FC = () => {
     }
   };
 
-  const handleAssign = async () => {
-    if (!selectedCourse || !selectedExam) {
-      message.warning('Please select both a course and an exam.');
-      return;
+  const fetchWeeksByCourse = async (courseId: number) => {
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
       }
-   try {
+
+      const request = await axios.get(`/course-detail/${courseId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (request.status === 200) {
+         setWeeks(request.data.data.weekData);
+      } else {
+        setWeeks([]);
+      }
+    } catch (error) {
+      message.error('Failed to fetch weeks.');
+      navigate('/error', { state: { message: error.message } });
+    }
+  };
+
+  const handleAssign = async () => {
+    if (!selectedCourse || !selectedWeek || !selectedExam) {
+      message.warning('Please select a course, a week, and an exam.');
+      return;
+    }
+    try {
       let token = "";
       let accountId;
       const userEncode = localStorage.getItem("user");
@@ -91,25 +130,29 @@ const AssignExamToCourse: React.FC = () => {
         token = userDecode?.token;
         accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
       }
-      const request = await axios.post(`/assign`, {account_id:accountId, course_id:selectedCourse,exam_id:selectedExam }, {
+      const request = await axios.post(`/assign`, {
+        account_id: accountId,
+        course_id: selectedCourse,
+        week_id: selectedWeek,
+        exam_id: selectedExam
+      }, {
         headers: {
           Authorization: token,
         },
       });
 
-      if (request.status === 201) {
-        message.success('Assign exam successfully!');
+      if (request.status === 200) {
+        message.success('Exam assigned successfully!');
       }
     } catch (error) {
       message.error('Failed to save exam.');
       navigate('/error', { state: { message: error.message } });
-      }
+    }
   };
 
- 
   return (
     <div>
-      <h2>Assign Exam to Course</h2>
+      <h2>Assign Weekly Exam to Course</h2>
       <Form layout="vertical">
         <Form.Item label="Select Course">
           <Select
@@ -123,26 +166,44 @@ const AssignExamToCourse: React.FC = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="Select Exam">
-          <Select
-            placeholder="Select an exam"
-            onChange={(value) => setSelectedExam(value as number)}
-          >
-            {exams.map(exam => (
-              <Option key={exam.exam_id} value={exam.exam_id}>
-                {exam.exam_name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={handleAssign}>
-            Assign Exam
-          </Button>
-        </Form.Item>
+        {selectedCourse && (
+          <Form.Item label="Select Week">
+            <Select
+              placeholder="Select a week"
+              onChange={(value) => setSelectedWeek(value as number)}
+            >
+              {weeks.map(week => (
+                <Option key={week.week_id} value={week.week_id}>
+                  {week.week_name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {selectedWeek && (
+          <Form.Item label="Select Exam">
+            <Select
+              placeholder="Select an exam"
+              onChange={(value) => setSelectedExam(value as number)}
+            >
+              {exams.map(exam => (
+                <Option key={exam.exam_id} value={exam.exam_id}>
+                  {exam.exam_name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {selectedExam && (
+          <Form.Item>
+            <Button type="primary" onClick={handleAssign}>
+              Save
+            </Button>
+          </Form.Item>
+        )}
       </Form>
     </div>
   );
 };
 
-export default AssignExamToCourse;
+export default AssignWeeklyExamToCourse;

@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
           key: "exam_id",
         },
       },
+      week_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Week",
+          key: "week_id",
+        },
+      },
     },
     {
       tableName: "course_exam",
@@ -35,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
   CourseExam.associate = function (models) {
     CourseExam.belongsTo(models.Course, { foreignKey: "course_id" });
     CourseExam.belongsTo(models.Exam, { foreignKey: "exam_id" });
+    CourseExam.belongsTo(models.Week, { foreignKey: "week_id" });
   };
 
   return CourseExam;

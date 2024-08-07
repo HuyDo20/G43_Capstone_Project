@@ -99,18 +99,6 @@ const CourseExamCreate: React.FC = () => {
     }
   }, [reload]);
 
-  // useEffect(() => {
-  //   console.log("current list data multi:" + JSON.stringify(multiChoiceQuestions));
-  // }, [multiChoiceQuestions]);
-
-  // useEffect(() => {
-  //   console.log("current list data reading ques:" + JSON.stringify(readingQuestions));
-  // }, [readingQuestions]);
-
-  // useEffect(() => {
-  //   console.log("current list data listning quest:" + JSON.stringify(listeningQuestions));
-  // }, [listeningQuestions]);
-
   const handleAddQuestion = () => {
     if (isEditingQuestion) {
       message.warning('Please confirm the current question before adding a new one.');
@@ -368,7 +356,6 @@ const CourseExamCreate: React.FC = () => {
 
   return (
     <ExamCreatePage>
-      <h2>JPD113 - Week 1:</h2>
       <Form layout="vertical">
         <Form.Item label="Name">
           <Input value={examName} onChange={(e) => setExamName(e.target.value)} />
