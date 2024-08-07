@@ -201,7 +201,10 @@ const getCourseDetailById = async (req, res) => {
 		const { course_id } = req.params;
 
 		const courseDetails = await Course.findOne({
-			where: { course_id: course_id, course_status_id: { [Op.or]: [1, 2] } },
+			where: {
+				course_id: course_id,
+				course_status_id: { [Op.or]: [1, 2] }
+			},
 			include: [
 				{
 					model: Week,
@@ -214,7 +217,7 @@ const getCourseDetailById = async (req, res) => {
 									include: [
 										{
 											model: GrammarExample,
-										},
+										}
 									],
 								},
 								{
@@ -247,7 +250,6 @@ const getCourseDetailById = async (req, res) => {
 				},
 			],
 		});
-
 		if (courseDetails) {
 			const data = transformCourseData(courseDetails);
 			return responseWithData(res, 200, data);
@@ -443,156 +445,151 @@ const getProgressByDayId = async (req, res) => {
 
 
 const updateCourseDetail = async (req, res) => {
-	const { courseData, weeksData } = req.body;
-	const {
-		course_id,
-		course_name,
-		description,
-		course_image,
-		course_status_id = 1,
-		week,
-	} = courseData;
+    const { courseData, weeksData } = req.body;
+    const {
+        course_id,
+        course_name,
+        description,
+        course_image,
+        course_status_id = 1,
+        week,
+    } = courseData;
 
-	try {
-		await Course.upsert({
-			course_id,
-			course_name,
-			description,
-			course_image,
-			course_status_id,
-			week,
-		});
+    try {
+        await Course.upsert({
+            course_id,
+            course_name,
+            description,
+            course_image,
+            course_status_id,
+            week,
+        });
 
-		for (const week of weeksData) {
-			const { week_id, week_name, week_topic, week_status_id = 1, days } = week;
-			const [weekRecord, weekCreated] = await Week.upsert(
-				{ week_id, week_name, week_topic, week_status_id, course_id },
-				{ returning: true },
-			);
+        console.log({ weeksData });
 
-			for (const day of days) {
-				const { day_id, day_name, day_status_id = 1, lessons, repeat_lesson } = day;
-				const [dayRecord, dayCreated] = await Day.upsert(
-					{
-						day_id,
-						day_name,
-						day_status_id,
-						week_id: weekRecord.week_id,
-						repeat_lesson:
-							typeof repeat_lesson === "object"
-								? JSON.stringify(repeat_lesson)
-								: repeat_lesson,
-					},
-					{ returning: true },
-				);
+        for (const week of weeksData) {
+            const { week_id, week_name, week_topic, week_status_id = 1, days } = week;
+            console.log({ week });
 
-				for (const lesson of lessons) {
-					const lessonDefaults = {
-						vocab_status_id: 1,
-						kanji_status_id: 1,
-						grammar_status_id: 1,
-						video_status_id: 1,
-					};
+            const [weekRecord] = await Week.upsert(
+                { week_id, week_name, week_topic, week_status_id, course_id },
+                { returning: true }
+            );
 
-					switch (lesson.type) {
-						case "vocab":
-							await Vocabulary.upsert({
-								vocab_id: lesson.vocab_id,
-								...lesson,
-								vocab_status_id: lesson.vocab_status_id || lessonDefaults.vocab_status_id,
-								day_id: dayRecord.day_id,
-							});
-							break;
-						case "kanji":
-							const [kanjiRecord, kanjiCreated] = await Kanji.upsert(
-								{
-									kanji_id: lesson.kanji_id,
-									...lesson,
-									kanji_status_id:
-										lesson.kanji_status_id || lessonDefaults.kanji_status_id,
-									day_id: dayRecord.day_id,
-								},
-								{ returning: true },
-							);
-							lesson.kanji_words?.forEach(async (word) => {
-								await KanjiWord.upsert({
-									kanji_word_id: word.kanji_word_id,
-									...word,
-									kanji_word_status_id:
-										word.kanji_word_status_id || lessonDefaults.kanji_status_id,
-									kanji_id: kanjiRecord.kanji_id,
-								});
-							});
-							break;
-						case "grammar":
-							const [grammarRecord, grammarCreated] = await Grammar.upsert(
-								{
-									grammar_id: lesson.grammar_id,
-									...lesson,
-									grammar_status_id:
-										lesson.grammar_status_id || lessonDefaults.grammar_status_id,
-									day_id: dayRecord.day_id,
-								},
-								{ returning: true },
-							);
-							lesson.grammar_examples?.forEach(async (example) => {
-								await GrammarExample.upsert({
-									grammar_example_id: example.grammar_example_id,
-									...example,
-									grammar_example_status_id:
-										example.grammar_example_status_id || lessonDefaults.grammar_status_id,
-									grammar_id: grammarRecord.grammar_id,
-								});
-							});
-							break;
-						case "video":
-							const [videoRecord, videoCreated] = await Video.upsert(
-								{
-									video_id: lesson.video_id,
-									...lesson,
-									video_status_id:
-										lesson.video_status_id || lessonDefaults.video_status_id,
-									day_id: dayRecord.day_id,
-								},
-								{ returning: true },
-							);
-							lesson.questions?.forEach(async (question) => {
-								const [questionRecord, questionCreated] = await VideoQuestion.upsert(
-									{
-										video_question_id: question.video_question_id,
-										...question,
-										video_question_status_id:
-											question.video_question_status_id ||
-											lessonDefaults.video_status_id,
-										video_id: videoRecord.video_id,
-									},
-									{ returning: true },
-								);
-								question.options?.forEach(async (option) => {
-									await VideoOption.upsert({
-										option_id: option.option_id,
-										...option,
-										video_option_status_id:
-											option.video_option_status_id || lessonDefaults.video_status_id,
-										video_question_id: questionRecord.video_question_id,
-									});
-								});
-							});
-							break;
-						default:
-							console.error("Unknown lesson type:", lesson.type);
-							break;
-					}
-				}
-			}
-		}
+            for (const day of days) {
+                const { day_id, day_name, day_status_id = 1, lessons, repeat_lesson } = day;
+                const [dayRecord] = await Day.upsert(
+                    {
+                        day_id,
+                        day_name,
+                        day_status_id,
+                        week_id: weekRecord.week_id,
+                        repeat_lesson: typeof repeat_lesson === 'object' ? JSON.stringify(repeat_lesson) : repeat_lesson,
+                    },
+                    { returning: true }
+                );
 
-		return ok(res, COURSE_UPDATED);
-	} catch (e) {
-		console.error(e);
-		return error(res);
-	}
+                await Promise.all(lessons.map(async (lesson) => {
+                    const lessonDefaults = {
+                        vocab_status_id: 1,
+                        kanji_status_id: 1,
+                        grammar_status_id: 1,
+                        video_status_id: 1,
+                    };
+
+                    switch (lesson.type) {
+                        case 'vocab':
+                            await Vocabulary.upsert({
+                                vocab_id: lesson.vocab_id,
+                                ...lesson,
+                                vocab_status_id: lesson.vocab_status_id || lessonDefaults.vocab_status_id,
+                                day_id: dayRecord.day_id,
+                            });
+                            break;
+                        case 'kanji':
+                            const [kanjiRecord] = await Kanji.upsert(
+                                {
+                                    kanji_id: lesson.kanji_id,
+                                    ...lesson,
+                                    kanji_status_id: lesson.kanji_status_id || lessonDefaults.kanji_status_id,
+                                    day_id: dayRecord.day_id,
+                                },
+                                { returning: true }
+                            );
+                            await Promise.all(lesson.kanji_words?.map(word =>
+                                KanjiWord.upsert({
+                                    kanji_word_id: word.kanji_word_id,
+                                    ...word,
+                                    kanji_word_status_id: word.kanji_word_status_id || lessonDefaults.kanji_status_id,
+                                    kanji_id: kanjiRecord.kanji_id,
+                                })
+                            ));
+                            break;
+                        case 'grammar':
+                            const [grammarRecord] = await Grammar.upsert(
+                                {
+                                    grammar_id: lesson.grammar_id,
+                                    ...lesson,
+                                    grammar_status_id: lesson.grammar_status_id || lessonDefaults.grammar_status_id,
+                                    day_id: dayRecord.day_id,
+                                },
+                                { returning: true }
+                            );
+                            await Promise.all(lesson.grammar_examples?.map(example =>
+                                GrammarExample.upsert({
+                                    grammar_example_id: example.grammar_example_id,
+                                    ...example,
+                                    grammar_example_status_id: example.grammar_example_status_id || lessonDefaults.grammar_status_id,
+                                    grammar_id: grammarRecord.grammar_id,
+                                })
+                            ));
+                            break;
+                        case 'video':
+                            const [videoRecord] = await Video.upsert(
+                                {
+                                    video_id: lesson.video_id,
+                                    ...lesson,
+                                    video_status_id: lesson.video_status_id || lessonDefaults.video_status_id,
+                                    day_id: dayRecord.day_id,
+                                },
+                                { returning: true }
+                            );
+                            await Promise.all(lesson.questions?.map(async question => {
+                                const [questionRecord] = await VideoQuestion.upsert(
+                                    {
+                                        video_question_id: question.video_question_id,
+                                        ...question,
+                                        video_question_status_id: question.video_question_status_id || lessonDefaults.video_status_id,
+                                        video_id: videoRecord.video_id,
+                                    },
+                                    { returning: true }
+                                );
+                                await Promise.all(question.options?.map(option =>
+                                    VideoOption.upsert({
+                                        option_id: option.option_id,
+                                        ...option,
+                                        video_option_status_id: option.video_option_status_id || lessonDefaults.video_status_id,
+                                        video_question_id: questionRecord.video_question_id,
+                                    })
+                                ));
+                            }));
+                            break;
+                        default:
+                            console.error('Unknown lesson type:', lesson.type);
+                            break;
+                    }
+                }));
+            }
+        }
+
+        return ok(res, COURSE_UPDATED);
+    } catch (e) {
+        console.error(e);
+        return error(res);
+    }
 };
+
+
 
 const createNewCourse = async (req, res) => {
 	try {

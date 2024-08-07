@@ -42,7 +42,7 @@ CREATE TABLE `account` (
   KEY `status_id` (`status_id`),
   CONSTRAINT `account_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
   CONSTRAINT `account_ibfk_2` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,7 +51,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'Admin','admin@gmail.com','$2a$10$.SLoZzQHYFujJscYnH6ly.dnCeQ39hNhOs9nmGX8sDjBP0JkANcrS',NULL,NULL,1,0,2,NULL,NULL),(2,'Content Manager','cm@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,2,0,2,NULL,NULL),(3,'Content Creator','cc@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,3,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozLCJmdWxsX25hbWUiOiJDb250ZW50IENyZWF0b3IiLCJlbWFpbCI6ImNjQGdtYWlsLmNvbSIsInBob25lX251bWJlciI6bnVsbCwiZG9iIjpudWxsLCJhdmF0YXIiOm51bGwsInJvbGVfaWQiOjMsInBvaW50IjowLCJzdGF0dXNfaWQiOjIsImlhdCI6MTcxODg0OTc3MCwiZXhwIjoxNzUwMzg1NzcwfQ.CtmyE2MA1bA-5HKzv-3UNRTY6P0RkMPLnxsNkCwSeqI',NULL),(4,'Nguyen Van A','user@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC','0123456789','string',4,1000,2,NULL,'2001-04-22'),(7,'Do Tran Quang Huy','huy@gmail.com','$2a$10$edBlNlninVw8Yad1n9VOJun7VWDAwgDJJn1rVV9UjmHYnmgGYqPfq','01234554512','string',4,1000,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo3LCJmdWxsX25hbWUiOiJEbyBUcmFuIFF1YW5nIEh1eSIsImVtYWlsIjoiaHV5QGdtYWlsLmNvbSIsInBob25lX251bWJlciI6IjAxMjM0NTU0NTEyIiwiZG9iIjoiMjAwMS0wNi0wNSIsImF2YXRhciI6InN0cmluZyIsInJvbGVfaWQiOjQsInBvaW50IjoxMDAwLCJzdGF0dXNfaWQiOjIsImlhdCI6MTcyMDgwMzMyMywiZXhwIjoxNzUyMzM5MzIzfQ.aDUgR12kulNForC3bYshaZTveM7vtrBiKtM4km64OWI','2001-06-05'),(8,'Nguyễn Đình Thành Quang','quanggk98@gmail.com','$2a$10$9EqnGiTP5O5o8omqEJm7XO1/d5PXLF2clu6W.B2iBWGcT81Ju36I6',NULL,NULL,4,0,2,NULL,NULL),(9,'Nguyen Chi Hai','hai@gmail.com','$2a$10$DEOlKQoscNlHMXZUfyEU1eqlR9IIN7MTOvsJNNZF8Mq7fFiW/Aq/u',NULL,NULL,4,0,2,NULL,NULL),(10,'Tran Thi Thao','thao@gmail.com','$2a$10$4iDowFtAYoPDTmvkRemzYumYK9P5yOpbyL3yBttEtRqYUV6K4TuqG',NULL,NULL,4,0,3,NULL,NULL),(11,'Bui Kieu Mai','mai@gmail.com','$2a$10$ALDX1Cf7EBEQXQVfioG/sOHeXFdWeyfiGQOzm54lNUlInZf7mwgpG',NULL,NULL,4,0,2,NULL,NULL),(12,'Ta Nhat Minh','minh@gmail.com','$2a$10$6HCqA63.sxmdgcSbNnHA8.pFtaELbRfriizy1BTCqpfjZd64t0CAC',NULL,NULL,4,0,3,NULL,NULL),(14,'test','test@gmail.com','$2a$10$KdvoAYEmYR9WWrQz7br68OIuRTbO79DP7P1DyWXL7KP/HYLiMwDwe','0123456789','string',4,1000,1,NULL,'2001-04-22');
+INSERT INTO `account` VALUES (1,'Admin','admin@gmail.com','$2a$10$.SLoZzQHYFujJscYnH6ly.dnCeQ39hNhOs9nmGX8sDjBP0JkANcrS',NULL,NULL,1,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJmdWxsX25hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjpudWxsLCJkb2IiOm51bGwsImF2YXRhciI6bnVsbCwicm9sZV9pZCI6MSwicG9pbnQiOjAsInN0YXR1c19pZCI6MiwiaWF0IjoxNzIxMjUzMjIwLCJleHAiOjE3NTI3ODkyMjB9.uafJAaAFOMd5aFbEUOrV8inWgd9ySSNfXMc_zg810tQ',NULL),(2,'Content Manager','cm@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,2,0,2,NULL,NULL),(3,'Content Creator','cc@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,3,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozLCJmdWxsX25hbWUiOiJDb250ZW50IENyZWF0b3IiLCJlbWFpbCI6ImNjQGdtYWlsLmNvbSIsInBob25lX251bWJlciI6bnVsbCwiZG9iIjpudWxsLCJhdmF0YXIiOm51bGwsInJvbGVfaWQiOjMsInBvaW50IjowLCJzdGF0dXNfaWQiOjIsImlhdCI6MTcxODg0OTc3MCwiZXhwIjoxNzUwMzg1NzcwfQ.CtmyE2MA1bA-5HKzv-3UNRTY6P0RkMPLnxsNkCwSeqI',NULL),(4,'Nguyen Van A','user@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC','0123456789','string',4,1000,2,NULL,'2001-04-22'),(7,'Do Tran Quang Huy','huy@gmail.com','$2a$10$edBlNlninVw8Yad1n9VOJun7VWDAwgDJJn1rVV9UjmHYnmgGYqPfq','01234554512','string',4,1000,2,NULL,'2001-06-05'),(8,'Nguyễn Đình Thành Quang','quanggk98@gmail.com','$2a$10$9EqnGiTP5O5o8omqEJm7XO1/d5PXLF2clu6W.B2iBWGcT81Ju36I6',NULL,NULL,4,0,2,NULL,NULL),(9,'Nguyen Chi Hai','hai@gmail.com','$2a$10$DEOlKQoscNlHMXZUfyEU1eqlR9IIN7MTOvsJNNZF8Mq7fFiW/Aq/u',NULL,NULL,4,0,2,NULL,NULL),(10,'Tran Thi Thao','thao@gmail.com','$2a$10$4iDowFtAYoPDTmvkRemzYumYK9P5yOpbyL3yBttEtRqYUV6K4TuqG',NULL,NULL,4,0,3,NULL,NULL),(11,'Bui Kieu Mai','mai@gmail.com','$2a$10$ALDX1Cf7EBEQXQVfioG/sOHeXFdWeyfiGQOzm54lNUlInZf7mwgpG',NULL,NULL,4,0,2,NULL,NULL),(12,'Ta Nhat Minh','minh@gmail.com','$2a$10$6HCqA63.sxmdgcSbNnHA8.pFtaELbRfriizy1BTCqpfjZd64t0CAC',NULL,NULL,4,0,3,NULL,NULL),(14,'test','test@gmail.com','$2a$10$KdvoAYEmYR9WWrQz7br68OIuRTbO79DP7P1DyWXL7KP/HYLiMwDwe','0123456789','string',4,1000,1,NULL,'2001-04-22'),(15,'Mai','buimai@gmail.com','$2a$10$KIa4/SjMfEqQBxDhImslzeBZI2k.N5DFpP16oa5kasnGwXvf04yOC',NULL,NULL,4,0,2,NULL,NULL),(16,'Do Tran Quang Huy ','huydo@gmail.com','$2a$10$DrcZyGV0jsN.LBsx2e3r9.7lR9OBovLREpVF6a65UJuFAzzxivvei',NULL,NULL,4,0,2,NULL,NULL),(17,'minhtn','minhtn123@gmail.com','$2a$10$z3xn6Ogay0z1ujzlwnnooO5YufOzIe/spgCYml88naAvU8xrEOtia','0955444578','',4,0,2,NULL,'2008-03-05'),(18,'Ta Nhat Minh','minhtn1234@gmail.com','$2a$10$pSdyrDMDdk1cIh/MuuguUuPT7J1wLhvFtI2wjFp1kRV8Nt8E2ecKu',NULL,NULL,4,0,2,NULL,NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -482,6 +482,33 @@ LOCK TABLES `option` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `otp`
+--
+
+DROP TABLE IF EXISTS `otp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `otp` (
+  `otp_id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `otp_code` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `expires_at` datetime NOT NULL,
+  PRIMARY KEY (`otp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `otp`
+--
+
+LOCK TABLES `otp` WRITE;
+/*!40000 ALTER TABLE `otp` DISABLE KEYS */;
+INSERT INTO `otp` VALUES (1,'huyydoooo@gmail.com','TcKowk','2024-07-16 23:22:26','2024-07-16 23:23:26'),(4,'testotp@gmail.com','Ep6S8C','2024-07-17 14:27:02','2024-07-17 14:28:02'),(5,'minhtn1234@gmail.com','YTVSci','2024-07-17 22:08:56','2024-07-17 22:09:56');
+/*!40000 ALTER TABLE `otp` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `question`
 --
 
@@ -647,7 +674,7 @@ CREATE TABLE `sequelizemeta` (
 
 LOCK TABLES `sequelizemeta` WRITE;
 /*!40000 ALTER TABLE `sequelizemeta` DISABLE KEYS */;
-INSERT INTO `sequelizemeta` VALUES ('20240419163550-create-roles.js'),('20240529144037-create-status.js'),('20240530082643-create-alphabet-types.js'),('20240530141446-create-account.js'),('20240601022943-create-alphabet.js'),('20240601154845-create-course.js'),('20240601194222-create-quiztype.js'),('20240601200515-create-questiontype.js'),('20240602053128-create-week.js'),('20240602054823-create-vocabulary.js'),('20240602055254-create-grammar.js'),('20240602055613-create-grammar-example.js'),('20240602061032-create-kanji.js'),('20240602061038-create-kanji-word.js'),('20240602061049-create-quiz.js'),('20240602061053-create-question.js'),('20240602061100-create-option.js'),('20240602065613-create-account-quiz.js');
+INSERT INTO `sequelizemeta` VALUES ('20240419163550-create-roles.js'),('20240529144037-create-status.js'),('20240530082643-create-alphabet-types.js'),('20240530141446-create-account.js'),('20240601022943-create-alphabet.js'),('20240601154845-create-course.js'),('20240601194222-create-quiztype.js'),('20240601200515-create-questiontype.js'),('20240602053128-create-day.js'),('20240602053128-create-week.js'),('20240602054823-create-vocabulary.js'),('20240602055254-create-grammar.js'),('20240602055613-create-grammar-example.js'),('20240602061032-create-kanji.js'),('20240602061038-create-kanji-word.js'),('20240602061049-create-quiz.js'),('20240602061053-create-question.js'),('20240602061100-create-option.js'),('20240602065613-create-account-quiz.js'),('20240610144745-create-video.js'),('20240716092444-create-otp-table.js');
 /*!40000 ALTER TABLE `sequelizemeta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -859,6 +886,10 @@ INSERT INTO `week` VALUES (1,'Week 1',1,1,'初めて'),(2,'Tuần 2',1,3,'初�
 UNLOCK TABLES;
 
 --
+-- Dumping events for database 'swp_fpt'
+--
+
+--
 -- Dumping routines for database 'swp_fpt'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -871,4 +902,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-13  0:29:29
+-- Dump completed on 2024-07-19  0:26:40
