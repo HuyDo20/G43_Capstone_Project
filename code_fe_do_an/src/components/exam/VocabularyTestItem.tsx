@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, image }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, image, error, showResults, selectedAnswer, mode }) => {
+  const [selectedLocalAnswer, setSelectedLocalAnswer] = useState(null);
 
-  const handleAnswerClick = (optionId, optionContent) => {
-    if (selectedAnswer === null) {
-      setSelectedAnswer(optionId);
-      onAnswerSelect(optionId === correctAnswer);
-    }
+  const handleAnswerClick = (optionId) => {
+    setSelectedLocalAnswer(optionId);
+    onAnswerSelect(optionId);
   };
 
   const optionPrefixes = ['A', 'B', 'C', 'D'];
@@ -23,24 +21,26 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
               <img src={image} alt="Vocabulary" className="max-w-full h-auto" />
             </div>
           )}
+          {error && <div className="text-red-500 mb-4">Please answer this question.</div>}
           <div className="text-lg mb-4">Select the correct answer:</div>
           <div className="flex flex-col gap-4">
             {options.map((option, optionIndex) => {
-              const isSelected = selectedAnswer === option.id;
-              let buttonClass = 'p-4 text-lg border rounded-md transition-all duration-300 flex items-center ';
-
-              if (isSelected) {
-                buttonClass += 'bg-blue-500 text-white';
-              } else {
-                buttonClass += 'bg-white text-black hover:bg-gray-200';
-              }
+              const isSelected = selectedLocalAnswer === option.id || (showResults && selectedAnswer === option.id);
+              const isCorrect = showResults && option.id === correctAnswer;
+              const buttonClass = `p-4 text-lg border rounded-md transition-all duration-300 flex items-center ${
+                isSelected ? 'bg-blue-500 text-white' : 'bg-white text-black hover:bg-gray-200'
+              } ${
+                showResults && isCorrect ? 'bg-green-500 text-white' : ''
+              } ${
+                showResults && !isCorrect && selectedAnswer === option.id ? 'bg-red-500 text-white' : ''
+              }`;
 
               return (
                 <button
                   key={option.id}
                   className={buttonClass}
-                  onClick={() => handleAnswerClick(option.id, option.content)}
-                  disabled={selectedAnswer !== null}
+                  onClick={() => handleAnswerClick(option.id)}
+                  disabled={mode === 'reviewing'}
                 >
                   <span className="mr-2">{optionPrefixes[optionIndex]}.</span>
                   <span>{option.content}</span>
@@ -48,6 +48,11 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
               );
             })}
           </div>
+          {showResults && selectedAnswer !== correctAnswer && (
+            <div className="text-red-500 mt-2">
+              Correct answer: {options.find(option => option.id === correctAnswer).content}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

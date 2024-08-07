@@ -104,4 +104,11 @@ db["Exam"].belongsToMany(db["Course"], {
   otherKey: "course_id",
 });
 
+db["Exam"].hasMany(db["ExamHistory"], { foreignKey: "exam_id" });
+db["ExamHistory"].belongsTo(db["Exam"], { foreignKey: "exam_id" });
+
+db["Account"].hasMany(db["ExamHistory"], { foreignKey: "account_id" });
+db["ExamHistory"].belongsTo(db["Account"], { foreignKey: "account_id" });
+
+
 module.exports = db;

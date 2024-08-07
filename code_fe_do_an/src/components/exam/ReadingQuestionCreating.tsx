@@ -174,7 +174,7 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, o
   );
 };
 
-export default ReadingQuestion;
+export default ReadingQuestionCreating;
 
 const ReadingContainer = styled.div`
   border: 1px solid #ccc;

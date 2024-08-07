@@ -165,7 +165,7 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
   );
 };
 
-export default ListeningQuestion;
+export default ListeningQuestionCreating;
 
 const ListeningContainer = styled.div`
   border: 1px solid #ccc;

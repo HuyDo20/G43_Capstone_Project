@@ -30,119 +30,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/vocabulary`;
   };
 
-  const testData = {
-  courseTitle: "English 101",
-  examTitle: "Final Exam",
-  examData: {
-    readingQuestions: [
-      {
-        id: 921373,
-        type: "Reading",
-        content: "Read the passage below and answer the questions that follow.",
-        imageUrl: "http://localhost:5000/uploads/example_reading_image.png",
-        subQuestions: [
-          {
-            id: 1722836600327,
-            questionContent: "What is the main idea of the passage?",
-            options: [
-              { id: 1722836609360, content: "To inform about the benefits of regular exercise." },
-              { id: 1722836610689, content: "To discuss the challenges of learning a new language." },
-              { id: 1722836611792, content: "To describe the process of photosynthesis." },
-              { id: 1722836615306, content: "To explain the history of the internet." }
-            ],
-            imageUrl: null,
-            isEditing: false,
-            correctOptionId: 1722836609360
-          },
-          {
-            id: 1722836618555,
-            questionContent: "Which of the following is NOT mentioned in the passage?",
-            options: [
-              { id: 1722836618556, content: "Health benefits of exercise." },
-              { id: 1722836618557, content: "Common obstacles to regular exercise." },
-              { id: 1722836618558, content: "Exercise equipment recommendations." },
-              { id: 1722836618559, content: "The role of diet in fitness." }
-            ],
-            imageUrl: null,
-            isEditing: false,
-            correctOptionId: 1722836618558
-          }
-        ]
-      },
-      {
-        id: 950085,
-        type: "Reading",
-        content: "Analyze the provided text and respond to the queries.",
-        imageUrl: "http://localhost:5000/uploads/example_reading_image2.png",
-        subQuestions: [
-          {
-            id: 1722836654116,
-            questionContent: "What is the author's purpose in writing this text?",
-            options: [
-              { id: 1722836656880, content: "To persuade readers to adopt a new technology." },
-              { id: 1722836657478, content: "To provide information about a recent discovery." },
-              { id: 1722836658259, content: "To narrate a personal experience." },
-              { id: 1722836658862, content: "To compare different approaches to a problem." }
-            ],
-            imageUrl: null,
-            isEditing: false,
-            correctOptionId: 1722836657478
-          }
-        ]
-      }
-    ],
-    listeningQuestions: [
-      {
-        id: 927497,
-        type: "Listening",
-        audioUrl: "http://localhost:5000/uploads/example_listening_audio.mp3",
-        subQuestions: [
-          {
-            id: 1722836600328,
-            questionContent: "What is the speaker's main argument?",
-            options: [
-              { id: 1722836609361, content: "The importance of healthy eating." },
-              { id: 1722836610690, content: "The benefits of daily meditation." },
-              { id: 1722836611793, content: "The impact of technology on education." },
-              { id: 1722836615307, content: "The effects of climate change." }
-            ],
-            imageUrl: null,
-            isEditing: false,
-            correctOptionId: 1722836611793
-          }
-        ]
-      }
-    ],
-    multiChoiceQuestions: [
-      {
-        id: 143249,
-        type: "Multi-choice",
-        content: "What is the capital of France?",
-        options: [
-          { id: 1722836533109, content: "Berlin" },
-          { id: 1722836533700, content: "Madrid" },
-          { id: 1722836534466, content: "Paris" },
-          { id: 1722836535067, content: "Rome" }
-        ],
-        imageUrl: null,
-        correctOptionId: 1722836534466
-      },
-      {
-        id: 213005,
-        type: "Multi-choice",
-        content: "Which planet is known as the Red Planet?",
-        options: [
-          { id: 1722836580847, content: "Earth" },
-          { id: 1722836581394, content: "Mars" },
-          { id: 1722836582359, content: "Jupiter" },
-          { id: 1722836583202, content: "Saturn" }
-        ],
-        imageUrl: null,
-        correctOptionId: 1722836581394
-      }
-    ]
-  }
-};
+  
 
   const handleClickKanji = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/kanji`;
@@ -158,6 +46,10 @@ export default function DaySchedule({ weekSelected, id = null }) {
 
   const handleClickExam = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/weeklyExam`;
+  };
+
+   const handleClickExamHistory = () => {
+    window.location.href = `/${id}/${weekSelected.week_id}/weeklyExamHistory`;
   };
 
 
@@ -351,6 +243,9 @@ export default function DaySchedule({ weekSelected, id = null }) {
           </AccordionTrigger>
           <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExam}>
             Kiểm tra
+          </AccordionContent>
+          <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExamHistory}>
+            Lịch sử kiểm tra
           </AccordionContent>
         </AccordionItem>
       </Accordion>

@@ -200,7 +200,7 @@ const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ quest
   );
 };
 
-export default MultiChoiceQuestion;
+export default MultiChoiceQuestionCreating;
 
 const QuestionContainer = styled.div`
   border: 1px solid #ccc;
