@@ -9,7 +9,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
 import OtpVerificationProps from "../authentication/OtpVerification"
-
+import React from 'react';
 type RegisterProps = {
   openLogin: () => void;
 };

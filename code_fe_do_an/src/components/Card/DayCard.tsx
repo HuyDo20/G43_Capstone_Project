@@ -26,6 +26,7 @@ function DayCard({
   setReload,
   mode,
 }) {
+
   const handleOpenNewDay = (item, index) => {
     setVisibleNewDay(true);
     setDaySelected(item);
@@ -197,32 +198,26 @@ function DayCard({
                       )}
                       style={{ marginBottom: "2%", backgroundColor: "#fff" }}
                       renderItem={(item, pos) => {
-                        const title = item.vocab_name;
+                        const vocab_title = item.vocab_name;
+                        const vocab_meaning = item.vocab_meaning;
+
                         return (
                           <List.Item>
-                            <div>
-                              Lesson Name: <b>{title}</b>
+                            <div style={{ fontWeight: "bold", fontSize: "1.1em", color: "#333" }}>
+                              <span style={{ color: "#007BFF" }}>{vocab_title}</span>: {vocab_meaning}
                             </div>
                             {mode !== "view" ? (
                               <Flex>
-                                <Button
-                                  onClick={() => handleOpenLesson(item, pos)}
-                                >
+                                <Button onClick={() => handleOpenLesson(item, pos)}>
                                   Edit
                                 </Button>
                                 &ensp;
-                                <Button
-                                  onClick={() =>
-                                    handleDeleteLesson(item, index, pos)
-                                  }
-                                >
+                                <Button onClick={() => handleDeleteLesson(item, index, pos)}>
                                   Delete
                                 </Button>
                               </Flex>
                             ) : (
-                              <Button
-                                onClick={() => handleOpenLesson(item, pos)}
-                              >
+                              <Button onClick={() => handleOpenLesson(item, pos)}>
                                 View
                               </Button>
                             )}
@@ -241,32 +236,25 @@ function DayCard({
                         (item) => item.type === "kanji"
                       )}
                       renderItem={(item, pos) => {
-                        const title = item.kanji_name;
+                        const kanji_title = item.kanji_name;
+
                         return (
                           <List.Item>
-                            <div>
-                              Lesson Name: <b>{title}</b>
+                            <div style={{ fontWeight: "bold", fontSize: "1.1em", color: "#333" }}>
+                              <span style={{ color: "#007BFF" }}>{kanji_title}</span>
                             </div>
                             {mode !== "view" ? (
                               <Flex>
-                                <Button
-                                  onClick={() => handleOpenLesson(item, pos)}
-                                >
+                                <Button onClick={() => handleOpenLesson(item, pos)}>
                                   Edit
                                 </Button>
                                 &ensp;
-                                <Button
-                                  onClick={() =>
-                                    handleDeleteLesson(item, index, pos)
-                                  }
-                                >
+                                <Button onClick={() => handleDeleteLesson(item, index, pos)}>
                                   Delete
                                 </Button>
                               </Flex>
                             ) : (
-                              <Button
-                                onClick={() => handleOpenLesson(item, pos)}
-                              >
+                              <Button onClick={() => handleOpenLesson(item, pos)}>
                                 View
                               </Button>
                             )}
@@ -285,32 +273,25 @@ function DayCard({
                         (item) => item.type === "grammar"
                       )}
                       renderItem={(item, pos) => {
-                        const title = item.grammar_name;
+                        const grammar_title = item.grammar_name;
+                        const grammar_description = item.grammar_description;
                         return (
                           <List.Item>
-                            <div>
-                              Lesson Name: <b>{title}</b>
+                            <div style={{ fontWeight: "bold", fontSize: "1.1em", color: "#333" }}>
+                              <span style={{ color: "#28A745" }}>{grammar_title}</span>: {grammar_description}
                             </div>
                             {mode !== "view" ? (
                               <Flex>
-                                <Button
-                                  onClick={() => handleOpenLesson(item, pos)}
-                                >
+                                <Button onClick={() => handleOpenLesson(item, pos)}>
                                   Edit
                                 </Button>
                                 &ensp;
-                                <Button
-                                  onClick={() =>
-                                    handleDeleteLesson(item, index, pos)
-                                  }
-                                >
+                                <Button onClick={() => handleDeleteLesson(item, index, pos)}>
                                   Delete
                                 </Button>
                               </Flex>
                             ) : (
-                              <Button
-                                onClick={() => handleOpenLesson(item, pos)}
-                              >
+                              <Button onClick={() => handleOpenLesson(item, pos)}>
                                 View
                               </Button>
                             )}
@@ -337,24 +318,16 @@ function DayCard({
                             </div>
                             {mode !== "view" ? (
                               <Flex>
-                                <Button
-                                  onClick={() => handleOpenLesson(item, pos)}
-                                >
+                                <Button onClick={() => handleOpenLesson(item, pos)}>
                                   Edit
                                 </Button>
                                 &ensp;
-                                <Button
-                                  onClick={() =>
-                                    handleDeleteLesson(item, index, pos)
-                                  }
-                                >
+                                <Button onClick={() => handleDeleteLesson(item, index, pos)}>
                                   Delete
                                 </Button>
                               </Flex>
                             ) : (
-                              <Button
-                                onClick={() => handleOpenLesson(item, pos)}
-                              >
+                              <Button onClick={() => handleOpenLesson(item, pos)}>
                                 View
                               </Button>
                             )}

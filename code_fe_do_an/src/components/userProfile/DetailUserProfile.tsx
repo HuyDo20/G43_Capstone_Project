@@ -14,9 +14,12 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
 
 export default function DetailUserProfile() {
   const { user, setUser } = useAuth(); // Assuming setUser is a function to update the user in your auth context
+  
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
   const FormSchema = z.object({
@@ -74,7 +77,7 @@ export default function DetailUserProfile() {
         throw new Error("Something went wrong!");
       }
     } catch (error) {
-      console.log(error);
+        navigate('/error', { state: { message: error } });
     }
   }
 

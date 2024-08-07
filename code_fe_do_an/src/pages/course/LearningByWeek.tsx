@@ -1,4 +1,6 @@
 import { DaySchedule, ResetDeadline } from "@/components/course";
+import React from 'react';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +14,7 @@ import { useAuth } from "@/hook/AuthContext";
 import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function LearningByWeek() {
   const { id } = useParams();
@@ -36,9 +39,10 @@ export default function LearningByWeek() {
     };
     if (reload) {
       handleFetchData();
-      setReload(false);
-    }
-  }, [reload]);
+   setReload(false);
+      }
+    
+  }, [reload,weekSelected]);
   return (
  
     <div>
@@ -62,18 +66,6 @@ export default function LearningByWeek() {
                 {item?.week_name}
               </Button>
             ))}
-            {/* <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 2
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 3
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 4
-            </Button>
-            <Button className="text-black bg-white hover:bg-[#2dac5c] hover:text-white text-base">
-              Tuần 5
-            </Button> */}
           </div>
         </div>
         <div className="basis-4/5 h-[800px] pt-7 pl-11 flex flex-col">

@@ -13,6 +13,8 @@ export type CourseResponse = {
     description: string;
     course_image: string;
     week: number;
+    totalProgress: number;
+    
 };
 export type WeekResponse = {
     week_id: number;
@@ -32,4 +34,5 @@ export type GrammarItemList = {
   grammar_structure: string;
   grammar_id: string;
   checkIsRepeat: boolean;
+  isLearned: boolean;
 };

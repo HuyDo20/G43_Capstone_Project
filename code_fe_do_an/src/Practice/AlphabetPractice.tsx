@@ -2,7 +2,7 @@ import { useAuth } from "@/hook/AuthContext";
 import { SmileOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, Input, Typography, notification } from "antd";
 import { useEffect, useState } from "react";
-
+import React from 'react';
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
 };

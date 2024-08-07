@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +16,13 @@ import Header from "@/layout/header/Header";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+
 export default function UserProfile() {
   const { user } = useAuth();
   const [input, setInput] = useState<File | null>(null);
+  const navigate = useNavigate();
   const handleOnSubmitFile = async () => {
     const formData = new FormData();
     formData.append("userAvatar", input);
@@ -38,7 +43,7 @@ export default function UserProfile() {
         throw new Error("Somthing went wrong!");
       }
     } catch (error) {
-      console.log(error);
+          navigate('/error', { state: { message: error } });
     }
   };
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);

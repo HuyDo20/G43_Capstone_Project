@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Logo from "@/layout/Logo";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-
+import React from 'react';
 import { Link } from "react-router-dom";
 
 export default function GetNewPWSuccess() {

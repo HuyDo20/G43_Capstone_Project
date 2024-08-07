@@ -14,6 +14,8 @@ import Kanji from "./pages/course/Kanji";
 import LearningByWeek from "./pages/course/LearningByWeek";
 import Video from "./pages/course/Video";
 import Vocabulary from "./pages/course/Vocabulary";
+import WeeklyExam from "./pages/course/WeeklyExam";
+import WeeklyExamHistory from "./pages/course/WeeklyExamHistory";
 import Home from "./pages/home/Home";
 import UserProfile from "./pages/userProfie/UserProfile";
 import Security from "./pages/home/Security";
@@ -21,7 +23,9 @@ import Policy from "./pages/home/Policy";
 import AboutDNLS from "./pages/about/AboutDNLS";
 import AboutTextbook from "./pages/about/AboutTextbook";
 import DetailTextbook from "./pages/about/DetailTextbook";
-
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import ErrorPage from "./components/ui/errorPage";
+import React from 'react';
 const contentStyle = {
   padding: 50,
   borderRadius: 4,
@@ -58,7 +62,7 @@ function App() {
               path="/getAuthenticationCode"
               element={<GetAuthenticationCode />}
             />
-            <Route path="/getNewPassword" element={<GetNewPassword />} />
+            <Route path="/getNewPassword" element={<ProtectedRoute><GetNewPassword /></ProtectedRoute>} />
             <Route path="/getNewPWSuccess" element={<GetNewPWSuccess />} />
             <Route path="/userProfile" element={<UserProfile />} />
             <Route path="/aboutDNLS" element={<AboutDNLS />} />
@@ -76,11 +80,19 @@ function App() {
             <Route path="/:id/:week_id/:day_id/kanji" element={<Kanji />} />
             <Route path="/:id/:week_id/:day_id/grammar" element={<Grammar />} />
             <Route path="/:id/:week_id/:day_id/video" element={<Video />} />
-            <Route
-              path="/:id/:week_id/:day_id/grammar/detail/:grammar_id"
-              element={<GrammarDetail />}
-            />
+            <Route path="/:id/:week_id/:day_id/grammar/detail/:grammar_id" element={<GrammarDetail />}/>
+            <Route path="/:id/:week_id/:weekly_exam_id/weeklyExam" element={<WeeklyExam />} />
+            <Route path="/:id/:week_id/weeklyExamHistory" element={<WeeklyExamHistory />} />
+            
             <Route path="/admin/*" element={<AdminRoutes />} />
+             <Route
+             path="/error"
+             element={<ErrorPage />}
+              />
+              <Route
+               path="*"
+              element={<ErrorPage />}
+               />
           </Routes>
         </Suspense>
       </AuthProvider>

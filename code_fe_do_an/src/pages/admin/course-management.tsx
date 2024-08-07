@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
+import { AiOutlineFileAdd } from "react-icons/ai"; // Import the icon
 
 interface Course {
   course_id: number;
@@ -143,6 +144,7 @@ const CoursesManagementPage: React.FC = () => {
         }
       } catch (error) {
         console.error(error);
+        navigate('/error', { state: { message: error} });
       }
     };
     if (reload) {
@@ -216,15 +218,16 @@ const CoursesManagementPage: React.FC = () => {
 
   return (
     <>
-      {/* <Button
+      <Button
         type="primary"
+        icon={<AiOutlineFileAdd />} // Add the icon here
         onClick={() => {
-          navigate("/admin/course-management/create");
+          navigate("/admin/course-exam-create");
         }}
         style={{ marginBottom: "8px" }}
       >
-        Add Course
-      </Button> */}
+        Create Exam
+      </Button>
       <Table dataSource={courses} columns={columns} rowKey="course_id" />
       <CourseModal
         isModalOpen={isModalOpen}

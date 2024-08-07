@@ -15,27 +15,28 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hook/AuthContext";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tag } from "antd";
+import { Tag, notification } from "antd";
+import axios from 'axios';
 
 export default function Video() {
   const [reload, setReload] = useState(true);
   const [courseData, setCourseData] = useState([]);
   const [weekSelected, setWeekSelected] = useState({});
   const [dayCurrent, setDayCurrent] = useState({});
+  const [completedVideos, setCompletedVideos] = useState(new Set());
   const { handleFetch } = useAuth();
   const { id, week_id, day_id } = useParams();
   const navigate = useNavigate();
   const handleLearningByWeek = () => {
     navigate(`/learningByWeek/${id}`);
   };
+
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -44,7 +45,6 @@ export default function Video() {
       });
       if (response.statusCode === 200) {
         const result = response.data;
-
         setCourseData(result.courseData);
         setWeekSelected(
           result.weekData?.find((item) => item.week_id === parseInt(week_id))
@@ -71,11 +71,72 @@ export default function Video() {
         setDayCurrent(_dayCurrent);
       }
     };
+
+    const fetchCompletedVideos = async () => {
+      try {
+        let token = "";
+        let accountId;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userDecode?.account_id;
+        }
+        const response = await axios.get(`/user-videos-learned/${accountId}`, {
+          headers: { Authorization: token },
+        });
+        if (response.status === 200) {
+          const completedVideoIds = response.data.map((item) => item.video_id);
+          setCompletedVideos(new Set(completedVideoIds));
+        } else {
+          alert("Failed to fetch completed videos.");
+        }
+      } catch (error) {
+        notification.error({
+        message: "Failed to update kanji learned",
+        description: `Error: ${error}`,
+      });
+      }
+    };
+
     if (reload) {
       handleFetchData();
+      fetchCompletedVideos();
       setReload(false);
     }
   }, [reload]);
+
+    const handleCompleteVideo = async (video_id) => {
+    try {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      }
+      const request = await axios.post('/update-video-learned', {
+        accountId: accountId,
+        videoId: video_id,
+      }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+       
+      if (request.status === 200) {
+        setCompletedVideos(prevCompletedVideos => new Set(prevCompletedVideos).add(video_id));
+        setReload(true); 
+      }
+    } catch (error) {
+      console.error(error);
+        notification.error({
+        message: "Failed to update video learned",
+        description: `Error: ${error}`,
+      });
+    }
+  };
   return (
     <div>
       {/* Header */}
@@ -84,13 +145,13 @@ export default function Video() {
       </div>
       {/* Body*/}
       <div className="flex flex-row">
-        {/* DaySchedule*/}
+        {/* DaySchedule */}
         <div className="p-5 shadow-md basis-1/6 h-[830px]">
           <DaySchedule weekSelected={weekSelected} id={id} />
         </div>
-        {/* Content*/}
+        {/* Content */}
         <div className="flex flex-col basis-5/6 pt-7 pl-11">
-          {/* Breadcrumb*/}
+          {/* Breadcrumb */}
           <div className="mb-7">
             <Breadcrumb>
               <BreadcrumbList>
@@ -150,7 +211,7 @@ export default function Video() {
                       <CarouselItem key={index}>
                         <div className="p-1">
                           <Card>
-                            <CardContent className="flex flex-col pt-10 h-[670px] w-[1200px] bg-[#fff8e1]">
+                            <CardContent className={`flex flex-col pt-10 h-[670px] w-[1200px] ${completedVideos.has(lesson.video_id) ? 'bg-[#e0f7fa]' : 'bg-[#fff8e1]'}`}>
                               <div className="flex flex-col gap-9 basis-2/5">
                                 <div className="text-2xl text-[#7db660] font-semibold">
                                   {lesson.video_name}{" "}
@@ -163,26 +224,35 @@ export default function Video() {
                                 </div>
                                 <div className="flex flex-col items-center gap-5">
                                   <video
-                                    className="h-[450px] w-[100%] rounded-md shadow-md"
-                                    // src={
-                                    //   lesson.vocab_image
-                                    //     ? lesson.vocab_image
-                                    //     : "/banner.png"
-                                    // }
-                                    src={
+                                      className="h-[450px] w-[100%] rounded-md shadow-md"
+                                      src={
                                       lesson?.video_link
-                                        ? lesson?.video_link.split(", ")[0]
-                                        : "/banner.png"
-                                    }
-                                  />
-                                  <Button className=" w-[140px] h-[40px] mt-8">
-                                    <Dialog>
-                                      <DialogTrigger>Luyện tập</DialogTrigger>
-                                      <DialogContent>
-                                        <Practice data={lesson?.questions} />
-                                      </DialogContent>
-                                    </Dialog>
-                                  </Button>
+                                      ? lesson?.video_link.split(", ")[0]
+                                      : "/banner.png"
+                                         }
+                                    controls
+                                   onError={(e) => {
+                                    console.error('Error loading video:', e.target.error, 'Video URL:', lesson?.video_link);
+                                     }}
+                                   />
+                                  {!completedVideos.has(lesson.video_id) && (
+                                    <Button
+                                      className="mt-8"
+                                      onClick={() => handleCompleteVideo(lesson.video_id)}
+                                    >
+                                      Đánh dấu hoàn thành
+                                    </Button>
+                                  )}
+                                  <Dialog>
+                                    <DialogTrigger asChild>
+                                      <Button className="mt-4">
+                                        Luyện tập
+                                      </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                      <Practice data={lesson?.questions} />
+                                    </DialogContent>
+                                  </Dialog>
                                 </div>
                               </div>
                             </CardContent>

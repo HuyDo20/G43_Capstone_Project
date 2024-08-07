@@ -7,6 +7,8 @@ import {
   PlusOutlined,
   SettingOutlined,
   UserOutlined,
+  FileTextOutlined,
+  AppstoreAddOutlined// Import the new icon for exam management
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useState } from "react";
@@ -16,8 +18,8 @@ const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const AdminLayout = ({ children }) => {
-  const auth = useAuth()
-  const {handleLogout} = auth
+  const auth = useAuth();
+  const { handleLogout } = auth;
   const [collapsed, setCollapsed] = useState(false);
 
   const {
@@ -57,6 +59,18 @@ const AdminLayout = ({ children }) => {
               <Link to="/admin/course-management/create">Create</Link>
             </Menu.Item>
           </SubMenu>
+             <SubMenu key="sub2" icon={<FileTextOutlined />} title="Exam">
+            <Menu.Item key="5" icon={<PlusOutlined />}>
+              <Link to="/admin/exam-management/create">Create</Link>
+            </Menu.Item>
+             <Menu.Item key="6" icon={<SettingOutlined />}>
+              <Link to="/admin/exam-management/manage">Manage</Link>
+            </Menu.Item> 
+             <Menu.Item key="7" icon={<AppstoreAddOutlined />}>
+            <Link to="/admin/exam-management/assign">Assign Exam to Course</Link>
+          </Menu.Item>
+          </SubMenu>
+          
           <Menu.Item
             key="logout"
             onClick={handleLogout}

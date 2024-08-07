@@ -2,7 +2,7 @@ import Footer from "@/layout/footer/Footer";
 import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import React from 'react';
 export default function AboutTextbook() {
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);
   const navigate = useNavigate();
