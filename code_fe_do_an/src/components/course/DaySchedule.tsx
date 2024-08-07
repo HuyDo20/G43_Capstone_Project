@@ -192,7 +192,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
       <div>
         {dayData.grammar?.percentage === 100 ? (
           <Tooltip title="Learned">
-            <MdCheck style={{ color: 'green', fontSize: '24px' }} />
+            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
           </Tooltip>
         ) : (
           <Tooltip title="Not Learned">
@@ -214,7 +214,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
       <div>
         {dayData.video?.percentage === 100 ? (
           <Tooltip title="Learned">
-            <MdCheck style={{ color: 'green', fontSize: '24px' }} />
+            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
           </Tooltip>
         ) : (
           <Tooltip title="Not Learned">
@@ -236,7 +236,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
       <div>
         {dayData.kanji?.percentage === 100 ? (
           <Tooltip title="Learned">
-            <MdCheck style={{ color: 'green', fontSize: '24px' }} />
+            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
           </Tooltip>
         ) : (
           <Tooltip title="Not Learned">
