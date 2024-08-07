@@ -1,5 +1,5 @@
-const { assignExamToCourse, removeExamFromCourse, getAllExamsByCourse, getAllCoursesByExam } = require('../services/courseExamService');
-const { ok, badRequest, notFound, error } = require('../handlers/response_handler');
+const { assignExamToCourse, removeExamFromCourse, getAllExamsByCourse, getAllCoursesByExam, getExamByCourseAndWeek } = require('../services/courseExamService');
+const { ok, badRequest, notFound, error, responseWithData } = require('../handlers/response_handler');
 
 class CourseExamController {
   async assignExamToCourse(req, res) {
@@ -47,6 +47,23 @@ class CourseExamController {
       return ok(res, courses);
     } catch (err) {
       return notFound(res, err.message);
+    }
+  }
+
+  async getExamByCourseAndWeek(req, res) {
+    try {
+      const { courseId, weekId } = req.body;
+
+      if (courseId == null || weekId == null) {
+        console.log("One or more required fields are null");
+        return badRequest(res, "Course ID and Week ID are required");
+      }
+
+      const exam = await getExamByCourseAndWeek(courseId, weekId);
+   
+      return ok(res, exam);
+    } catch (err) {
+      return responseWithData(res, 202, "Not have any exam");
     }
   }
 }

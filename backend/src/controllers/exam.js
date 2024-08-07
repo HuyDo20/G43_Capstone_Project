@@ -31,8 +31,8 @@ class ExamController {
 
   async getExamById(req, res) {
     try {
-      const { exam_id } = req.params;
-      const exam = await getExamById(exam_id);
+      const { weekly_exam_id } = req.params;
+      const exam = await getExamById(weekly_exam_id);
       if (!exam) {
         return notfound(res, 'Exam not found');
       }

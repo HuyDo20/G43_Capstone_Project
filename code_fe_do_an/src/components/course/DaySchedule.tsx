@@ -10,6 +10,7 @@ import ExamTakingPopup from '../exam/ExamTaking'; // Ensure correct import path
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() => weekSelected?.days ? weekSelected?.days[0] : {});
   const [weekData, setWeekData] = useState([]);
+  const [weeklyExamId, setWeeklyExamId] = useState(0);
   const [dayData, setDayData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { FaCheck } = useLocation();
@@ -30,8 +31,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/vocabulary`;
   };
 
-  
-
   const handleClickKanji = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/${daySelected.day_id}/kanji`;
   };
@@ -45,7 +44,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
   const handleClickExam = () => {
-    window.location.href = `/${id}/${weekSelected.week_id}/weeklyExam`;
+    window.location.href = `/${id}/${weekSelected.week_id}/${weeklyExamId}/weeklyExam`;
   };
 
    const handleClickExamHistory = () => {
@@ -89,6 +88,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
     }
   };
 
+
+
   const handleFetchDetailCourseProgressByWeekId = async (weekId) => {
     let token = "";
     let accountId;
@@ -106,6 +107,17 @@ export default function DaySchedule({ weekSelected, id = null }) {
     const response = request.data;
     if (response.statusCode === 200) {
       setWeekData(response.data);
+      const requestExam = await axios.post("/get_exam_by_course_and_week", { courseId: id, weekId: weekId }, {
+      headers: {
+        Authorization: token,
+      },
+      });
+      const responseExam = requestExam.data;
+      if (responseExam.statusCode === 200) {
+         setWeeklyExamId(responseExam.data.data.exam_id);
+      } else {
+        setWeeklyExamId(0);
+      }
     }
   };
 
@@ -115,6 +127,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
 
       if (weekSelected.week_id) {
         await handleFetchDetailCourseProgressByWeekId(weekSelected.week_id);
+        
       }
 
       if (daySelected.day_id) {
@@ -237,7 +250,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
 )}
           </AccordionItem>
         ))}
-        <AccordionItem value="item-7">
+
+        {weeklyExamId !== 0 ? ( <AccordionItem value="item-7">
           <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
             Kiểm tra tổng hợp
           </AccordionTrigger>
@@ -247,7 +261,14 @@ export default function DaySchedule({ weekSelected, id = null }) {
           <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExamHistory}>
             Lịch sử kiểm tra
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem>) : (<AccordionItem value="item-7">
+          <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
+            Kiểm tra tổng hợp
+          </AccordionTrigger>
+          <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer">
+            Trống
+          </AccordionContent>
+        </AccordionItem>)}
       </Accordion>
     </div>
   );

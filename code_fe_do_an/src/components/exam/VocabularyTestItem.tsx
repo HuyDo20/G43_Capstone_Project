@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, image, error, showResults, selectedAnswer, mode }) => {
+const VocabularyTestItem = ({ question, options = [], correctAnswer, onAnswerSelect, image, error, showResults, selectedAnswer, mode }) => {
   const [selectedLocalAnswer, setSelectedLocalAnswer] = useState(null);
 
   const handleAnswerClick = (optionId) => {
@@ -21,32 +21,36 @@ const VocabularyTestItem = ({ question, options, correctAnswer, onAnswerSelect, 
               <img src={image} alt="Vocabulary" className="max-w-full h-auto" />
             </div>
           )}
-          {error && <div className="text-red-500 mb-4">Please answer this question.</div>}
-          <div className="text-lg mb-4">Select the correct answer:</div>
-          <div className="flex flex-col gap-4">
-            {options.map((option, optionIndex) => {
-              const isSelected = selectedLocalAnswer === option.id || (showResults && selectedAnswer === option.id);
-              const isCorrect = showResults && option.id === correctAnswer;
-              const buttonClass = `p-4 text-lg border rounded-md transition-all duration-300 flex items-center ${
-                isSelected ? 'bg-blue-500 text-white' : 'bg-white text-black hover:bg-gray-200'
-              } ${
-                showResults && isCorrect ? 'bg-green-500 text-white' : ''
-              } ${
-                showResults && !isCorrect && selectedAnswer === option.id ? 'bg-red-500 text-white' : ''
-              }`;
+          {error && <div className="text-red-500 mb-4">Hãy chọn đáp án</div>}
+          <div className="text-lg mb-4">Lựa chọn đáp án đúng:</div>
+          <div className="flex flex-col gap-2">
+            {options.length > 0 ? (
+              options.map((option, optionIndex) => {
+                const isSelected = selectedLocalAnswer === option.id || (showResults && selectedAnswer === option.id);
+                const isCorrect = showResults && option.id === correctAnswer;
+                const buttonClass = `p-4 text-lg border rounded-md transition-all duration-300 flex items-center ${
+                  isSelected ? 'bg-blue-500 text-white' : 'bg-white text-black hover:bg-gray-200'
+                } ${
+                  showResults && isCorrect ? 'bg-green-500 text-white' : ''
+                } ${
+                  showResults && !isCorrect && selectedAnswer === option.id ? 'bg-red-500 text-white' : ''
+                }`;
 
-              return (
-                <button
-                  key={option.id}
-                  className={buttonClass}
-                  onClick={() => handleAnswerClick(option.id)}
-                  disabled={mode === 'reviewing'}
-                >
-                  <span className="mr-2">{optionPrefixes[optionIndex]}.</span>
-                  <span>{option.content}</span>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={option.id}
+                    className={buttonClass}
+                    onClick={() => handleAnswerClick(option.id)}
+                    disabled={mode === 'reviewing'}
+                  >
+                    <span className="mr-2">{optionPrefixes[optionIndex]}.</span>
+                    <span>{option.content}</span>
+                  </button>
+                );
+              })
+            ) : (
+              <div>No options available.</div>
+            )}
           </div>
           {showResults && selectedAnswer !== correctAnswer && (
             <div className="text-red-500 mt-2">

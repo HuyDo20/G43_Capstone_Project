@@ -12,6 +12,7 @@ import Header from "@/layout/header/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import ExamHistoryItem from '@/components/exam/ExamHistoryItem';
 import ExamHistoryDetail from '@/components/exam/ExamHistoryDetail';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 // Provided test data
 const testData = [
@@ -64,7 +65,7 @@ const testData = [
       "correct": 2,
       "total": 2
     },
-    "score": 100
+    "score": 95
   },
   {
     "examTitle": "Quiz 2",
@@ -84,7 +85,7 @@ const testData = [
     "score": 75
   },
   {
-    "examTitle": "Practice Exam",
+    "examTitle": "Practice Exam 1 ",
     "createdTime": "2024-06-30T08:45:00.000Z",
     "multiChoice": {
       "correct": 2,
@@ -98,8 +99,76 @@ const testData = [
       "correct": 4,
       "total": 4
     },
-    "score": 100
+    "score": 90
+  },
+   {
+    "examTitle": "Practice Exam 2",
+    "createdTime": "2024-06-30T08:45:00.000Z",
+    "multiChoice": {
+      "correct": 2,
+      "total": 2
+    },
+    "reading": {
+      "correct": 3,
+      "total": 3
+    },
+    "listening": {
+      "correct": 4,
+      "total": 4
+    },
+    "score": 80
+  },
+    {
+    "examTitle": "Practice Exam 3",
+    "createdTime": "2024-06-30T08:45:00.000Z",
+    "multiChoice": {
+      "correct": 2,
+      "total": 2
+    },
+    "reading": {
+      "correct": 3,
+      "total": 3
+    },
+    "listening": {
+      "correct": 4,
+      "total": 4
+    },
+    "score": 65
+  },
+     {
+    "examTitle": "Practice Exam 4",
+    "createdTime": "2024-06-30T08:45:00.000Z",
+    "multiChoice": {
+      "correct": 2,
+      "total": 2
+    },
+    "reading": {
+      "correct": 3,
+      "total": 3
+    },
+    "listening": {
+      "correct": 4,
+      "total": 4
+    },
+    "score": 60
+  }, {
+    "examTitle": "Practice Exam 5",
+    "createdTime": "2024-06-30T08:45:00.000Z",
+    "multiChoice": {
+      "correct": 2,
+      "total": 2
+    },
+    "reading": {
+      "correct": 3,
+      "total": 3
+    },
+    "listening": {
+      "correct": 4,
+      "total": 4
+    },
+    "score": 75
   }
+
 ];
 
 export default function WeeklyExamHistory() {
@@ -161,7 +230,7 @@ export default function WeeklyExamHistory() {
           </div>
           {/* Main Content */}
           <div className="flex justify-center w-full mt-7">
-            <div className="w-full max-w-6xl max-h-[800px] overflow-y-auto bg-white rounded-lg shadow-lg p-6 border-4 border-green-300">
+            <div className="w-full max-w-6xl max-h-[800px] overflow-y-auto bg-white rounded-lg shadow-lg p-6 border-2">
               {/* Section 1: Latest Exam History */}
               {examHistory.length > 0 && (
                 <div>
@@ -178,6 +247,27 @@ export default function WeeklyExamHistory() {
                   ))}
                 </div>
               )}
+              {/* Section 3: Column Chart */}
+              <div className="mt-8">
+                <h2 className="text-2xl font-semibold mb-4">Lịch sử kiểm tra</h2>
+                <BarChart
+                  width={400}
+                  height={400}
+                  data={examHistory.map(exam => ({
+                    name: exam.examTitle,
+                    score: exam.score,
+                    date: new Date(exam.createdTime).toLocaleDateString(),
+                  }))}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3"/>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="score" fill="#82ca9d" />
+                </BarChart>
+              </div>
             </div>
           </div>
         </div>

@@ -85,9 +85,26 @@ async function getAllCoursesByExam(examId) {
   return exam.Courses;
 }
 
+async function getExamByCourseAndWeek(course_id, week_id) {
+  const courseExam = await CourseExam.findOne({
+    where: {
+      course_id: course_id,
+      week_id: week_id
+    },
+    include: [
+      {
+        model: Exam,
+      },
+    ],
+  });
+  
+  return courseExam.Exam;
+}
+
 module.exports = {
   assignExamToCourse,
   removeExamFromCourse,
   getAllExamsByCourse,
-  getAllCoursesByExam
+  getAllCoursesByExam,
+  getExamByCourseAndWeek
 };

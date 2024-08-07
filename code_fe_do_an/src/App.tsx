@@ -81,7 +81,7 @@ function App() {
             <Route path="/:id/:week_id/:day_id/grammar" element={<Grammar />} />
             <Route path="/:id/:week_id/:day_id/video" element={<Video />} />
             <Route path="/:id/:week_id/:day_id/grammar/detail/:grammar_id" element={<GrammarDetail />}/>
-            <Route path="/:id/:week_id/weeklyExam" element={<WeeklyExam />} />
+            <Route path="/:id/:week_id/:weekly_exam_id/weeklyExam" element={<WeeklyExam />} />
             <Route path="/:id/:week_id/weeklyExamHistory" element={<WeeklyExamHistory />} />
             
             <Route path="/admin/*" element={<AdminRoutes />} />

@@ -90,7 +90,8 @@ export default function Vocabulary() {
         setDayCurrent(_dayCurrent);
         setCurrentDayVocabularyIds(vocabularyIds);
       }
-    };
+    }; 
+    
     const fetchLearnedVocab = async () => {
       try {
         let token = "";

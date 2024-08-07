@@ -23,7 +23,7 @@ const splitQuestions = (data) => {
   return { readingQuestions, listeningQuestions, multiChoiceQuestions };
 };
 
-const ExamTaking = ({ courseTitle, examTitle, questions, mode, onSubmit }) => {
+const ExamTaking = ({ examTitle, questions, mode, onSubmit }) => {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [errors, setErrors] = useState({});
   const [results, setResults] = useState(null);
@@ -127,19 +127,19 @@ const ExamTaking = ({ courseTitle, examTitle, questions, mode, onSubmit }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-8 w-full max-w-5xl max-h-full overflow-y-auto relative">
+    <div className="bg-white rounded-lg p-8 w-full max-w-6xl max-h-full overflow-y-auto relative">
       <div className="header mb-8">
-        <h1 className="text-4xl font-bold">{courseTitle}</h1>
-        <h2 className="text-2xl font-semibold">{examTitle}</h2>
+        <h1 className="text-4xl font-bold">{examTitle}</h1>
+   
       </div>
       {results && (
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Your Score: {results.score}%</h3>
+          <h3 className="text-2xl font-semibold mb-4">Điểm: {results.score}%</h3>
         </div>
       )}
       <div className="questions-container">
         <div className="multi-choice-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Multiple Choice Questions</h3>
+          <h3 className="text-2xl font-semibold mb-4">Câu hỏi nhiều lựa chọn</h3>
           {multiChoiceQuestions.map((question) => (
             <div key={question.id}>
               <VocabularyTestItem
@@ -157,7 +157,7 @@ const ExamTaking = ({ courseTitle, examTitle, questions, mode, onSubmit }) => {
           ))}
         </div>
         <div className="reading-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Reading Questions</h3>
+          <h3 className="text-2xl font-semibold mb-4">Bài đọc</h3>
           {readingQuestions.map((question) => (
             <div key={question.id}>
               <ReadingTestItem
@@ -174,7 +174,7 @@ const ExamTaking = ({ courseTitle, examTitle, questions, mode, onSubmit }) => {
           ))}
         </div>
         <div className="listening-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Listening Questions</h3>
+          <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
           {listeningQuestions.map((question) => (
             <div key={question.id}>
               <ListeningTestItem
@@ -196,7 +196,7 @@ const ExamTaking = ({ courseTitle, examTitle, questions, mode, onSubmit }) => {
           className="mt-8 p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-all duration-300"
           disabled={results !== null}
         >
-          Submit
+          Nộp bài
         </button>
       )}
     </div>
