@@ -234,14 +234,14 @@ export default function WeeklyExamHistory() {
               {/* Section 1: Latest Exam History */}
               {examHistory.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất</h2>
+                  <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
                   <ExamHistoryDetail exam={examHistory[0]} />
                 </div>
               )}
               {/* Section 2: Older Exam History */}
               {examHistory.length > 1 && (
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4">Các bài trước đây</h2>
+                  <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
                   {examHistory.slice(1).map((exam, index) => (
                     <ExamHistoryItem key={index} exam={exam} />
                   ))}
