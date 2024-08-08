@@ -153,9 +153,9 @@ const AssignWeeklyExamToCourse: React.FC = () => {
 
   return (
     <div>
-      <h2>Assign Weekly Exam to Course</h2>
+      <h1>Chỉ định bài kiểm tra hàng tuần cho khóa học</h1>
       <Form layout="vertical">
-        <Form.Item label="Select Course">
+        <Form.Item label="Lựa chọn khóa học">
           <Select
             placeholder="Select a course"
             onChange={(value) => setSelectedCourse(value as number)}
@@ -168,7 +168,7 @@ const AssignWeeklyExamToCourse: React.FC = () => {
           </Select>
         </Form.Item>
         {selectedCourse && (
-          <Form.Item label="Select Week">
+          <Form.Item label="Lựa chọn tuần">
             <Select
               placeholder="Select a week"
               onChange={(value) => setSelectedWeek(value as number)}
@@ -182,7 +182,7 @@ const AssignWeeklyExamToCourse: React.FC = () => {
           </Form.Item>
         )}
         {selectedWeek && (
-          <Form.Item label="Select Exam">
+          <Form.Item label="Lựa chọn bài kiểm tra">
             <Select
               placeholder="Select an exam"
               onChange={(value) => setSelectedExam(value as number)}
@@ -198,7 +198,7 @@ const AssignWeeklyExamToCourse: React.FC = () => {
         {selectedExam && (
           <Form.Item>
             <Button type="primary" onClick={handleAssign}>
-              Save
+              Lưu
             </Button>
           </Form.Item>
         )}

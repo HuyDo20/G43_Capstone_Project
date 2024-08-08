@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-const VocabularyTestItem = ({ question, options = [], correctAnswer, onAnswerSelect, image, error, showResults, selectedAnswer, mode }) => {
+const VocabularyTestItem = ({ question, options = [], correctAnswer, onAnswerSelect, image, error, showResults, userAnsweredId, mode }) => {
   const [selectedLocalAnswer, setSelectedLocalAnswer] = useState(null);
 
   const handleAnswerClick = (optionId) => {
@@ -26,14 +26,13 @@ const VocabularyTestItem = ({ question, options = [], correctAnswer, onAnswerSel
           <div className="flex flex-col gap-2">
             {options.length > 0 ? (
               options.map((option, optionIndex) => {
-                const isSelected = selectedLocalAnswer === option.id || (showResults && selectedAnswer === option.id);
+                const isSelected = selectedLocalAnswer === option.id;
                 const isCorrect = showResults && option.id === correctAnswer;
+                const isUserAnswered = showResults && option.id === userAnsweredId;
                 const buttonClass = `p-4 text-lg border rounded-md transition-all duration-300 flex items-center ${
+                  isCorrect ? 'bg-green-500 text-white' :
+                  isUserAnswered ? 'bg-red-500 text-white' :
                   isSelected ? 'bg-blue-500 text-white' : 'bg-white text-black hover:bg-gray-200'
-                } ${
-                  showResults && isCorrect ? 'bg-green-500 text-white' : ''
-                } ${
-                  showResults && !isCorrect && selectedAnswer === option.id ? 'bg-red-500 text-white' : ''
                 }`;
 
                 return (
@@ -49,12 +48,12 @@ const VocabularyTestItem = ({ question, options = [], correctAnswer, onAnswerSel
                 );
               })
             ) : (
-              <div>No options available.</div>
+              <div>Không có lựa chọn nào</div>
             )}
           </div>
-          {showResults && selectedAnswer !== correctAnswer && (
-            <div className="text-red-500 mt-2">
-              Correct answer: {options.find(option => option.id === correctAnswer).content}
+          {showResults && userAnsweredId !== correctAnswer && (
+            <div className="text-green-500 mt-2">
+              Đáp án đúng: {options.find(option => option.id === correctAnswer).content}
             </div>
           )}
         </div>

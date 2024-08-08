@@ -45,10 +45,10 @@ export default function DaySchedule({ weekSelected, id = null }) {
 
   const handleClickExam = () => {
     window.location.href = `/${id}/${weekSelected.week_id}/${weeklyExamId}/weeklyExam`;
-  };
+    };
 
    const handleClickExamHistory = () => {
-    window.location.href = `/${id}/${weekSelected.week_id}/weeklyExamHistory`;
+    window.location.href = `/${id}/${weekSelected.week_id}/${weeklyExamId}/examsHistory`;
   };
 
 

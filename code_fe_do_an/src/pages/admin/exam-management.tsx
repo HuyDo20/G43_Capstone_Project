@@ -141,16 +141,6 @@ const ExamManagementPage: React.FC = () => {
 
   return (
     <>
-      <Button
-        type="primary"
-        icon={<AiOutlineFileAdd />}
-        onClick={() => {
-          navigate("/admin/course-exam-create");
-        }}
-        style={{ marginBottom: "8px" }}
-      >
-        Create Exam
-      </Button>
       <Table dataSource={exams} columns={columns} rowKey="exam_id" />
     </>
   );

@@ -25,5 +25,6 @@ module.exports = [
 	require("./video_option"),
 	require("./upload_file"),
 	require("./exam"),
-	require("./course_exam")
+	require("./course_exam"),
+	require("./exam_history")
 ];
