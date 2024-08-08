@@ -210,7 +210,8 @@ export default function WeeklyExam() {
                   examTitle={examData.examTitle} 
                   questions={examData.examData} 
                   mode="doing"
-                  onSubmit={handleExamSubmit}
+                    onSubmit={handleExamSubmit}
+                    score={0}
                 />
               ) : (
                 <div>Loading...</div>
