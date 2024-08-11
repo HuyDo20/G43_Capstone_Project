@@ -52,16 +52,16 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
 
-  const getBackgroundAccordionColor = (index) => {
+  const isCompletedDay = (index) => {
     if (!weekData || weekData.length === 0) {
-      return "bg-[#c6edc3]";
+      return false;
     }
 
     if (weekData[index]?.vocabulary?.percentage === 100 && weekData[index]?.grammar?.percentage === 100 &&
       weekData[index]?.video?.percentage === 100 && weekData[index]?.kanji?.percentage === 100) {
-      return "bg-[#e0f7fa]";
+      return true;
     }
-    return "bg-[#c6edc3]";
+    return false;
   };
 
   const getBackgroundColor = (percentage) => {
@@ -156,8 +156,15 @@ export default function DaySchedule({ weekSelected, id = null }) {
             key={index}
             onClick={() => setDaySelected(day)}
           >
-            <AccordionTrigger className={`${getBackgroundAccordionColor(index)} pl-12 pr-6`}>
-              Ngày {index + 1}: {day?.day_name}
+            <AccordionTrigger className='bg-[#c6edc3] pl-12 pr-6 flex items-center justify-between'>
+            <div className="flex items-center">
+            {isCompletedDay(index) && (
+            <Tooltip title="Learned">
+            <CheckCircleOutlined style={{ color: 'green', fontSize: '25px' }} />
+            </Tooltip>
+              )}
+            <span className='ml-2'>Ngày {index + 1}: {day?.day_name}</span>
+            </div>
             </AccordionTrigger>
 
             {dayData.vocabulary?.total !== 0 && (
