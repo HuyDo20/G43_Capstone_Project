@@ -58,9 +58,17 @@ const AdminLayout = ({ children }) => {
               <Link to="/admin/course-management/create">Create</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="5" icon={<NotificationOutlined />}>
+          <SubMenu key="sub2" icon={<NotificationOutlined />} title="Notification">
+            <Menu.Item key="5" icon={<SettingOutlined/>}>
+              <Link to="/admin/notification/manage">Manage</Link>
+            </Menu.Item>
+            <Menu.Item key="6" icon={<PlusOutlined/>}>
+              <Link to="/admin/notification/create">Create</Link>
+            </Menu.Item>
+          </SubMenu>
+          {/* <Menu.Item key="5" icon={<NotificationOutlined />}>
             <Link to="/admin/notification/list">Notification</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item
             key="logout"
             onClick={handleLogout}

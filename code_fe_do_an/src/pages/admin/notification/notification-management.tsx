@@ -1,7 +1,8 @@
 import { convertDateToString } from "@/helper";
-import { Button, DatePicker, Form, Input, Modal, notification, Pagination, Table, Typography } from "antd";
+import { Button, Modal, notification, Pagination, Popconfirm, Spin, Table, Typography } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import NotificationModifier from "./notification-modifier";
 
 export interface Notification {
   noti_id: number
@@ -15,16 +16,16 @@ export interface Notification {
   created_at: Date 
 }
 
-type NotiType = 'all'|'read'|'unread'
-type PushNotiType = 'success' | 'info' | 'warning' | 'error';
+export type NotiType = 'all'|'read'|'unread'|'allWithUnsent'
+export type PushNotiType = 'success' | 'info' | 'warning' | 'error';
 
-interface NofiFetchResponse {
+export interface NofiFetchResponse {
   current_page: number
   total_pages: number
   data: Notification[]
 }
 
-interface NotiFetchPayload {
+export interface NotiFetchPayload {
   type: NotiType
   source_id?: number
   target_id?: number
@@ -32,7 +33,7 @@ interface NotiFetchPayload {
   limit?: number
 }
 
-const initNoti: Notification = {
+export const initNoti: Notification = {
   noti_id: 0,
   title: "",
   content: "",
@@ -47,10 +48,10 @@ const initNoti: Notification = {
 export default function NotiManagementPage() {
 
   const [loading, setLoading] = useState(false)
-  const [openCreateDialog, setOpenCreateDialog] = useState(false)
+  const [openModifyNotiDialog, setOpenModifyNotiDialog] = useState(false)
 
   const [notifications, setNotifications] = useState<Notification[]>([])
-  const [newNotification, setNewNotification] = useState<Notification>(initNoti)
+  const [tmpNotification, setTmpNotification] = useState<Notification>(initNoti)
 
   const [activePage, setActivePage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(0)
@@ -78,41 +79,54 @@ export default function NotiManagementPage() {
       render: (text: string) => <span>{text}</span>,
     },
     {
-      title: "Noti date",
+      title: "Notify date",
       dataIndex: "noti_date",
       key: "noti_date",
+      width: '8%',
       render: (date: Date) => <span>{convertDateToString(date)}</span>,
     },
     {
       title: "Status",
       dataIndex: "noti_date",
       key: "noti_date",
-      render: (date: Date) => <span>{(date < new Date()) ? 'Sent' : 'Not send'}</span>,
+      width: '6%',
+      render: (date: Date) => <span>{(new Date(date) < new Date()) ? 'Sent' : 'Not send'}</span>,
     },
     {
       title: "Action",
       key: "action",
+      width: '12%',
       render: (_value: any, record: Notification) => {
         return (
-          <section>
-            <Button color="warning" className="mr-4">EDIT</Button>
-            <Button danger className="">DELETE</Button>
+          <section className={`${(new Date(record.noti_date) < new Date()) ? 'invisible' : 'visible'}`}>
+            <Button color="warning" className="mr-4 font-medium" onClick={() => openUpdateNoti(record)}>EDIT</Button>
+            <Popconfirm
+              title={`Delete notification`}
+              description={`Are you sure you want to delete this notification ?`}
+              onConfirm={() => deleteNoti(record.noti_id)}
+              okText="Delete"
+              cancelText="Cancel"
+              okButtonProps={{danger: true}}
+            >
+              <Button danger className="font-medium">DELETE</Button>
+            </Popconfirm>
           </section>
         );
       },
     },
   ];
 
+  // ==== WATCHERS ====
   useEffect(() => {
     fetchNoti()
   }, [])
 
   // ==== ASYNC FUNCTIONS ==== 
-  const fetchNoti = (type: NotiType = 'all', next_page: number = 1, limit: number = PAGE_LIMIT) => {
+  const fetchNoti = (type: NotiType = 'allWithUnsent', next_page: number = 1, limit: number = PAGE_LIMIT) => {
     setLoading(true)
     const fetchNotiPayload : NotiFetchPayload = {
       type,
-      // source_id: 1,
+      source_id: 1,
       next_page,
       limit
     }
@@ -139,16 +153,15 @@ export default function NotiManagementPage() {
         token = userDecode?.token;
       }
 
-      const createNotiPayload = { 
-        title: newNotification.title, 
-        content: newNotification.content, 
+      const createNotiPayload = {
+        noti_id: tmpNotification.noti_id,
+        title: tmpNotification.title, 
+        content: tmpNotification.content, 
         action: '', 
         target_id: 0, 
         source_id: 1,
-        noti_date: convertDateToString(newNotification.noti_date, true)
+        noti_date: convertDateToString(tmpNotification.noti_date, true)
       }
-
-      console.log({createNotiPayload});
       
       const request = await axios.post("/noti", createNotiPayload , {
         headers: {
@@ -156,12 +169,11 @@ export default function NotiManagementPage() {
         },
       });
       const response = request.data;
-      if (response.statusCode === 201) {
+      if ([201,200].includes(response.statusCode)) {
         pushScreenNoti(response.data.message, 'success')
         return true
       }
 
-      console.log('what is this?', response);
       return false
     } catch (error) {
       pushScreenNoti('Can not create new notification', 'error')
@@ -170,21 +182,42 @@ export default function NotiManagementPage() {
     }
   }
 
+  const deleteNoti = async (id: number) => {
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+      
+      const deleteNotiPayload = {
+        ids: [id],
+      }
+
+      const request = await axios.post("/noti/delete", deleteNotiPayload, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = request.data;
+      
+      if (response.statusCode === 200 && response.data.data) {
+        fetchNoti()
+
+        pushScreenNoti(response.data.message, 'success')
+        return true
+      }
+
+      return false
+    } catch (error) {
+      pushScreenNoti('Can not delete notification', 'error')
+      console.error('Can not delete notification', error);
+      return false
+    }
+  }
+
   // ==== LOGIC FUNCTIONS ====
-  const handleChangeNewNoti = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewNotification({ ...newNotification, [name]: value });
-  };
-
-  const handleChangeNotiDate = (dateString: string) => {
-    const notiDate = new Date(dateString)
-    setNewNotification({ ...newNotification, noti_date: notiDate})
-  }
-
-  const handleCreateNoti = () => {
-    setOpenCreateDialog(true);
-  }
-
   const handleSubmitCreateNoti = async () => {
 
     setLoading(true);
@@ -194,17 +227,24 @@ export default function NotiManagementPage() {
     if(isCreateNotiSuccess) {
       fetchNoti()
     }
+
     setLoading(false)
-    setOpenCreateDialog(false);
+    setTmpNotification(initNoti)
+    setOpenModifyNotiDialog(false);
   }
 
   const handleCancelCreateNoti = () => {
-    setNewNotification(initNoti);
-    setOpenCreateDialog(false);
+    setTmpNotification(initNoti);
+    setOpenModifyNotiDialog(false);
   }
 
   const handleChangePageNoti = (page: number, pageSize: number) => {
     fetchNoti('all', page, pageSize)
+  }
+
+  const openUpdateNoti = (noti : Notification) => {
+    setTmpNotification(noti)
+    setOpenModifyNotiDialog(true);
   }
 
   // ==== UTILITY FUNCTIONS ====
@@ -218,17 +258,13 @@ export default function NotiManagementPage() {
   return (
     <div className="notification-page h-full">
         {contextHolder}
+        <Spin
+          fullscreen
+          size="large"
+          spinning={loading}
+        />
         <Typography.Title level={2} className="text-center">Notification management</Typography.Title>
         <section className="notification-content h-full">
-            <div className="notication-content__action flex justify-end mb-3">
-                <Button 
-                  type="primary" 
-                  className=""
-                  onClick={handleCreateNoti}
-                >
-                  Create new notification
-                </Button>
-            </div>
             <Table 
               className="notication-content__list"
               dataSource={notifications}
@@ -244,45 +280,23 @@ export default function NotiManagementPage() {
             />
         </section>
         <Modal
-          open={openCreateDialog}
+          open={openModifyNotiDialog}
           onOk={handleSubmitCreateNoti}
           onCancel={handleCancelCreateNoti}
-          title="Create new notification"
+          title="Update notification"
           centered
           confirmLoading={loading}
           maskClosable={false}
           destroyOnClose={true}
-          okText="Create"
+          okText="Update"
         >
-          <Form layout="vertical" autoComplete="off">
-            <Form.Item label="Title">
-              <Input
-                value={newNotification.title}
-                disabled={loading}
-                onChange={handleChangeNewNoti}
-                name="title"
-              />
-            </Form.Item>
-
-            <Form.Item label="Content">
-            <Input
-                value={newNotification.content}
-                disabled={loading}
-                onChange={handleChangeNewNoti}
-                name="content"
-              />
-            </Form.Item>
-
-            <Form.Item label="Notify date" className="">
-              <DatePicker
-                showNow
-                disabled={loading}
-                onChange={(date: any, dateString: string) => handleChangeNotiDate(dateString)}
-                className="block"
-              />
-            </Form.Item>
-          </Form>
+          <NotificationModifier
+            loading={loading}
+            notification={tmpNotification}
+            handleChangeNoti={newNoti => setTmpNotification(newNoti)}
+          />
         </Modal>
+
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import CourseDetailPage from "@/pages/admin/course-detail";
 import CourseManagementPage from "@/pages/admin/course-management";
-import NotiManagementPage from "@/pages/admin/notification-management";
+import NotificationCreator from "@/pages/admin/notification/notification-creator";
+import NotiManagementPage from "@/pages/admin/notification/notification-management";
 import UserManagementPage from "@/pages/admin/user-management";
 
 export const adminRoutes = [
@@ -8,6 +9,7 @@ export const adminRoutes = [
   { path: "course-management", element: CourseManagementPage },
   { path: "course-management/manage", element: CourseManagementPage },
   { path: "course-management/create", element: CourseDetailPage },
-  { path: "notification/list", element: NotiManagementPage },
+  { path: "notification/manage", element: NotiManagementPage },
+  { path: "notification/create", element: NotificationCreator },
   { path: "course-management/:id", element: CourseDetailPage },
 ];
