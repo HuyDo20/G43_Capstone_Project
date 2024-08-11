@@ -161,7 +161,8 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
               <div className="congratulations">
                 <h2 className="text-2xl font-bold mb-4">Chúc mừng! Bạn đã vượt qua bài luyện tập!</h2>
                 <p className="text-lg">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Làm tốt lắm!</p>
-                <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
+                  <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
+                  <Button type="primary" onClick={handleRetry} className="ml-4">Luyện lại</Button>
               </div>
             ) : (
               <div className="try-again">

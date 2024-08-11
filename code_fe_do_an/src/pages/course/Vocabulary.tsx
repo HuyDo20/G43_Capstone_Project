@@ -35,6 +35,7 @@ export default function Vocabulary() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentDayVocabularyIds, setCurrentDayVocabularyIds] = useState([]);
   const [practicalData, setPracticalData] = useState([]);
+  const [isAllLearned, setIsAllLearned] = useState(false);
 
   const navigate = useNavigate();
 
@@ -124,6 +125,7 @@ export default function Vocabulary() {
   }, [reload]);
 
   const handleComplete = async () => {
+    if (isAllLearned) return;
     try {
       const userEncode = localStorage.getItem("user");
       const token = userEncode ? JSON.parse(userEncode)?.token : '';
@@ -220,6 +222,8 @@ export default function Vocabulary() {
     const isAllLearned = dayCurrent?.lessons
       ?.filter((lesson) => lesson.vocab_id !== undefined)
       ?.every((lesson) => isLearned(lesson.vocab_id));
+    
+    setIsAllLearned(isAllLearned);
 
     const handleSummaryClick = (index) => {
       setActiveIndex(index);
@@ -346,7 +350,7 @@ export default function Vocabulary() {
         >
           <HiOutlineChevronRight size={30} />
         </button>
-        <div className="summary-section block justify-center mt-4" style={{ display: isAllLearned ? 'none' : 'normal' }}>
+        <div className="summary-section block justify-center mt-4">
           {dayCurrent?.lessons
             ?.filter((item) => item.vocab_id)
             ?.map((_, index) => (
@@ -363,7 +367,7 @@ export default function Vocabulary() {
             ))}
         </div>
         {isAllLearned && (
-          <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg animate-bounce">
+          <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-4 rounded-lg shadow-lg animate-bounce"  onClick={handlePractice}>
             Đã hoàn thành
           </div>
         )}
