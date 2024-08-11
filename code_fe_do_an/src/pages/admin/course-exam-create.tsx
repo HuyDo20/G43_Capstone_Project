@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AiOutlinePlus } from 'react-icons/ai';
 import styled from 'styled-components';
-import MultiChoiceQuestionCreating from "@/components/exam/MultiChoiceQuestionCreating"
+import MultiChoiceQuestionCreating from "@/components/exam/MultiChoiceQuestionCreating";
 import ReadingQuestionCreating from '@/components/exam/ReadingQuestionCreating';
 import ListeningQuestionCreating from '@/components/exam/ListeningQuestionCreating';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -82,11 +82,12 @@ const defaultListeningQuestion: ListeningQuestionType = {
   confirmed: false,
 };
 
+
 const CourseExamCreate: React.FC = () => {
   const [examName, setExamName] = useState('');
-  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState<MultiChoiceQuestionType[]>([]);
-  const [readingQuestions, setReadingQuestions] = useState<ReadingQuestionType[]>([]);
-  const [listeningQuestions, setListeningQuestions] = useState<ListeningQuestionType[]>([]);
+  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState([]);
+  const [readingQuestions, setReadingQuestions] = useState([]);
+  const [listeningQuestions, setListeningQuestions] = useState([]);
   const [selectedType, setSelectedType] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
   const [reload, setReload] = useState(false);
@@ -105,7 +106,7 @@ const CourseExamCreate: React.FC = () => {
       return;
     }
 
-    let newQuestion: Question;
+    let newQuestion;
 
     if (selectedType === 'Multi-choice') {
       newQuestion = { ...defaultMultiChoiceQuestion, id: generateRandomId() };
@@ -162,7 +163,7 @@ const CourseExamCreate: React.FC = () => {
         },
       };
 
-      const request = await axios.post(`/exams`, {account_id:accountId, exam_data:examData }, {
+      const request = await axios.post(`/exams`, { account_id: accountId, exam_data: examData }, {
         headers: {
           Authorization: token,
         },
@@ -178,7 +179,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const handleDragEnd = (result: DropResult, questions: Question[], setQuestions: React.Dispatch<React.SetStateAction<Question[]>>) => {
+  const handleDragEnd = (result: DropResult, questions, setQuestions) => {
     if (!result.destination) return;
     const items = Array.from(questions);
     const [reorderedItem] = items.splice(result.source.index, 1);
@@ -186,16 +187,7 @@ const CourseExamCreate: React.FC = () => {
     setQuestions(items);
   };
 
-  const handleConfirmQuestion = (
-    type: string,
-    id: number,
-    questionContent: string,
-    options: any[],
-    correctOptionId: number | null,
-    imageUrl: string | null,
-    subQuestions?: any[],
-    audioUrl?: string | null
-  ) => {
+  const handleConfirmQuestion = (type: string, id: number, questionContent: string, options: any[], correctOptionId: number | null, imageUrl: string | null, subQuestions?: any[], audioUrl?: string | null) => {
     if (type === 'Multi-choice') {
       updateOrCreateMultiChoiceQuestion(id, questionContent, options, correctOptionId, imageUrl);
     } else if (type === 'Reading') {
@@ -207,13 +199,7 @@ const CourseExamCreate: React.FC = () => {
     setIsEditingQuestion(false);
   };
 
-  const updateOrCreateMultiChoiceQuestion = (
-    id: number,
-    questionContent: string,
-    options: any[],
-    correctOptionId: number | null,
-    imageUrl: string | null
-  ) => {
+  const updateOrCreateMultiChoiceQuestion = (id: number, questionContent: string, options: any[], correctOptionId: number | null, imageUrl: string | null) => {
     const questionExists = multiChoiceQuestions.some((q) => q.id === id);
     if (questionExists) {
       setMultiChoiceQuestions((prevQuestions) =>
@@ -233,12 +219,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const updateOrCreateReadingQuestion = (
-    id: number,
-    content: string,
-    subQuestions: any[],
-    imageUrl: string | null
-  ) => {
+  const updateOrCreateReadingQuestion = (id: number, content: string, subQuestions: any[], imageUrl: string | null) => {
     const questionExists = readingQuestions.some((q) => q.id === id);
     if (questionExists) {
       setReadingQuestions((prevQuestions) =>
@@ -257,11 +238,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const updateOrCreateListeningQuestion = (
-    id: number,
-    subQuestions: any[],
-    audioUrl: string | null
-  ) => {
+  const updateOrCreateListeningQuestion = (id: number, subQuestions: any[], audioUrl: string | null) => {
     const questionExists = listeningQuestions.some((q) => q.id === id);
     if (questionExists) {
       setListeningQuestions((prevQuestions) =>
@@ -301,7 +278,19 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const renderQuestionsByType = (type: string, questions: Question[], setQuestions: React.Dispatch<React.SetStateAction<Question[]>>) => (
+  const handleCancelQuestion = () => {
+    if (selectedType === 'Multi-choice') {
+      setMultiChoiceQuestions(multiChoiceQuestions.filter((q) => q.id !== editingQuestionId));
+    } else if (selectedType === 'Reading') {
+      setReadingQuestions(readingQuestions.filter((q) => q.id !== editingQuestionId));
+    } else if (selectedType === 'Listening') {
+      setListeningQuestions(listeningQuestions.filter((q) => q.id !== editingQuestionId));
+    }
+    setEditingQuestionId(null);
+    setIsEditingQuestion(false);
+  };
+
+  const renderQuestionsByType = (type: string, questions, setQuestions) => (
     <Droppable droppableId={type} key={type}>
       {(provided) => (
         <QuestionSection ref={provided.innerRef} {...provided.droppableProps}>
@@ -318,6 +307,7 @@ const CourseExamCreate: React.FC = () => {
                         handleConfirmQuestion(question.type, id, content, options, correctOptionId, imageUrl)
                       }
                       onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
                       isConfirmed={question.confirmed}
                       isEditing={editingQuestionId === question.id}
                     />
@@ -329,6 +319,7 @@ const CourseExamCreate: React.FC = () => {
                         handleConfirmQuestion(question.type, id, content, [], null, imageUrl, subQuestions)
                       }
                       onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
                       isConfirmed={question.confirmed}
                       isEditing={editingQuestionId === question.id}
                     />
@@ -340,6 +331,7 @@ const CourseExamCreate: React.FC = () => {
                         handleConfirmQuestion(question.type, id, '', [], null, null, subQuestions, audioUrl)
                       }
                       onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
                       isConfirmed={question.confirmed}
                       isEditing={editingQuestionId === question.id}
                     />
@@ -380,10 +372,29 @@ const CourseExamCreate: React.FC = () => {
         Add Question
       </StyledButton>
       <Sidebar>
-        <Button onClick={() => setSelectedType('Multi-choice')} disabled={isEditingQuestion}>Multi-choice</Button>
-        <Button onClick={() => setSelectedType('Reading')} disabled={isEditingQuestion}>Reading</Button>
-        <Button onClick={() => setSelectedType('Listening')} disabled={isEditingQuestion}>Listening</Button>
-      </Sidebar>
+  <StyledButton 
+    onClick={() => setSelectedType('Multi-choice')} 
+    disabled={isEditingQuestion}
+    selected={selectedType === 'Multi-choice'}
+  >
+    Multi-choice
+  </StyledButton>
+  <StyledButton 
+    onClick={() => setSelectedType('Reading')} 
+    disabled={isEditingQuestion}
+    selected={selectedType === 'Reading'}
+  >
+    Reading
+  </StyledButton>
+  <StyledButton 
+    onClick={() => setSelectedType('Listening')} 
+    disabled={isEditingQuestion}
+    selected={selectedType === 'Listening'}
+  >
+    Listening
+  </StyledButton>
+</Sidebar>
+
       <StyledButton type="primary" onClick={handleSaveExam}>
         Complete
       </StyledButton>
@@ -407,9 +418,18 @@ const Sidebar = styled.div`
   }
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<{ selected: boolean }>`
   display: block;
-  margin: 10px 0;
+  margin-bottom: 10px;
+  background-color: ${({ selected }) => (selected ? '#6495ed' : '#f0f0f0')};
+  color: ${({ selected }) => (selected ? '#fff' : '#000')};
+  border-color: ${({ selected }) => (selected ? '#6495ed' : '#d9d9d9')};
+
+  &:hover {
+    background-color: ${({ selected }) => (selected ? '#4169e1' : '#e6e6e6')};
+    color: ${({ selected }) => (selected ? '#fff' : '#000')};
+    border-color: ${({ selected }) => (selected ? '#4169e1' : '#d9d9d9')};
+  }
 `;
 
 const QuestionSection = styled.div`
@@ -434,3 +454,4 @@ const QuestionSection = styled.div`
     margin-bottom: 10px;
   }
 `;
+
