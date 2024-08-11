@@ -25,6 +25,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
         return;
       }
       setPracticalData(practiceData);
+      console.log(practiceData);
       setPassThreshold(practiceData.length > 1 ? Math.ceil(practiceData.length * 0.7) : 1);
     };
 
@@ -183,6 +184,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
                 <div className="summary-question font-bold">
                   {index + 1}. {item.question}
                 </div>
+                {item.image && (<img src={item.image} width={50} height={50} alt='questionImage'/>)}
                 <div className="summary-result">
                   {userAnswers[index] === true ? (
                     <span className="text-green-500">Đúng</span>

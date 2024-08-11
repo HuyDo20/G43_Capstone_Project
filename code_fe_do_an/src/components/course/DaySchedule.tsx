@@ -89,7 +89,6 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
 
-
   const handleFetchDetailCourseProgressByWeekId = async (weekId) => {
     let token = "";
     let accountId;

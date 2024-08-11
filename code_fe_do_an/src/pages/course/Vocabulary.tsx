@@ -46,8 +46,8 @@ export default function Vocabulary() {
     setIsModalVisible(false);
   };
 
-    const handleSubmitClick = () => {
-      setIsModalVisible(false);
+  const handleSubmitClick = () => {
+    setIsModalVisible(false);
   }
 
   useEffect(() => {
@@ -84,14 +84,14 @@ export default function Vocabulary() {
         }
 
         const vocabularyIds = _dayCurrent?.lessons
-        ?.filter((lesson) => lesson.vocab_id !== undefined)
-        ?.map((lesson) => lesson.vocab_id);
+          ?.filter((lesson) => lesson.vocab_id !== undefined)
+          ?.map((lesson) => lesson.vocab_id);
 
         setDayCurrent(_dayCurrent);
         setCurrentDayVocabularyIds(vocabularyIds);
       }
-    }; 
-    
+    };
+
     const fetchLearnedVocab = async () => {
       try {
         let token = "";
@@ -112,7 +112,7 @@ export default function Vocabulary() {
           setLearnedVocab(new Set(learnedVocabIds));
         }
       } catch (error) {
-          navigate('/error', { state: { message: error} });
+        navigate('/error', { state: { message: error } });
       }
     };
 
@@ -123,27 +123,27 @@ export default function Vocabulary() {
     }
   }, [reload]);
 
-      const handleComplete = async () => {
-      try {
-        const userEncode = localStorage.getItem("user");
-        const token = userEncode ? JSON.parse(userEncode)?.token : '';
-        await axios.post('/update-all-vocabulary-learned', {
-          accountId: JSON.parse(userEncode)?.account_id,
-          vocabularyIds: currentDayVocabularyIds,
-        }, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setReload(true);
-      } catch (error) {
-        console.error("Error update vocabulary process", error);
-         notification.error({
+  const handleComplete = async () => {
+    try {
+      const userEncode = localStorage.getItem("user");
+      const token = userEncode ? JSON.parse(userEncode)?.token : '';
+      await axios.post('/update-all-vocabulary-learned', {
+        accountId: JSON.parse(userEncode)?.account_id,
+        vocabularyIds: currentDayVocabularyIds,
+      }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setReload(true);
+    } catch (error) {
+      console.error("Error update vocabulary process", error);
+      notification.error({
         message: "Failed to update kanji learned",
         description: `Error: ${error}`,
       });
-      }
-    };
+    }
+  };
 
   const handlePlayAudio = (linkAudio) => {
     const audio = new Audio(linkAudio);
@@ -183,8 +183,8 @@ export default function Vocabulary() {
 
     const handlePractice = async () => {
       await fetchPracticalData();
-      if (practicalData) {        
-          setIsModalVisible(true);
+      if (practicalData) {
+        setIsModalVisible(true);
       }
     };
 
@@ -194,7 +194,7 @@ export default function Vocabulary() {
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
         const request = await axios.post('/generate-vocabulary-practice-data', {
           accountId: JSON.parse(userEncode)?.account_id,
-           vocabularyIds: currentDayVocabularyIds,
+          vocabularyIds: currentDayVocabularyIds,
         }, {
           headers: {
             Authorization: token,
@@ -222,11 +222,11 @@ export default function Vocabulary() {
       ?.every((lesson) => isLearned(lesson.vocab_id));
 
     const handleSummaryClick = (index) => {
-        setActiveIndex(index);
-        const targetItem = itemRefs.current[index];
-        if (targetItem) {
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-        }
+      setActiveIndex(index);
+      const targetItem = itemRefs.current[index];
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
     };
 
     const handleCarouselPrevious = () => {
@@ -321,7 +321,7 @@ export default function Vocabulary() {
                             </div>
                             <div>{lesson.vocab_meaning}</div>
                           </div>
-  
+
                           <div className="flex flex-col items-center gap-5 pt-10 basis-2/4 ">
                             <div className="flex flex-col items-center justify-center gap-3">
                               <div className="bg-[#b6da9f] w-[140px] h-[40px] p-2 text-center rounded-md shadow-sm font-semibold">
@@ -354,8 +354,8 @@ export default function Vocabulary() {
                 key={index}
                 onClick={() => handleSummaryClick(index)}
                 className={`w-6 h-6 m-1 rounded-full flex items-center justify-center text-white cursor-pointer ${index === activeIndex
-                    ? 'bg-blue-500'
-                    :'bg-green-500'
+                  ? 'bg-blue-500'
+                  : 'bg-green-500'
                   }`}
               >
                 {index + 1}
@@ -377,7 +377,7 @@ export default function Vocabulary() {
               Làm bài luyện tập
             </button>
           </div>
-        )}  
+        )}
       </div>
     );
   };
@@ -466,7 +466,7 @@ export default function Vocabulary() {
                 />
               </div>
             </div>
-     
+
           </div>
         </div>
       </div>

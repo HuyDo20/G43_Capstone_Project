@@ -52,12 +52,13 @@ const AdminLayout = ({ children }) => {
             <Link to="/admin/user-management">User</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<BookOutlined />} title="Course">
-            <Menu.Item key="3" icon={<PlusOutlined />}>
+            <Menu.Item key="4" icon={<PlusOutlined />}>
+            <Link to="/admin/course-management/create">Create</Link>
+            </Menu.Item>
+            <Menu.Item key="3" icon={<SettingOutlined />}>
               <Link to="/admin/course-management/manage">Manage</Link>
             </Menu.Item>
-            <Menu.Item key="4" icon={<SettingOutlined />}>
-              <Link to="/admin/course-management/create">Create</Link>
-            </Menu.Item>
+
           </SubMenu>
              <SubMenu key="sub2" icon={<FileTextOutlined />} title="Exam">
             <Menu.Item key="5" icon={<PlusOutlined />}>
