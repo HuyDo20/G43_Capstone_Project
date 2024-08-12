@@ -91,11 +91,18 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
   };
 
   const beforeUpload = (file: RcFile) => {
-    if (fileList.length >= 1) {
-      alert('You can only upload one audio file.');
-      return false;
-    }
-    return true;
+  const isMp3 = file.type === 'audio/mp3' || file.name.endsWith('.mp3');
+  if (!isMp3) {
+    message.error('Bạn chỉ có thể chọn tệp có định dạng .mp3');
+    return false;
+  }
+
+  if (fileList.length >= 1) {
+    message.error('Bạn chỉ có thể tải lên một tệp.');
+    return false;
+  }
+
+  return true;
   };
 
   const handleRemoveAudio = () => {

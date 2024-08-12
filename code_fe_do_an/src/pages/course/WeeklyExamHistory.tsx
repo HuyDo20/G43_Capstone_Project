@@ -67,7 +67,9 @@ export default function WeeklyExamHistory() {
         console.log(response);
         if (response.statusCode === 200) {
           const data = response.data;
-          setExamHistory(data.data);
+          const tempHistory = data.data;
+           tempHistory.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+          setExamHistory(tempHistory);
           setLoading(false);
         }
       } catch (error) {
@@ -83,6 +85,8 @@ export default function WeeklyExamHistory() {
   const handleLearningByWeek = () => {
     navigate(`/learningByWeek/${id}`);
   };
+
+
 
   return (
     <div>
@@ -139,43 +143,58 @@ export default function WeeklyExamHistory() {
                 </div>
               ) : (
                 <>
-                  {/* Section 1: Latest Exam History */}
-                  {examHistory.length > 0 && (
-                    <div>
-                      <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
-                      <ExamHistoryDetail exam={examHistory[0]} />
-                    </div>
-                  )}
-                  {/* Section 2: Older Exam History */}
-                  {examHistory.length > 1 && (
-                    <div>
-                      <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
-                      {examHistory.slice(1).map((exam, index) => (
-                        <ExamHistoryItem key={index} exam={exam} />
-                      ))}
-                    </div>
-                  )}
-                  {/* Section 3: Column Chart */}
-                  <div className="mt-8">
-                    <h2 className="text-2xl font-semibold mb-4">Lịch sử kiểm tra</h2>
-                    <BarChart
-                      width={400}
-                      height={400}
-                      data={examHistory.map(exam => ({
-                        name: exam.examTitle,
-                        score: exam.score,
-                        date: new Date(exam.createdTime).toLocaleDateString(),
-                      }))}
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3"/>
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="score" fill="#82ca9d" />
-                    </BarChart>
-                  </div>
+         {/* Main Container */}
+<div className="mt-8 flex flex-col space-y-6">
+  {/* Top Row: Section 1 and Section 3 Horizontally Aligned */}
+  <div className="flex flex-row space-x-8">
+    {/* Section 1: Latest Exam History */}
+    <div className="w-1/2">
+      {examHistory.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
+          <ExamHistoryDetail exam={examHistory[0]} />
+        </div>
+      )}
+    </div>
+    
+    {/* Section 3: Column Chart */}
+   <div className="w-1/2">
+  <h2 className="text-2xl font-semibold mb-10">Lịch sử kiểm tra</h2>
+  <BarChart
+    width={200}
+    height={400}
+    data={examHistory.map(exam => ({
+      date: new Date(exam.createdTime).toLocaleDateString(),  // Use date as the key
+      score: exam.score,
+    }))}
+    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+  >
+    <CartesianGrid strokeDasharray="5 5" />
+    <XAxis dataKey="date" />  {/* Display date on the X-axis */}
+    <YAxis />
+    <Tooltip formatter={(value, name, props) => [`Score: ${value}`, `Date: ${props.payload.date}`]} /> {/* Tooltip shows date and score */}
+    <Legend />
+    <Bar dataKey="score" fill="#82ca9d" />
+  </BarChart>
+</div>
+
+  </div>
+
+  {/* Bottom Row: Section 2 Full Width Below */}
+  <div className="flex flex-col w-full">
+    {examHistory.length > 1 && (
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
+        <div className="overflow-y-auto max-h-[800px]">
+          {examHistory.slice(1).map((exam, index) => (
+            <ExamHistoryItem key={index} exam={exam} />
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
                 </>
               )}
             </div>
