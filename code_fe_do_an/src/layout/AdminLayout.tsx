@@ -7,6 +7,7 @@ import {
   PlusOutlined,
   SettingOutlined,
   UserOutlined,
+  NotificationOutlined,
   FileTextOutlined,
   AppstoreAddOutlined// Import the new icon for exam management
 } from "@ant-design/icons";
@@ -70,6 +71,15 @@ const AdminLayout = ({ children }) => {
              <Menu.Item key="7" icon={<AppstoreAddOutlined />}>
             <Link to="/admin/exam-management/assign">Assign Exam to Course</Link>
           </Menu.Item>
+          </SubMenu>
+
+          <SubMenu key="sub3" icon={<NotificationOutlined />} title="Notification">
+            <Menu.Item key="8" icon={<PlusOutlined/>}>
+              <Link to="/admin/notification/create">Create</Link>
+            </Menu.Item>
+            <Menu.Item key="9" icon={<SettingOutlined/>}>
+              <Link to="/admin/notification/manage">Manage</Link>
+            </Menu.Item>
           </SubMenu>
           
           <Menu.Item

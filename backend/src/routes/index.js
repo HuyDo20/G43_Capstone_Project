@@ -26,5 +26,6 @@ module.exports = [
 	require("./upload_file"),
 	require("./exam"),
 	require("./course_exam"),
-	require("./exam_history")
+	require("./exam_history"),
+	require("./notification"),
 ];
