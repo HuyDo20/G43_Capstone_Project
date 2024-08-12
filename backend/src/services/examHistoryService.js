@@ -21,6 +21,8 @@ async function getAllExamHistoriesByExamIdAndAccountId(examId, accountId) {
   return examHistories.map(examHistory => {
     const content = JSON.parse(examHistory.content);
     return {
+      examHistoryId: examHistory.exam_history_id,
+      examId:examHistory.id,
       examTitle: content.examTitle,
       createdTime: examHistory.created_time,
       multiChoice: content.examData.multiChoiceQuestions.reduce((acc, question) => {

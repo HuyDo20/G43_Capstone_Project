@@ -137,7 +137,7 @@ export default function WeeklyExam() {
       if (response.statusCode === 200) {
         const { content, score, examHistoryId } = response.data.data;
         if (content && examHistoryId) {
-          message.success(`Exam submitted successfully! Your score is ${score}`);
+          message.success(`Nộp bài thành công! Điểm của bạn là ${score}`);
           navigate(`/weeklyExam/${id}/${week_id}/${examHistoryId}/reviewing`);
         }
       }
@@ -214,7 +214,9 @@ export default function WeeklyExam() {
                     score={0}
                 />
               ) : (
-                <div>Loading...</div>
+                <div className="flex justify-center items-center h-full">
+                  <Spin size="large" />
+                </div>
               )}
             </div>
           </div>
