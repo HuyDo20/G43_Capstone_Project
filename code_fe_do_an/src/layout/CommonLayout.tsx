@@ -8,7 +8,8 @@ import {
   SettingOutlined,
   UserOutlined,
   FileTextOutlined,
-  AppstoreAddOutlined// Import the new icon for exam management
+  AppstoreAddOutlined,
+  NotificationOutlined// Import the new icon for exam management
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useState, useEffect } from "react";
@@ -62,9 +63,21 @@ const CommonLayout = ({ children }) => {
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           {/* admin - user management */}
           {role === '1' && (
-            <Menu.Item key="1" icon={<UserOutlined />}>
+            <>
+              <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/admin/user-management">Quản lý người dùng</Link>
-            </Menu.Item>)}
+              </Menu.Item>
+                  <SubMenu key="sub3" icon={<NotificationOutlined />} title="Notification">
+            <Menu.Item key="8" icon={<PlusOutlined/>}>
+              <Link to="/admin/notification/create">Create</Link>
+            </Menu.Item>
+            <Menu.Item key="9" icon={<SettingOutlined/>}>
+              <Link to="/admin/notification/manage">Manage</Link>
+            </Menu.Item>
+          </SubMenu>
+            </>
+            
+          )}
           
           {/* content manager - course manager */}
           {role === '2' && (
