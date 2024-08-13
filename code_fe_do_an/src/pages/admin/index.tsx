@@ -1,4 +1,4 @@
-import AdminLayout from "@/layout/AdminLayout";
+import AdminLayout from "@/layout/CommonLayout";
 import { adminRoutes } from "@/router";
 import { Navigate, Route, Routes } from "react-router-dom";
 

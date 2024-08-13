@@ -34,6 +34,8 @@ const contentStyle = {
 const content = <div style={contentStyle} />;
 
 const AdminRoutes = lazy(() => import("@/pages/admin/"));
+const ContentCreatorRoutes = lazy(() => import("@/pages/contentCreator/"));
+const ContentManagerRoutes = lazy(() => import("@/pages/contentManager/"));
 
 const SpinnerComponent = (
   <Flex
@@ -59,10 +61,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
-            <Route
-              path="/getAuthenticationCode"
-              element={<GetAuthenticationCode />}
-            />
+            <Route path="/getAuthenticationCode" element={<GetAuthenticationCode />}/>
             <Route path="/getNewPassword" element={<ProtectedRoute><GetNewPassword /></ProtectedRoute>} />
             <Route path="/getNewPWSuccess" element={<GetNewPWSuccess />} />
             <Route path="/userProfile" element={<UserProfile />} />
@@ -74,10 +73,7 @@ function App() {
             <Route path="/security" element={<Security />} />
             <Route path="/policy" element={<Policy />} />
             <Route path="/learningByWeek/:id" element={<LearningByWeek />} />
-            <Route
-              path="/:id/:week_id/:day_id/vocabulary"
-              element={<Vocabulary />}
-            />
+            <Route path="/:id/:week_id/:day_id/vocabulary" element={<Vocabulary />}/>
             <Route path="/:id/:week_id/:day_id/kanji" element={<Kanji />} />
             <Route path="/:id/:week_id/:day_id/grammar" element={<Grammar />} />
             <Route path="/:id/:week_id/:day_id/video" element={<Video />} />
@@ -87,14 +83,10 @@ function App() {
             <Route path="/:id/:week_id/:weekly_exam_id/examsHistory" element={<WeeklyExamHistory />} /> 
             
             <Route path="/admin/*" element={<AdminRoutes />} />
-             <Route
-             path="/error"
-             element={<ErrorPage />}
-              />
-              <Route
-               path="*"
-              element={<ErrorPage />}
-               />
+            <Route path="/contentCreator/*" element={<ContentCreatorRoutes />} />
+            <Route path="/contentManager/*" element={<ContentManagerRoutes />} />
+            <Route path="/error" element={<ErrorPage />}/>
+            <Route path="*" element={<ErrorPage />}/>
           </Routes>
         </Suspense>
       </AuthProvider>

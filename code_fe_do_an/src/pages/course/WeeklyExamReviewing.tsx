@@ -18,8 +18,8 @@ import axios from 'axios';
 export default function WeeklyExamReviewing() {
   const [courseData, setCourseData] = useState([]);
   const [weekSelected, setWeekSelected] = useState({});
-    const [examData, setExamData] = useState(null);
-    const [score, setScore] = useState(0);
+  const [examData, setExamData] = useState(null);
+  const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const { handleFetch } = useAuth();
   const { id, week_id, examHistoryId } = useParams();
@@ -48,9 +48,7 @@ export default function WeeklyExamReviewing() {
           const userDecode = JSON.parse(userEncode);
           token = userDecode?.token;
         }
-
         const url = `/get-exam-history-by-id/${examHistoryId}`;
-
         const request = await axios.get(url, {
           headers: {
             Authorization: token,
