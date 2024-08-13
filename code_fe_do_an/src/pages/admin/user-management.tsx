@@ -281,23 +281,23 @@ const UserManagementPage: React.FC = () => {
       ),
     },
     {
-      title: "User Name",
+      title: "Tên người dùng",
       dataIndex: "full_name",
       key: "full_name",
       render: (text: string) => <p style={{ fontWeight: "bold" }}>{text}</p>,
     },
     {
-      title: "Email Address",
+      title: "Địa chỉ Email",
       dataIndex: "email",
       key: "email",
     },
     {
-      title: "Phone Number",
+      title: "SĐT",
       dataIndex: "phone_number",
       key: "phone_number",
     },
     {
-      title: "Role",
+      title: "Vị trí",
       dataIndex: "role_id",
       key: "role_id",
       render: (_: any, user: User) => {
@@ -347,7 +347,7 @@ const UserManagementPage: React.FC = () => {
       },
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       key: "status_id",
       render: (_: any, user: User) => {
         const { status_id, account_id } = user;
@@ -401,12 +401,12 @@ const UserManagementPage: React.FC = () => {
       },
     },
     {
-      title: "DOB",
+      title: "Sinh nhật",
       dataIndex: "dob",
       key: "dob",
     },
     {
-      title: "Point",
+      title: "Điểm",
       dataIndex: "point",
       key: "point",
     },
@@ -480,7 +480,7 @@ const UserManagementPage: React.FC = () => {
         type="primary"
         style={{ marginBottom: "1%" }}
       >
-        Create User
+       Tạo người dùng mới
       </Button>
       <Table
         loading={reload}
