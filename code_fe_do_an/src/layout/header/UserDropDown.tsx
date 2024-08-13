@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hook/AuthContext";
-import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { NotificationArea } from "./NotificationArea";
 export function UserDropDown() {
   const auth = useAuth();
   const {handleLogout} = auth
@@ -20,7 +20,7 @@ export function UserDropDown() {
   if(window.innerWidth > 1000)
   return (
     <div className="flex gap-5">
-      <FaBell className="size-9 text-[#7db660]" />
+      <NotificationArea userId={auth.user.account_id}/>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
@@ -40,7 +40,7 @@ export function UserDropDown() {
 if(window.innerWidth <= 1000 && window.innerWidth > 750)
     return (
       <div className="flex items-center ">
-        <FaBell className="size-5 text-[#7db660]" />
+        <NotificationArea userId={auth.user.account_id}/>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="start-2 size-8">
@@ -64,7 +64,7 @@ if(window.innerWidth <= 1000 && window.innerWidth > 750)
   if(window.innerWidth <= 750)
         return (
           <div className="flex items-center ">
-            <FaBell className="size-10 mr-3 text-[#7db660]" />
+            <NotificationArea userId={auth.user.account_id}/>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className="mr-5 end-1 size-10">

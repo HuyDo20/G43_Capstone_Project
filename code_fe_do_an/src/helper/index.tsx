@@ -4,7 +4,6 @@ function isEmptyObj(obj: {}) {
 
 function convertDateToString(date: Date, isInputDateValue?: boolean) {
   // Define options for formatting the date
-  console.log(date);
   const dateObj = new Date(date);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -19,7 +18,6 @@ function convertDateToString(date: Date, isInputDateValue?: boolean) {
   // Log the locale-specific string with options to the console
 
   if (isInputDateValue) {
-    console.log(localeStringWithOptions.split("/").reverse().join("-") );
     return localeStringWithOptions.split("/").reverse().join("-");
   }
   return localeStringWithOptions;
