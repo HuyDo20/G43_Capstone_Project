@@ -22,7 +22,6 @@ class ExamController {
 
   async getAllExams(req, res) {
     try {
-      console.log("get all exam");
       const exams = await getAllExams();
       return ok(res, exams);
     } catch (err) {
