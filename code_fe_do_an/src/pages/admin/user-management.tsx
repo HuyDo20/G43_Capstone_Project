@@ -166,6 +166,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           <Select
             onChange={(value) => setUserData({ ...userData, status_id: value})}
             value={userData.status_id}
+            
           >
             <Select.Option value={2}>Hoạt động</Select.Option>
             <Select.Option value={3}>Không hoạt động</Select.Option>

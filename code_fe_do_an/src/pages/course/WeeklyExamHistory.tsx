@@ -184,15 +184,15 @@ export default function WeeklyExamHistory() {
     
          {/* Section 3: Column Chart */}
        <div className="w-1/2">
-      <h2 className="text-2xl font-semibold mb-10">Lịch sử kiểm tra</h2>
+      <h2 className="text-2xl font-semibold mb-5">Lịch sử kiểm tra</h2>
       <BarChart
-        width={200}
+        width={400}
         height={400}
         data={examHistory.map(exam => ({
           date: new Date(exam.createdTime).toLocaleDateString(),  // Use date as the key
           score: exam.score,
          }))}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 2, left: 25, bottom: 5 }}
            >
       <CartesianGrid strokeDasharray="5 5" />
       <XAxis dataKey="date" />  {/* Display date on the X-axis */}

@@ -33,7 +33,7 @@ const CommonLayout = ({ children }) => {
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
           // setRole(userDecode?.role_id.toString());
-            setRole("1");
+            setRole("3");
           
     }
   }, [auth])
@@ -67,12 +67,12 @@ const CommonLayout = ({ children }) => {
               <Menu.Item key="1" icon={<UserOutlined />}>
             <Link to="/admin/user-management">Quản lý người dùng</Link>
               </Menu.Item>
-                  <SubMenu key="sub3" icon={<NotificationOutlined />} title="Notification">
+                  <SubMenu key="sub3" icon={<NotificationOutlined />} title="Thông báo">
             <Menu.Item key="8" icon={<PlusOutlined/>}>
-              <Link to="/admin/notification/create">Create</Link>
+              <Link to="/admin/notification/create">Tạo mới</Link>
             </Menu.Item>
             <Menu.Item key="9" icon={<SettingOutlined/>}>
-              <Link to="/admin/notification/manage">Manage</Link>
+              <Link to="/admin/notification/manage">Quản lý</Link>
             </Menu.Item>
           </SubMenu>
             </>

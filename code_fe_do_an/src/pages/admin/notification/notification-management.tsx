@@ -67,33 +67,33 @@ export default function NotiManagementPage() {
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: "Title",
+      title: "Tiêu đề",
       dataIndex: "title",
       key: "title",
       render: (text: string) => <span>{text}</span>,
     },
     {
-      title: "Content",
+      title: "Nội dung",
       dataIndex: "content",
       key: "content",
       render: (text: string) => <span>{text}</span>,
     },
     {
-      title: "Notify date",
+      title: "Ngày thông báo",
       dataIndex: "noti_date",
       key: "noti_date",
       width: '8%',
       render: (date: Date) => <span>{convertDateToString(date)}</span>,
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "noti_date",
       key: "noti_date",
       width: '6%',
       render: (date: Date) => <span>{(new Date(date) < new Date()) ? 'Sent' : 'Not send'}</span>,
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       width: '12%',
       render: (_value: any, record: Notification) => {
@@ -263,7 +263,7 @@ export default function NotiManagementPage() {
           size="large"
           spinning={loading}
         />
-        <Typography.Title level={2} className="text-center">Notification management</Typography.Title>
+        <Typography.Title level={2} className="text-center">Quản lý thông báo</Typography.Title>
         <section className="notification-content h-full">
             <Table 
               className="notication-content__list"
