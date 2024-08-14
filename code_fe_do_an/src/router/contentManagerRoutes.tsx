@@ -1,5 +1,5 @@
-import CourseDetailPage from "@/pages/contentCreator/course-detail";
-import CourseManagementPage from "@/pages/contentCreator/course-management";
+import CourseDetailPage from "@/pages/contentManager/course-detail";
+import CourseManagementPage from "@/pages/contentManager/course-management";
 
 export const contentManagerRoutes = [
   { path: "course-management", element: CourseManagementPage },

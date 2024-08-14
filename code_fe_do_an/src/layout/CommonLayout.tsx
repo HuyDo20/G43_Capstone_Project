@@ -33,7 +33,7 @@ const CommonLayout = ({ children }) => {
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
           // setRole(userDecode?.role_id.toString());
-            setRole("");
+            setRole("2");
           
     }
   }, [auth])
@@ -96,7 +96,6 @@ const CommonLayout = ({ children }) => {
            <Link to="/contentCreator/course-management/manage">Quản lý</Link>
           </Menu.Item>
            </SubMenu>
-
           <SubMenu key="examSubmenu" icon={<FileTextOutlined />} title="Bài kiểm tra">
           <Menu.Item key="createExam" icon={<PlusOutlined />}>
           <Link to="/contentCreator/exam-management/create">Tạo mới</Link>
