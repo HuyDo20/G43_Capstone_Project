@@ -36,7 +36,7 @@ export default function NotificationModifier ({loading, notification, handleChan
 
   return (
     <Form layout="vertical" autoComplete="off">
-      <Form.Item label="Title">
+      <Form.Item label="Tiêu đề">
         <Input
           value={tmpNotification.title}
           disabled={loading}
@@ -46,7 +46,7 @@ export default function NotificationModifier ({loading, notification, handleChan
         />
       </Form.Item>
 
-      <Form.Item label="Content">
+      <Form.Item label="Nội dung">
         <Input.TextArea
           value={tmpNotification.content}
           disabled={loading}
@@ -56,7 +56,7 @@ export default function NotificationModifier ({loading, notification, handleChan
         />
       </Form.Item>
 
-      <Form.Item label="Notify date" className="">
+      <Form.Item label="Ngày thông báo" className="">
         <DatePicker
           showNow
           disabled={loading}

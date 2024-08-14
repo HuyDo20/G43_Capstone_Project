@@ -33,7 +33,7 @@ const CommonLayout = ({ children }) => {
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
           // setRole(userDecode?.role_id.toString());
-            setRole("2");
+            setRole("1");
           
     }
   }, [auth])

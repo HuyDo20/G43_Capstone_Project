@@ -6,7 +6,8 @@ import {
   Select,
   Space,
   Table,
-  Tag,Pagination
+  Tag, Pagination,
+   message
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -36,7 +37,7 @@ const UserDefaultData: User = {
   point: 0,
   password: "",
   phone_number: "",
-  status_id: 1,
+  status_id: 2,
 };
 
 interface ModalEditProps {
@@ -97,13 +98,13 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       !userData.dob.trim() ||
       !userData.status_id
     ) {
-      alert("Please fill in all required fields");
+      message.warning("Please fill in all required fields");
       return;
     }
   
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(userData.phone_number)) {
-      alert("Phone number is invalid");
+      message.warning("Phone number is invalid");
       return;
     }
   
@@ -116,11 +117,11 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       }
       const response = await axios.post("/account", { ...userData, role_id: userData.role_id });
       if (response.status === 201) {
-        alert("Create successful");
+        message.success("Create successful");
         setReload(true);
         setIsModalOpen(false);
       } else {
-        alert("Operation failed");
+        message.error("Operation failed");
       }
     } catch (error) {
       console.error(error);
@@ -130,13 +131,13 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
   return (
     <Modal
-      title={"Create User"}
+      title={"Tạo người dùng"}
       visible={isModalOpen}
       onOk={handleCreateAccount}
       onCancel={handleCancel}
     >
       <Form style={{ maxWidth: 600 }} layout="vertical" autoComplete="off">
-        <Form.Item label="User Name">
+        <Form.Item label="Tên tài khoản">
           <Input
             value={userData.full_name}
             onChange={handleChangeInput}
@@ -152,7 +153,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="Password">
+        <Form.Item label="Mật khẩu">
         <Input.Password
         value={userData.password  ? userData.password : '12345678'}
         onChange={handleChangeInput}
@@ -161,30 +162,30 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="Status">
+        <Form.Item label="Trạng thái">
           <Select
-            onChange={(value) => setUserData({ ...userData, status_id: value })}
+            onChange={(value) => setUserData({ ...userData, status_id: value})}
             value={userData.status_id}
           >
-            <Select.Option value={2}>Active</Select.Option>
-            <Select.Option value={3}>Deactive</Select.Option>
+            <Select.Option value={2}>Hoạt động</Select.Option>
+            <Select.Option value={3}>Không hoạt động</Select.Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label="Role">
+        <Form.Item label="Vị trí">
           <Select
             onChange={(value) => setUserData({ ...userData, role_id: value })}
             value={userData.role_id}
             options={[
-              { label: "Admin", value: 1 },
-              { label: "Content Manager", value: 2 },
-              { label: "Content Creator", value: 3 },
-              { label: "User", value: 4 },
+              { label: "Quản trị viên", value: 1 },
+              { label: "Người duyệt nội dung", value: 2 },
+              { label: "Người tạo nội dung", value: 3 },
+              { label: "Người dùng", value: 4 },
             ]}
           />
         </Form.Item>
 
-        <Form.Item label="Phone Number">
+        <Form.Item label="Số điện thoại">
           <Input
             value={userData.phone_number}
             onChange={handleChangeInput}
@@ -192,7 +193,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="DOB">
+        <Form.Item label="Ngày sinh">
           <Input
             value={userData.dob}
             onChange={handleChangeInput}
@@ -201,14 +202,14 @@ const ModalEdit: React.FC<ModalEditProps> = ({
           />
         </Form.Item>
 
-        <Form.Item label="Point">
+        {/* <Form.Item label="Point">
           <Input
             value={userData.point}
             onChange={handleChangeInput}
             name="point"
             readOnly
           />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );
@@ -226,7 +227,7 @@ const UserManagementPage: React.FC = () => {
 
   const handleUpdateUserData = async () => {
     if (!selectedItem.role_id || !selectedItem.status_id) {
-      alert("Please fill in all required fields");
+      message.warning("Please fill in all required fields");
       return;
     }
 
@@ -247,11 +248,11 @@ const UserManagementPage: React.FC = () => {
       );
 
       if (response.status === 200) {
-        alert("Update successful");
+        message.success("Update successful");
         setReload(true);
         setSelectedItem(null);
       } else {
-        alert("Operation failed");
+        message.error("Operation failed");
       }
     } catch (error) {
       console.error(error);
@@ -292,7 +293,7 @@ const UserManagementPage: React.FC = () => {
       key: "email",
     },
     {
-      title: "SĐT",
+      title: "Số điện thoại",
       dataIndex: "phone_number",
       key: "phone_number",
     },
@@ -314,13 +315,13 @@ const UserManagementPage: React.FC = () => {
             : "";
         const content =
           role_id === 1
-            ? "Admin"
+            ? "Quản trị viên"
             : role_id === 2
-            ? "Content manager"
+            ? "Người duyệt nội dung"
             : role_id === 3
-            ? "Content creator"
+            ? "Người tạo nội dung"
             : role_id === 4
-            ? "User"
+            ? "Người dùng"
             : "";
         return (
           <>
@@ -336,9 +337,9 @@ const UserManagementPage: React.FC = () => {
                 value={selectedItem.role_id}
                 options={[
               
-                  { label: "Content Manager", value: 2 },
-                  { label: "Content Creator", value: 3 },
-                  { label: "User", value: 4 },
+                  { label: "Người duyệt nội dung", value: 2 },
+                  { label: "Người tạo nội dung", value: 3 },
+                  { label: "Người dùng", value: 4 },
                 ]}
               />
             )}
@@ -367,9 +368,9 @@ const UserManagementPage: React.FC = () => {
           status_id === 1
             ? "Pending"
             : status_id === 2
-            ? "active"
+            ? "hoạt động"
             : status_id === 3
-            ? "deactive"
+            ? "không hoạt động"
             : status_id === 4
             ? "done"
             : status_id === 5
@@ -392,8 +393,8 @@ const UserManagementPage: React.FC = () => {
                 }
                 value={selectedItem.status_id}
               >
-                <Select.Option value={2}>Active</Select.Option>
-                <Select.Option value={3}>Deactive</Select.Option>
+                <Select.Option value={2}>Hoạt động</Select.Option>
+                <Select.Option value={3}>Không hoạt động</Select.Option>
               </Select>
             )}
           </>
@@ -401,24 +402,24 @@ const UserManagementPage: React.FC = () => {
       },
     },
     {
-      title: "Sinh nhật",
+      title: "Ngày sinh",
       dataIndex: "dob",
       key: "dob",
     },
+    // {
+    //   title: "Điểm",
+    //   dataIndex: "point",
+    //   key: "point",
+    // },
     {
-      title: "Điểm",
-      dataIndex: "point",
-      key: "point",
-    },
-    {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       render: (_: any, record: User) => {
         return (
           <>
             {selectedItem?.account_id === record?.account_id ? (
               <Button type="primary" onClick={handleUpdateUserData}>
-                Complete
+                Xác nhận
               </Button>
             ) : (
               <Space size="middle">

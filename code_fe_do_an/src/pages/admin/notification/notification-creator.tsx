@@ -69,7 +69,7 @@ export default function NotificationCreator () {
   return (
     <div className="notification-creator h-full">
       {contextHolder}
-      <Typography.Title level={3} className="text-center">Create New Notification</Typography.Title>
+      <Typography.Title level={3} className="text-center">Tạo thông báo</Typography.Title>
       <NotificationModifier
         loading={loading}
         notification={newNotification}
@@ -80,7 +80,7 @@ export default function NotificationCreator () {
         className="w-full"
         onClick={handleSubmitCreateNoti}
       >
-        Create
+        Tạo
       </Button>
       <Spin
         fullscreen
