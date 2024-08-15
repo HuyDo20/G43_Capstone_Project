@@ -38,7 +38,7 @@ const { Op, where } = require("sequelize");
 const getAllCourse = async (req, res) => {
 	try {
 		const course = await Course.findAll({
-			where: { [Op.or]: [{ course_status_id: 2 }, { course_status_id: 1 }] },
+			where: { [Op.or]: [{ course_status_id: 2 }, { course_status_id: 1 }, { course_status_id: 3 }] },
 			order: [["course_id", "asc"]]
 		});
 		if (course) {
@@ -616,39 +616,55 @@ const createNewCourse = async (req, res) => {
 };
 
 const updateCourseById = async (req, res) => {
-	try {
-		const { accountId } = req;
-		const { account_id, course_status_id } = req.body;
-		const { course_id } = req.params;
+  console.log("Update course request received");
+  try {
+    const { accountId } = req;
+    const { course_status_id, course_name, description, week, course_image, note } = req.body;
+    const { course_id } = req.params;
+    
+    // // Check if the user has permission to update the course
+    // if (accountId && accountId.toString() !== account_id.toString()) {
+    //   return forbidden(res, "You do not have permission to update this course.");
+    // }
 
-		if (accountId && accountId?.toString() !== account_id?.toString()) {
-			return forbidden(res);
-		}
+    // Find the course by its ID
+    const course = await Course.findOne({
+      where: { course_id },
+    });
 
-		const course = await Course.findOne({
-			where: {
-				course_id,
-			},
-		});
-		if (course) {
-			const [update] = await Course.update({
-				where: {
-					course_id,
-				},
-			});
-			if (update) {
-				return ok(res, COURSE_UPDATED);
-			} else {
-				return badRequest(res, COURSE_UPDATED_FAILED);
-			}
-		} else {
-			return notfound(res);
-		}
-	} catch (e) {
-		console.log("updateCourseById", e);
-		return error(res);
-	}
+    if (!course) {
+      return notfound(res, "Course not found.");
+    }
+
+    // Prepare update data
+    const updateData = {};
+    if (course_name) updateData.course_name = course_name;
+    if (description) updateData.description = description;
+    if (week !== undefined) updateData.week = week;
+    if (course_status_id !== undefined) updateData.course_status_id = course_status_id;
+    if (course_image) updateData.course_image = course_image;
+    if (note) updateData.note = note; 
+
+    // Check if there is any data to update
+    if (Object.keys(updateData).length === 0) {
+      return badRequest(res, "No valid fields provided for update.");
+    }
+
+    // Perform the update
+    const [update] = await Course.update(updateData, {
+      where: { course_id },
+    });
+
+    if (update) {
+      return ok(res, "Course updated successfully.");
+    } else {
+      return badRequest(res, "Failed to update course.");
+    }
+  } catch (e) {
+    return error(res, "An error occurred while updating the course.");
+  }
 };
+
 
 async function deleteCourseById(req, res) {
 	try {
@@ -678,3 +694,4 @@ module.exports = {
 	getProgressByDayId,
 	getProgressByWeekId
 };
+npm

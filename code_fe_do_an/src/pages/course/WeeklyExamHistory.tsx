@@ -151,7 +151,14 @@ export default function WeeklyExamHistory() {
                   <Spin size="large" />
                 </div>
               ) : (
-                <>
+                  <>
+                      {examHistory.length === 0 && (
+                        <>
+                          <div className="text-1xl  mb-4">
+                            <h1>Không có dữ liệu lịch sử kiểm tra</h1>
+                          </div>
+                        </>
+                      )}
          {/* Main Container */}
           <div className="mt-8 flex flex-col space-y-6">
           {/* Top Row: Section 1 and Section 3 Horizontally Aligned */}
@@ -184,23 +191,27 @@ export default function WeeklyExamHistory() {
     
          {/* Section 3: Column Chart */}
        <div className="w-1/2">
-      <h2 className="text-2xl font-semibold mb-10">Lịch sử kiểm tra</h2>
-      <BarChart
-        width={200}
-        height={400}
-        data={examHistory.map(exam => ({
+        {examHistory.length > 0 && (
+        <>
+        <h2 className="text-2xl font-semibold mb-5">Lịch sử kiểm tra</h2>
+        <BarChart
+          width={400}
+          height={400}
+          data={examHistory.map(exam => ({
           date: new Date(exam.createdTime).toLocaleDateString(),  // Use date as the key
           score: exam.score,
          }))}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 2, left: 25, bottom: 5 }}
            >
       <CartesianGrid strokeDasharray="5 5" />
       <XAxis dataKey="date" />  {/* Display date on the X-axis */}
       <YAxis />
-     <Tooltip formatter={(value, name, props) => [`Score: ${value}`, `Date: ${props.payload.date}`]} /> {/* Tooltip shows date and score */}
-     <Legend />
+      <Tooltip formatter={(value, name, props) => [`Score: ${value}`, `Date: ${props.payload.date}`]} /> {/* Tooltip shows date and score */}
+      <Legend />
       <Bar dataKey="score" fill="#82ca9d" />
-    </BarChart>
+      </BarChart>
+      </>
+       )}
       </div>
   </div>
   {/* Bottom Row: Section 2 Full Width Below */}
@@ -216,9 +227,10 @@ export default function WeeklyExamHistory() {
       </div>
     )}
   </div>
-</div>
-                </>
-              )}
+                    
+    </div>
+     </>
+     )}
             </div>
           </div>
         </div>
