@@ -108,7 +108,7 @@ export default function UserProfile() {
                       <TabsTrigger value="learningProcess">
                         Tiến độ học tập
                       </TabsTrigger>
-                      <TabsTrigger value="game">Lịch sử trò chơi</TabsTrigger>
+                      {/* <TabsTrigger value="game">Lịch sử trò chơi</TabsTrigger> */}
                     </TabsList>
                   </div>
                   <div>

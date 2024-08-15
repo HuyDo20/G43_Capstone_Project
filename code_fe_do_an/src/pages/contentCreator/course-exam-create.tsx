@@ -160,6 +160,7 @@ const CourseExamCreate: React.FC = () => {
           multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
           readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
           listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
+          
         },
       };
 
@@ -394,7 +395,6 @@ const CourseExamCreate: React.FC = () => {
     Listening
   </StyledButton>
 </Sidebar>
-
       <StyledButton type="primary" onClick={handleSaveExam}>
         Complete
       </StyledButton>

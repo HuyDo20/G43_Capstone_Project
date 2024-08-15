@@ -27,14 +27,14 @@ module.exports = (sequelize, DataTypes) => {
 				onUpdate: "CASCADE",
 				onDelete: "CASCADE",
 			},
-			exam_status_id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				references: {
-					model: "status",
-					key: "status_id",
-				},
-			},
+			// exam_status_id: {
+			// 	type: DataTypes.INTEGER,
+			// 	allowNull: false,
+			// 	references: {
+			// 		model: "status",
+			// 		key: "status_id",
+			// 	},
+			// },
 		},
 		{
 			tableName: "exam",
