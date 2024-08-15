@@ -1,37 +1,45 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
   const Exam = sequelize.define(
-    "Exam",
-    {
-      exam_id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
-      exam_name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      questions: {
-        type: DataTypes.JSON,
-        allowNull: false,
-      },
-      account_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Account",
-          key: "account_id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-    },
-    {
-      tableName: "exam",
-      timestamps: false,
-    }
+		"Exam",
+		{
+			exam_id: {
+				allowNull: false,
+				autoIncrement: true,
+				primaryKey: true,
+				type: DataTypes.INTEGER,
+			},
+			exam_name: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			questions: {
+				type: DataTypes.JSON,
+				allowNull: false,
+			},
+			account_id: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				references: {
+					model: "Account",
+					key: "account_id",
+				},
+				onUpdate: "CASCADE",
+				onDelete: "CASCADE",
+			},
+			exam_status_id: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				references: {
+					model: "status",
+					key: "status_id",
+				},
+			},
+		},
+		{
+			tableName: "exam",
+			timestamps: false,
+		},
   );
 
   Exam.associate = function (models) {

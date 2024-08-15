@@ -1,4 +1,5 @@
 const { Exam, Course, CourseExam } = require('../../models');
+const { forbidden, notfound } = require('../handlers/response_handler');
 
 
   async function createExam(examData) {
@@ -132,12 +133,19 @@ async function getExamWithoutAnswerById(examId) {
   }
 
   async function deleteExam(examId) {
-    const exam = await Exam.findByPk(examId);
-    if (!exam) {
-      throw new Error('Exam not found');
+    try {
+      const exam = await Exam.findByPk(examId);
+		if (!exam) {
+			return notfound(res, "Không tìm thấy bài kiểm tra");
+		}
+    exam.exam_status_id = 3;
+		await exam.save();
+		return ok(res, "Xóa bài kiểm tra thành công");
+		
+    } catch (error) {
+      return error(res);
     }
-    await exam.destroy();
-    return exam;
+    
   }
 
   async function assignExamToCourse(examId, courseId) {
