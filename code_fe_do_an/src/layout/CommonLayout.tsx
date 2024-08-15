@@ -33,8 +33,7 @@ const CommonLayout = ({ children }) => {
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
           // setRole(userDecode?.role_id.toString());
-            setRole("3");
-          
+            setRole("2");
     }
   }, [auth])
   
@@ -82,7 +81,7 @@ const CommonLayout = ({ children }) => {
           {/* content manager - course manager */}
           {role === '2' && (
             <Menu.Item key="2" icon={<BookOutlined />}>
-            <Link to="course-management/manage">Quản lý khóa học</Link>
+            <Link to="/contentManager/course-management/manage">Quản lý khóa học</Link>
             </Menu.Item>)}
           
           {/* content creator - course manager - exam manager */}

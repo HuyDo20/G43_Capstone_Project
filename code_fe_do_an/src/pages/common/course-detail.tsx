@@ -76,8 +76,8 @@ function CourseDetailPage() {
         if (updateCourse.status === 200) {
           notification.success({
             message: id
-              ? "Course Update Successful"
-              : "Course Creation Successful",
+              ? "Cập nhật khóa học thành công"
+              : "Tạo khóa học thành công",
             description: updateCourse.data.data.message,
           });
           setTimeout(() => {
@@ -302,11 +302,11 @@ function CourseDetailPage() {
         }
         notification.success({
           message: id
-            ? "Course Update Successful"
-            : "Course Creation Successful",
+            ? "Cập nhật khóa học thành công"
+            : "Tạo khóa học thành công",
           description: id
-            ? "You have successfully update course information and associated data."
-            : "You have successfully created a new course and associated data.",
+            ? "Cập nhật thông tin khóa học thành công"
+            : "Tạo khóa học mới thành công",
         });
         setTimeout(() => {
           setWaitingCreate(false);

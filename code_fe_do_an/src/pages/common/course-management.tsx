@@ -23,6 +23,7 @@ const statusLabels = {
 
 const CoursesManagementPage: React.FC = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const { handleFetch } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [reload, setReload] = useState(true);
@@ -33,6 +34,18 @@ const CoursesManagementPage: React.FC = () => {
     reason?: string;
   } | null>(null);
   const [deactivationReason, setDeactivationReason] = useState<string>("");
+  const [role, setRole] = useState("");
+
+  
+  useEffect(() => {
+      const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          // setRole(userDecode?.role_id.toString());
+            setRole("2");
+          
+    }
+  }, [auth])
 
   const showConfirmModal = (course_id: number, action: string) => {
     setConfirmAction({ course_id, action });
@@ -40,9 +53,16 @@ const CoursesManagementPage: React.FC = () => {
   };
 
   const handleActionView = (course_id: number) => {
-     navigate(`/contentManager/course-management/${course_id}`, {
+    if (role === "2") {
+       navigate(`/contentManager/course-management/${course_id}`, {
         state: { mode: "view" },
       });
+    } else {
+        navigate(`/contentCreator/course-management/${course_id}`, {
+        state: { mode: "view" },
+      });
+    }
+    
   }
 
 const handleOk = async () => {

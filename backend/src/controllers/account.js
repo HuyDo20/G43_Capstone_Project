@@ -236,8 +236,6 @@ async function verifyOtpRecoverPassword(req, res) {
             expires_at: tokenExpiry
         });
 
-        // Optional: Send the token to the user's email or provide it in the response
-        // sendPasswordResetEmail(email, resetToken); // Implement this function
 
         // Return success response with the reset token (optional, if not sending via email)
         return responseWithData(res, 200, resetToken );

@@ -249,11 +249,11 @@ const UserManagementPage: React.FC = () => {
       );
 
       if (response.status === 200) {
-        message.success("Update successful");
+        message.success("Cập nhật thành công");
         setReload(true);
         setSelectedItem(null);
       } else {
-        message.error("Operation failed");
+        message.error("Cập nhật thất bại");
       }
     } catch (error) {
       console.error(error);

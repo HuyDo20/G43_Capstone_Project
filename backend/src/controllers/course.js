@@ -621,10 +621,7 @@ const updateCourseById = async (req, res) => {
     const { accountId } = req;
     const { course_status_id, course_name, description, week, course_image, note } = req.body;
     const { course_id } = req.params;
-
-    console.log(`Updating course with ID: ${course_status_id}`);
-    console.log("note:" + note);
-
+    
     // // Check if the user has permission to update the course
     // if (accountId && accountId.toString() !== account_id.toString()) {
     //   return forbidden(res, "You do not have permission to update this course.");

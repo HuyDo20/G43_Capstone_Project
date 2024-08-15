@@ -1,5 +1,5 @@
-import CourseDetailPage from "@/pages/contentCreator/course-detail";
-import CourseManagementPage from "@/pages/contentCreator/course-management";
+import CourseDetailPage from "@/pages/common/course-detail";
+import CourseManagementPage from "@/pages/common/course-management";
 import ExamCreatePage from "@/pages/contentCreator/course-exam-create";
 import ExamManagementPage from "@/pages/contentCreator/exam-management";
 import ExamAssignPage from "@/pages/contentCreator/assign-exam-to-course";
