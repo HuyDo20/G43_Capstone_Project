@@ -93,6 +93,12 @@ export default function Login() {
           setNotification({ message: 'Đăng nhập thành công', type: 'success' });
           if (result.role_id === 1) {
             navigate("/admin");
+          } else if (result.role_id === 2) {
+            navigate("/contentManager");
+          } else if (result.role_id === 3) {
+            navigate("/contentCreator");
+          } else {
+            navigate("/");
           }
         }, 2000);
       } else {

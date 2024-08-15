@@ -31,6 +31,8 @@ const StepTwo = ({
       );
   }, [week]);
 
+
+
   const weekCardData = id ? weekData : new Array(week).fill(null);
 
   return (
@@ -66,16 +68,7 @@ const StepTwo = ({
           <Button onClick={handlePreviousStep} style={{ width: "30%" }}>
             Previous
           </Button>
-          {mode === "view" ? (
-            <Button
-              onClick={()=>navigate("/admin/course-management")}
-              
-              type="primary"
-              style={{ width: "30%" }}
-            >
-              Return Course Page
-            </Button>
-          ) : (
+          {mode !== "view" && (
             <Button
               onClick={handleNextStep}
               type="primary"
@@ -89,5 +82,6 @@ const StepTwo = ({
     </>
   );
 };
+
 
 export default StepTwo;
