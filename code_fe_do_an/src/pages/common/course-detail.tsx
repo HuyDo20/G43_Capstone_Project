@@ -366,16 +366,16 @@ function CourseDetailPage() {
     <div style={{ margin: "0 auto", textAlign: "center" }}>
       <Typography.Title level={3}>
         {mode === "view"
-          ? "Course Details"
+          ? "Chi tiết khóa học"
           : id
-          ? "Update Course"
-          : "Create New Course"}
+          ? "Cập nhật khóa học"
+          : "Tạo khóa học"}
       </Typography.Title>
       {mode !== "view" && (
         <Steps current={step} style={{ margin: "2% auto", maxWidth: "800px" }}>
-          <Steps.Step title={id ? "Update Course" : "Create Course"} />
-          <Steps.Step title="Update week and lesson" />
-          <Steps.Step title="Finish" />
+          <Steps.Step title={id ? "Cập nhật khóa học" : "Tạo khóa học"} />
+          <Steps.Step title="Tuần và bài học" />
+          <Steps.Step title="Hoàn thiện" />
         </Steps>
       )}
       <Card style={{ maxWidth: "1000px", margin: "0 auto" }}>
