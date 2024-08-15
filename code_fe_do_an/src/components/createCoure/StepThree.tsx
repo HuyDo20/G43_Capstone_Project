@@ -12,8 +12,8 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
           style={{ marginTop: "3%", maxWidth: "600px" }}
         >
           {id
-            ? `Chúc mừng! Bạn đã hoàn tất việc thiết lập. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể tạo một khóa học mới. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`
-            : `Chúc mừng! Bạn đã hoàn tất việc thiết lập. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể tạo một khóa học mới. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`}
+            ? `Hoàn tất việc cập nhật. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể cập nhật khóa học. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`
+            : `Hoàn tất việc thiết lập. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể tạo một khóa học mới. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`}
         </Typography.Title>
       </Space>
       <Flex

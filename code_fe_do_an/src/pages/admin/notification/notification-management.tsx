@@ -90,7 +90,7 @@ export default function NotiManagementPage() {
       dataIndex: "noti_date",
       key: "noti_date",
       width: '6%',
-      render: (date: Date) => <span>{(new Date(date) < new Date()) ? 'Sent' : 'Not send'}</span>,
+      render: (date: Date) => <span>{(new Date(date) < new Date()) ? 'Đã gửi' : 'Chưa gửi'}</span>,
     },
     {
       title: "Hành động",
@@ -99,16 +99,16 @@ export default function NotiManagementPage() {
       render: (_value: any, record: Notification) => {
         return (
           <section className={`${(new Date(record.noti_date) < new Date()) ? 'invisible' : 'visible'}`}>
-            <Button color="warning" className="mr-4 font-medium" onClick={() => openUpdateNoti(record)}>EDIT</Button>
+            <Button color="warning" className="mr-4 font-medium" onClick={() => openUpdateNoti(record)}>Sửa</Button>
             <Popconfirm
-              title={`Delete notification`}
-              description={`Are you sure you want to delete this notification ?`}
+              // title={`Delete notification`}
+              description={`Bạn có muốn xóa thông báo này ?`}
               onConfirm={() => deleteNoti(record.noti_id)}
-              okText="Delete"
-              cancelText="Cancel"
+              okText="Xóa"
+              cancelText="Không xóa"
               okButtonProps={{danger: true}}
             >
-              <Button danger className="font-medium">DELETE</Button>
+              <Button danger className="font-medium">Xóa</Button>
             </Popconfirm>
           </section>
         );
@@ -228,7 +228,7 @@ const updateNoti = async () => {
         ids: [id],
       }
 
-      const request = await axios.post("/noti/delete", deleteNotiPayload, {
+      const request = await axios.post("/deleteNoti", deleteNotiPayload, {
         headers: {
           Authorization: token,
         },

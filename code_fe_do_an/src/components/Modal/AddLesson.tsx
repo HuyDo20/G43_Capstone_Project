@@ -9,7 +9,7 @@ import {
   Divider,
   Select,
   Upload,
-  notification
+  notification,
 } from "antd";
 const { Option } = Select;
 import ImgCrop from "antd-img-crop";
@@ -81,11 +81,10 @@ function AddLessonModal({
         },
       ]);
     } catch (error) {
-       notification.error({
-          message: "Upload failed:",
-          description: `Error: ${error.message}`,
-        });
-    
+      notification.error({
+        message: "Upload failed:",
+        description: `Error: ${error.message}`,
+      });
     }
   };
 
@@ -733,55 +732,53 @@ function AddLessonModal({
             </Form.Item>
 
             <Form.List name="grammar_examples">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space
-                    key={key}
-                    style={{ display: 'flex', marginBottom: 8 }}
-                    align="baseline"
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'grammar_example']}
-                      rules={[{ required: true, message: 'Missing example' }]}
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
                     >
-                      <Input
-                        readOnly={mode === "view"}
-                        placeholder="Grammar Example"
-                      />
+                      <Form.Item
+                        {...restField}
+                        name={[name, "grammar_example"]}
+                        rules={[{ required: true, message: "Missing example" }]}
+                      >
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Grammar Example"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "grammar_example_meaning"]}
+                      >
+                        <Input
+                          readOnly={mode === "view"}
+                          placeholder="Example Meaning"
+                        />
+                      </Form.Item>
+                      {mode !== "view" && (
+                        <MinusCircleOutlined onClick={() => remove(name)} />
+                      )}
+                    </Space>
+                  ))}
+                  {mode !== "view" && (
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                      >
+                        Add Grammar Example
+                      </Button>
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'grammar_example_meaning']}
-                    >
-                      <Input
-                        readOnly={mode === "view"}
-                        placeholder="Example Meaning"
-                      />
-                    </Form.Item>
-                    {mode !== "view" && (
-                      <MinusCircleOutlined
-                        onClick={() => remove(name)}
-                      />
-                    )}
-                  </Space>
-                ))}
-                {mode !== "view" && (
-                  <Form.Item>
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    >
-                      Add Grammar Example
-                    </Button>
-                  </Form.Item>
-                )}
-              </>
-            )}
-          </Form.List>
+                  )}
+                </>
+              )}
+            </Form.List>
 
             <Form.Item>
               {mode !== "view" && (

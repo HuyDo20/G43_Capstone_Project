@@ -27,7 +27,6 @@ const {
 	DELETE_NOTIS_FAILED,
 	DELETE_NOTIS_SUCCESS
 } = require('../messages/notification');
-const { UNEXPECTED_ERROR } = require("../messages");
 
 const NOTI_GET_TYPES = ['all','read','unread', 'allWithUnsent']
 const DATE_FORMAT_REG = new RegExp(/^\d{4}-\d{2}-\d{2}$/)
@@ -123,9 +122,9 @@ const createNoti = async (req, res) => {
 			is_create_multiple,
 			res,
 		});
-	} catch (e) {
-		console.error(UNEXPECTED_ERROR, e);
-		return badRequest(res, UNEXPECTED_ERROR);
+	} catch (err) {
+		//console.error(UNEXPECTED_ERROR, e);
+		return badRequest(res,CREATE_NOTI_FAILED);
 	}
 };
 
@@ -153,9 +152,9 @@ const updateNoti = async (req, res) => {
 			noti_date,
 			res,
 		});
-	} catch (e) {
-		console.error(UNEXPECTED_ERROR, e);
-		return badRequest(res, UNEXPECTED_ERROR);
+	} catch (err) {
+		//console.error(UNEXPECTED_ERROR, e);
+		return badRequest(res, err);
 	}
 };
 
@@ -237,12 +236,12 @@ const _updateNotiUsecase = async ({
 		if (!updatingNoti) return badRequest(res, INVALID_NOTI_ID);
 
 		// check if the notification is from admin or not
-		const sourceUser = await Account.findOne({
+		const account = await Account.findOne({
 			where: { account_id: updatingNoti.source_id }
 		})
-		if (!sourceUser) return badRequest(res, SOURCE_ID_GUARD)
+		if (!account) return badRequest(res, SOURCE_ID_GUARD)
 
-		if (sourceUser.role_id === 1) {
+		if (account.role_id === 1) {
 			// update data
 			const updateData = {
 				title: title ? title : updatingNoti.title,
