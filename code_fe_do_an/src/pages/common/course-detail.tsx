@@ -375,7 +375,7 @@ function CourseDetailPage() {
         <Steps current={step} style={{ margin: "2% auto", maxWidth: "800px" }}>
           <Steps.Step title={id ? "Cập nhật khóa học" : "Tạo khóa học"} />
           <Steps.Step title="Tuần và bài học" />
-          <Steps.Step title="Hoàn thiện" />
+          <Steps.Step title="Hoàn tất" />
         </Steps>
       )}
       <Card style={{ maxWidth: "1000px", margin: "0 auto" }}>
