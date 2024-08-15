@@ -163,7 +163,7 @@ export default function NotiManagementPage() {
         noti_date: convertDateToString(tmpNotification.noti_date, true)
       }
       
-      const request = await axios.post("/noti", createNotiPayload , {
+      const request = await axios.post("/createNoti", createNotiPayload , {
         headers: {
           Authorization: token,
         },
@@ -181,7 +181,40 @@ export default function NotiManagementPage() {
       return false
     }
   }
+const updateNoti = async () => {
+  try {
+    let token = "";
+    const userEncode = localStorage.getItem("user");
+    if (userEncode) {
+      const userDecode = JSON.parse(userEncode);
+      token = userDecode?.token;
+    }
 
+    const createNotiPayload = {
+      noti_id: tmpNotification.noti_id,
+      title: tmpNotification.title,
+      content: tmpNotification.content,
+      noti_date: convertDateToString(tmpNotification.noti_date, true),
+    };
+
+    const request = await axios.put("/updateNoti", createNotiPayload, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    const response = request.data;
+    if ([201, 200].includes(response.statusCode)) {
+      pushScreenNoti(response.data.message, "success");
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    pushScreenNoti("Can not update notification", "error");
+    console.error("Can not update notification", error);
+    return false;
+  }
+};
   const deleteNoti = async (id: number) => {
     try {
       let token = "";
@@ -222,10 +255,13 @@ export default function NotiManagementPage() {
 
     setLoading(true);
 
-    const isCreateNotiSuccess = await createNoti()
+    // 
+    const isOperationSuccessful = tmpNotification.noti_id
+      ? await updateNoti()
+      : await createNoti();
 
-    if(isCreateNotiSuccess) {
-      fetchNoti()
+    if (isOperationSuccessful) {
+      fetchNoti();
     }
 
     setLoading(false)

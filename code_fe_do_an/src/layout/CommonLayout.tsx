@@ -19,9 +19,9 @@ const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const statusRole= {
-  1: "Admin",
-  2: "Content Manager",
-  3: "Content Creator",
+  1: "Quản trị viên",
+  2: "Người duyệt nội dung",
+  3: "Người tạo nội dung",
 };
 
 const CommonLayout = ({ children }) => {

@@ -32,55 +32,133 @@ const { UNEXPECTED_ERROR } = require("../messages");
 const NOTI_GET_TYPES = ['all','read','unread', 'allWithUnsent']
 const DATE_FORMAT_REG = new RegExp(/^\d{4}-\d{2}-\d{2}$/)
 
-const createOrUpdateNoti = async (req, res) => {
-    try {
+// const createOrUpdateNoti = async (req, res) => {
+//     try {
+// 		const {
+// 			noti_id,
+// 			title, 
+// 			content, 
+// 			action, 
+// 			target_id, 
+// 			source_id,
+// 			noti_date = '2024-08-01', // TODO: update this to use helper format instead of hard code later
+// 			is_create_multiple = false
+// 		} = req.body;
+
+// 		// validate data // TODO: update this if there is any other way to guard data type
+// 		const guardErrors = []
+// 		if(title && title.trim().length === 0) guardErrors.push(TITLE_GUARD)
+// 		if(content && content.trim().length === 0) guardErrors.push(CONTENT_GUARD)
+// 		if(noti_date && !DATE_FORMAT_REG.test(noti_date)) guardErrors.push(NOTI_DATE_GUARD)
+// 		if(target_id && typeof target_id !== 'number') guardErrors.push(TARGET_ID_GUARD)
+// 		if(source_id && typeof source_id !== 'number') guardErrors.push(SOURCE_ID_GUARD)
+
+// 		if(guardErrors.length > 0) return responseWithData(res, 400, guardErrors)
+	
+// 		const isEditNoti = !!noti_id
+
+// 		return isEditNoti ? 
+// 			await _updateNotiUsecase({
+// 				noti_id,
+// 				title, 
+// 				content,
+// 				noti_date,
+// 				res
+// 			}) : 
+// 			await _createNotiUseCase({
+// 				title, 
+// 				content, 
+// 				action, 
+// 				target_id, 
+// 				source_id,
+// 				noti_date,
+// 				is_create_multiple,
+// 				res
+// 			})
+		
+// 	} catch (e) {
+// 		console.error(UNEXPECTED_ERROR, e);
+// 		return badRequest(res, UNEXPECTED_ERROR);
+// 	}
+// }
+async function getAllNoti(req, res) {
+	try {
+		const notis = await Notification.findAll();
+		return responseWithData(res, 200, notis);
+	} catch (error) {
+		console.error("Error getting all notis:", error);
+		throw error;
+	}
+}
+
+const createNoti = async (req, res) => {
+	try {
 		const {
-			noti_id,
-			title, 
-			content, 
-			action, 
-			target_id, 
+			title,
+			content,
+			action,
+			target_id,
 			source_id,
-			noti_date = '2024-08-01', // TODO: update this to use helper format instead of hard code later
-			is_create_multiple = false
+			noti_date = "2024-08-01", // TODO: update this to use helper format instead of hard code later
+			is_create_multiple = false,
 		} = req.body;
 
 		// validate data // TODO: update this if there is any other way to guard data type
-		const guardErrors = []
-		if(title && title.trim().length === 0) guardErrors.push(TITLE_GUARD)
-		if(content && content.trim().length === 0) guardErrors.push(CONTENT_GUARD)
-		if(noti_date && !DATE_FORMAT_REG.test(noti_date)) guardErrors.push(NOTI_DATE_GUARD)
-		if(target_id && typeof target_id !== 'number') guardErrors.push(TARGET_ID_GUARD)
-		if(source_id && typeof source_id !== 'number') guardErrors.push(SOURCE_ID_GUARD)
+		const guardErrors = [];
+		if (title && title.trim().length === 0) guardErrors.push(TITLE_GUARD);
+		if (content && content.trim().length === 0) guardErrors.push(CONTENT_GUARD);
+		if (noti_date && !DATE_FORMAT_REG.test(noti_date)) guardErrors.push(NOTI_DATE_GUARD);
+		if (target_id && typeof target_id !== "number") guardErrors.push(TARGET_ID_GUARD);
+		if (source_id && typeof source_id !== "number") guardErrors.push(SOURCE_ID_GUARD);
 
-		if(guardErrors.length > 0) return responseWithData(res, 400, guardErrors)
-	
-		const isEditNoti = !!noti_id
+		if (guardErrors.length > 0) return responseWithData(res, 400, guardErrors);
 
-		return isEditNoti ? 
-			await _updateNotiUsecase({
-				noti_id,
-				title, 
-				content,
-				noti_date,
-				res
-			}) : 
-			await _createNotiUseCase({
-				title, 
-				content, 
-				action, 
-				target_id, 
-				source_id,
-				noti_date,
-				is_create_multiple,
-				res
-			})
-		
+		return await _createNotiUseCase({
+			title,
+			content,
+			action,
+			target_id,
+			source_id,
+			noti_date,
+			is_create_multiple,
+			res,
+		});
 	} catch (e) {
 		console.error(UNEXPECTED_ERROR, e);
 		return badRequest(res, UNEXPECTED_ERROR);
 	}
-}
+};
+
+const updateNoti = async (req, res) => {
+	try {
+		const {
+			noti_id,
+			title,
+			content,
+			noti_date = "2024-08-01", // TODO: update this to use helper format instead of hard code later
+		} = req.body;
+
+		// validate data // TODO: update this if there is any other way to guard data type
+		const guardErrors = [];
+		if (title && title.trim().length === 0) guardErrors.push(TITLE_GUARD);
+		if (content && content.trim().length === 0) guardErrors.push(CONTENT_GUARD);
+		if (noti_date && !DATE_FORMAT_REG.test(noti_date)) guardErrors.push(NOTI_DATE_GUARD);
+
+		if (guardErrors.length > 0) return responseWithData(res, 400, guardErrors);
+
+		return await _updateNotiUsecase({
+			noti_id,
+			title,
+			content,
+			noti_date,
+			res,
+		});
+	} catch (e) {
+		console.error(UNEXPECTED_ERROR, e);
+		return badRequest(res, UNEXPECTED_ERROR);
+	}
+};
+
 
 const _createNotiUseCase = async ({
 	title, 
@@ -284,7 +362,10 @@ const deleteNoti = async (req, res) => {
 }
 
 module.exports = {
-    getNotiById,
-    createOrUpdateNoti,
-	deleteNoti
-}
+	getNotiById,
+	//createOrUpdateNoti,
+	createNoti,
+	updateNoti,
+	deleteNoti,
+	getAllNoti,
+};

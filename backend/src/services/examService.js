@@ -124,7 +124,9 @@ async function getExamWithoutAnswerById(examId) {
 
 
   async function updateExam(examId, updatedData) {
-    const exam = await Exam.findByPk(examId);
+    const exam = await Exam.findOne({
+			where: { exam_id },
+		});
     if (!exam) {
       throw new Error('Exam not found');
     }
