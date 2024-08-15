@@ -18,6 +18,12 @@ import { Link } from "react-router-dom";
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
+const statusRole= {
+  1: "Admin",
+  2: "Content Manager",
+  3: "Content Creator",
+};
+
 const CommonLayout = ({ children }) => {
   const auth = useAuth();
   const { handleLogout } = auth;
@@ -33,7 +39,6 @@ const CommonLayout = ({ children }) => {
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
           setRole(userDecode?.role_id.toString());
-           
     }
   }, [auth])
   
@@ -57,7 +62,18 @@ const CommonLayout = ({ children }) => {
           >
             FPT Nihongo Dekiru
           </h1>
-          <h1>Content creator</h1>
+           <h2
+            style={{
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 3
+            }}
+          >
+           {statusRole[role]}
+          </h2>
+          
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           {/* admin - user management */}
