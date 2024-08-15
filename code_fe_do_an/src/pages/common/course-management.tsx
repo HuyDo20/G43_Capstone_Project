@@ -63,6 +63,12 @@ const CoursesManagementPage: React.FC = () => {
     
   }
 
+   const handleActionEdit= (course_id: number) => {
+   navigate(`/contentCreator/course-management/${course_id}`, {
+        state: { mode: "edit" },
+      });
+  }
+
 const handleOk = async () => {
   try {
     if (!confirmAction) return;
@@ -73,7 +79,7 @@ const handleOk = async () => {
     let requestData = {course_status_id, note, deactivationReason};
 
     if (action === "activate") {
-      course_status_id = 2; // Assuming 2 is the status ID for active
+      course_status_id = 2; 
       requestData.note = ""; 
     } else if (action === "reject") {
       if (deactivationReason === "" || !deactivationReason) {
@@ -209,7 +215,7 @@ const handleOk = async () => {
             </Button>)}
             {role === "3" && ( <Button
               type="primary"
-              onClick={() => showConfirmModal(course.course_id, "edit")}
+              onClick={() => handleActionEdit(course.course_id)}
             >
               Chỉnh sửa
             </Button>)}
