@@ -12,12 +12,8 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
           style={{ marginTop: "3%", maxWidth: "600px" }}
         >
           {id
-            ? `Congratulations! You've completed the setup. By clicking "Yes" below,
-          you can update course information. This process may take a few minutes.
-          Please wait until it is finished.`
-            : `Congratulations! You've completed the setup. By clicking "Yes" below,
-          you can create a new course. This process may take a few minutes.
-          Please wait until it is finished.`}
+            ? `Chúc mừng! Bạn đã hoàn tất việc thiết lập. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể tạo một khóa học mới. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`
+            : `Chúc mừng! Bạn đã hoàn tất việc thiết lập. Bằng cách nhấp vào "Hoàn tất" bên dưới, bạn có thể tạo một khóa học mới. Quá trình này có thể mất một vài phút. Vui lòng đợi cho đến khi nó hoàn tất.`}
         </Typography.Title>
       </Space>
       <Flex
@@ -28,7 +24,7 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
           type="default"
           onClick={handlePreviousStep}
         >
-          Return
+          Quay lại
         </Button>
         <div style={{ width: "20px" }}></div>
         <Button
@@ -38,7 +34,7 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
           onClick={handleSubmit}
           loading={waitingCreate}
         >
-          Yes
+          Hoàn tất
         </Button>
       </Flex>
     </>

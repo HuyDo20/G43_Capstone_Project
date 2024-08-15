@@ -356,10 +356,10 @@ function AddLessonModal({
     <Modal
       title={
         mode === "view"
-          ? "Lesson Detail"
+          ? "Chi tiết bài học"
           : id && lessonSelected
-          ? "Update Lesson"
-          : "Add New Lesson"
+          ? "Cập nhật bài học"
+          : "Thêm bài học"
       }
       visible={visible}
       onCancel={() => {

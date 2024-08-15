@@ -93,7 +93,7 @@ function WeekCard({
             style={{ cursor: "pointer" }}
             onClick={handleTopicClick}
           >
-            Topic: <b style={{ color: "red" }}>{topicName}</b>
+            <b style={{ color: "red" }}>{topicName}</b>
           </Typography.Title>
         )}
         {mode !== "view" && (
@@ -106,7 +106,7 @@ function WeekCard({
                 setDayIndexSelected(null);
               }}
             >
-              Add New Day
+              Thêm ngày mới
             </Button>
             <div style={{ width: "10px" }}></div>
             <Button
@@ -114,7 +114,7 @@ function WeekCard({
               className="custom-button"
               onClick={showLessonModal}
             >
-              Add New Lesson
+              Thêm bài học
             </Button>
           </Flex>
         )}
