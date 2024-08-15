@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DaySchedule } from "@/components/course";
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,17 +16,13 @@ import ExamTaking from '@/components/exam/ExamTaking';
 import axios from 'axios';
 
 export default function WeeklyExam() {
-  const [reload, setReload] = useState(true);
   const [courseData, setCourseData] = useState([]);
   const [weekSelected, setWeekSelected] = useState({});
   const [examData, setExamData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { handleFetch } = useAuth();
   const { id, week_id, weekly_exam_id } = useParams();
   const navigate = useNavigate();
-
-  const handleLearningByWeek = () => {
-    navigate(`/learningByWeek/${id}`);
-  };
 
   useEffect(() => {
     const handleFetchData = async () => {
@@ -51,7 +47,9 @@ export default function WeeklyExam() {
           const userDecode = JSON.parse(userEncode);
           token = userDecode?.token;
         }
-        const request = await axios.get(`/exams/${weekly_exam_id}`, {
+
+        const url = `/get-exam-without-answers/${weekly_exam_id}`;
+        const request = await axios.get(url, {
           headers: {
             Authorization: token,
           },
@@ -66,12 +64,9 @@ export default function WeeklyExam() {
       }
     };
 
-    if (reload) {
-      handleFetchData();
-      fetchCourseWeeklyExam();
-      setReload(false);
-    }
-  }, [reload]);
+    handleFetchData();
+    fetchCourseWeeklyExam();
+  }, [id, week_id, weekly_exam_id, handleFetch, navigate]);
 
   const transformFetchedData = (data) => {
     return {
@@ -87,8 +82,8 @@ export default function WeeklyExam() {
             questionContent: subQuestion.questionContent,
             options: subQuestion.options,
             imageUrl: subQuestion.imageUrl,
-            userAnsweredId: null,
-            correctOptionId: subQuestion.correctOptionId,
+            userAnsweredId: subQuestion.userAnsweredId || null,
+            correctOptionId: null,
           })) : [],
         })) : [],
         listeningQuestions: data.questions.listeningQuestions ? data.questions.listeningQuestions.map(question => ({
@@ -100,8 +95,8 @@ export default function WeeklyExam() {
             questionContent: subQuestion.questionContent,
             options: subQuestion.options,
             imageUrl: subQuestion.imageUrl,
-            userAnsweredId: null,
-            correctOptionId: subQuestion.correctOptionId,
+            userAnsweredId: subQuestion.userAnsweredId || null,
+            correctOptionId: null,
           })) : [],
         })) : [],
         multiChoiceQuestions: data.questions.multiChoiceQuestions ? data.questions.multiChoiceQuestions.map(question => ({
@@ -110,40 +105,51 @@ export default function WeeklyExam() {
           content: question.content,
           options: question.options,
           imageUrl: question.imageUrl,
-          userAnsweredId: null,
-          correctOptionId: question.correctOptionId,
+          userAnsweredId: question.userAnsweredId || null,
+          correctOptionId: null,
         })) : [],
       }
     };
   };
 
-  const handleExamSubmit = (selectedAnswers) => {
-    const updatedExamData = { ...examData };
-
-    updatedExamData.examData.readingQuestions.forEach(question => {
-      question.subQuestions.forEach(subQuestion => {
-        if (selectedAnswers[subQuestion.id] !== undefined) {
-          subQuestion.userAnsweredId = selectedAnswers[subQuestion.id];
+  const handleExamSubmit = async (selectedAnswers) => {
+    setLoading(true);
+    try {
+      let token = "";
+      let accountId;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
         }
-      });
-    });
 
-    updatedExamData.examData.listeningQuestions.forEach(question => {
-      question.subQuestions.forEach(subQuestion => {
-        if (selectedAnswers[subQuestion.id] !== undefined) {
-          subQuestion.userAnsweredId = selectedAnswers[subQuestion.id];
+      const request = await axios.post("/progressExam", {
+        exam_id: weekly_exam_id,
+        account_id: accountId,
+        userAnswers: selectedAnswers
+      }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = request.data;
+      if (response.statusCode === 200) {
+        const { content, score, examHistoryId } = response.data.data;
+        if (content && examHistoryId) {
+          message.success(`Nộp bài thành công! Điểm của bạn là ${score}`);
+          navigate(`/weeklyExam/${id}/${week_id}/${examHistoryId}/reviewing`);
         }
-      });
-    });
-
-    updatedExamData.examData.multiChoiceQuestions.forEach(question => {
-      if (selectedAnswers[question.id] !== undefined) {
-        question.userAnsweredId = selectedAnswers[question.id];
       }
-    });
+    } catch (error) {
+      message.error('Failed to submit exam. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    console.log('Updated Exam Data:', JSON.stringify(updatedExamData));
-    // Here you can set the updated data to state or perform any necessary actions
+  const handleLearningByWeek = () => {
+    navigate(`/learningByWeek/${id}`);
   };
 
   return (
@@ -195,15 +201,22 @@ export default function WeeklyExam() {
           {/* ExamTaking Component */}
           <div className="flex justify-center w-full mt-7">
             <div className="w-full max-w-6xl max-h-[800px] overflow-y-auto bg-white rounded-lg shadow-lg p-6 border-2">
-              {examData ? (
+              {loading ? (
+                <div className="flex justify-center items-center h-full">
+                  <Spin size="large" />
+                </div>
+              ) : examData ? (
                 <ExamTaking        
                   examTitle={examData.examTitle} 
                   questions={examData.examData} 
                   mode="doing"
-                  onSubmit={handleExamSubmit}
+                    onSubmit={handleExamSubmit}
+                    score={0}
                 />
               ) : (
-                <div>Loading...</div>
+                <div className="flex justify-center items-center h-full">
+                  <Spin size="large" />
+                </div>
               )}
             </div>
           </div>

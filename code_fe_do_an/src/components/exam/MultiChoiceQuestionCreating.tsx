@@ -19,10 +19,11 @@ interface MultiChoiceQuestionProps {
   onConfirm: (id: number, questionContent: string, options: Option[], correctOptionId: number, imageUrl: string | null) => void;
   onEdit: (id: number) => void;
   isConfirmed?: boolean;
+  onCancel: () => void;
   isEditing?: boolean;
 }
 
-const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isConfirmed = false, isEditing = true }) => {
+const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, onCancel, isConfirmed = false,  isEditing = true }) => {
   const [questionContent, setQuestionContent] = useState('');
   const [options, setOptions] = useState<Option[]>([]);
   const [correctOptionId, setCorrectOptionId] = useState<number | null>(null);
@@ -55,6 +56,10 @@ const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ quest
       return;
     }
     onConfirm(questionId, questionContent, options, correctOptionId, imageUrl);
+  };
+
+  const handleCancel = () => {
+    onCancel();
   };
 
   const handleEdit = () => {
@@ -171,7 +176,7 @@ const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ quest
       {isEditing && (
         <>
           <ImgCrop rotationSlider>
-            <Upload
+            <Upload className='mt-3'
               customRequest={handleUpload}
               listType="picture-card"
               fileList={fileList}
@@ -191,9 +196,14 @@ const MultiChoiceQuestionCreating: React.FC<MultiChoiceQuestionProps> = ({ quest
         </>
       )}
       {isEditing && (
-        <ConfirmButton type="primary" onClick={handleConfirm}>
-          Confirm
-        </ConfirmButton>
+         <ButtonContainer>
+          <ConfirmButton type="primary" onClick={handleConfirm}>
+            Confirm
+          </ConfirmButton>
+          <CancelButton type="default" onClick={handleCancel}>
+            Cancel
+          </CancelButton>
+        </ButtonContainer>
       )}
       {!isEditing && imageUrl !== null && <img src={imageUrl} width={50} height={50} alt="Uploaded"/>}
     </QuestionContainer>
@@ -243,6 +253,13 @@ const AddOptionButton = styled(Button)`
   gap: 10px;
 `;
 
+const ButtonContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+
 const ConfirmButton = styled(Button)`
   margin-top: 10px;
   display: flex;
@@ -250,6 +267,10 @@ const ConfirmButton = styled(Button)`
   gap: 10px;
 `;
 
-const UploadButton = styled.div`
+const CancelButton = styled(Button)`
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
+

@@ -25,6 +25,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
         return;
       }
       setPracticalData(practiceData);
+      console.log(practiceData);
       setPassThreshold(practiceData.length > 1 ? Math.ceil(practiceData.length * 0.7) : 1);
     };
 
@@ -160,7 +161,8 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
               <div className="congratulations">
                 <h2 className="text-2xl font-bold mb-4">Chúc mừng! Bạn đã vượt qua bài luyện tập!</h2>
                 <p className="text-lg">Bạn đã trả lời đúng {correctAnswersCount} câu hỏi. Làm tốt lắm!</p>
-                <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
+                  <Button type="primary" onClick={onSubmit} className="mt-4">Hoàn thành</Button>
+                  <Button type="primary" onClick={handleRetry} className="ml-4">Luyện lại</Button>
               </div>
             ) : (
               <div className="try-again">
@@ -183,6 +185,7 @@ const PracticeModal = ({ title, practiceData, isModalVisible, onSubmit, onClose,
                 <div className="summary-question font-bold">
                   {index + 1}. {item.question}
                 </div>
+                {item.image && (<img src={item.image} width={50} height={50} alt='questionImage'/>)}
                 <div className="summary-result">
                   {userAnswers[index] === true ? (
                     <span className="text-green-500">Đúng</span>

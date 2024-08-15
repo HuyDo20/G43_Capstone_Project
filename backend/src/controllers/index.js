@@ -20,6 +20,7 @@ const vocab = require("./vocabulary");
 const video = require("./video");
 const account_day = require("./account_day");
 const account_week = require("./account_week");
+const notification = require("./notification");
 
 module.exports = {
 	role,
@@ -45,4 +46,5 @@ module.exports = {
 	video,
 	account_day,
 	account_week,
+	notification,
 };

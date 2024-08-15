@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { message} from 'antd'
 import axios from "axios";
 import React from 'react';
 type OtpVerificationProps = {
@@ -41,7 +42,7 @@ const OtpVerification = ({ email, full_name, password, onOtpVerified }: OtpVerif
       const request = await axios.post("/verify-otp-account-create", { email, otp, full_name, password });
       const response = request.data;
       if (response.statusCode === 200) {
-        alert(response.message);
+        message.success("Tạo tài khoản thành công!");
         onOtpVerified();
       } else {
         setOtpError(response.data);
@@ -72,15 +73,16 @@ const OtpVerification = ({ email, full_name, password, onOtpVerified }: OtpVerif
       const request = await axios.post("/resend-otp", { email });
       const response = request.data;
       if (response.statusCode === 200) {
-        alert("OTP mới đã được gửi.");
+        message.info("OTP mới đã được gửi.");
         setCountdown(60); // Reset countdown
         setIsResendVisible(false);
         setResendAttempts(resendAttempts + 1);
       } else {
-        alert(response.data?.message);
+         message.warning(response.data?.message);
       }
     } catch (error) {
-      alert("Có lỗi xảy ra khi gửi lại OTP.");
+      message.error("Có lỗi xảy ra khi gửi lại OTP.");
+      message.error("Có lỗi xảy ra khi gửi lại OTP.");
     }
   };
 

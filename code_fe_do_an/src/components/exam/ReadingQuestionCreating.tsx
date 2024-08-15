@@ -11,11 +11,13 @@ interface ReadingQuestionProps {
   onDelete: (id: number) => void;
   onConfirm: (id: number, readingContent: string, questions: any[], imageUrl: string | null) => void;
   onEdit: (id: number) => void;
+  onCancel: () => void;
   isEditing?: boolean;
   isConfirmed?: boolean;
+  
 }
 
-const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
+const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, onCancel, isEditing = true, isConfirmed = false }) => {
   const [readingContent, setReadingContent] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -103,11 +105,15 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, o
   };
 
   const handleConfirm = () => {
-    if (readingContent.trim() === '' || questions.length === 0 || imageUrl === null) {
+    if (readingContent.trim() === '' || questions.length === 0) {
       message.warning('Please ensure the reading content is filled, at least one question is added, and an image is uploaded.');
       return;
     }
     onConfirm(questionId, readingContent, questions, imageUrl);
+  };
+
+  const handleCancel = () => {
+    onCancel();
   };
 
   return (
@@ -130,6 +136,7 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, o
         <>
           <ImgCrop rotationSlider>
             <Upload
+              className='mt-3'
               customRequest={handleUpload}
               listType="picture-card"
               fileList={fileList}
@@ -166,9 +173,14 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId, o
         </AddQuestionButton>
       )}
       {isEditing && (
-        <ConfirmButton type="primary" onClick={handleConfirm}>
-          Confirm
-        </ConfirmButton>
+        <ButtonContainer>
+          <ConfirmButton type="primary" onClick={handleConfirm}>
+            Confirm
+          </ConfirmButton>
+          <CancelButton type="default" onClick={handleCancel}>
+            Cancel
+          </CancelButton>
+        </ButtonContainer>
       )}
     </ReadingContainer>
   );
@@ -204,7 +216,21 @@ const AddQuestionButton = styled(Button)`
   gap: 10px;
 `;
 
+const ButtonContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+
 const ConfirmButton = styled(Button)`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CancelButton = styled(Button)`
   margin-top: 10px;
   display: flex;
   align-items: center;

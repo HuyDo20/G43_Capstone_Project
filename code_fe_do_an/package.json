@@ -34,6 +34,8 @@
     "antd": "^5.18.3",
     "antd-img-crop": "^4.22.0",
     "axios": "^1.7.2",
+    "chart.js": "^4.4.3",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -43,15 +45,21 @@
     "loadable-image": "^3.2.3",
     "lucide-react": "^0.378.0",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-confetti": "^6.1.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.0",
     "react-icons": "^5.2.1",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.23.1",
     "react-select": "^5.8.0",
+    "recharts": "^2.12.7",
     "styled-components": "^6.1.11",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "vite": "^5.4.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -67,7 +75,6 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "^5.2.2"
   }
 }

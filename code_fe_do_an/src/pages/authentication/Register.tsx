@@ -10,6 +10,7 @@ import { z } from "zod";
 import axios from "axios";
 import OtpVerificationProps from "../authentication/OtpVerification"
 import React from 'react';
+import { message} from 'antd'
 type RegisterProps = {
   openLogin: () => void;
 };
@@ -74,7 +75,7 @@ export default function Register({ openLogin }: RegisterProps) {
       if (response.statusCode === 200) {
         setShowOtpVerification(true);
       } else {
-        alert(response.data);
+      message.warning(response.data);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -95,6 +96,7 @@ export default function Register({ openLogin }: RegisterProps) {
   const handleOtpVerified = () => {
     setShowOtpVerification(false);
     openLogin();
+ 
   };
 
   const [widthScreen, setWidthScreen] = useState(window.innerWidth);

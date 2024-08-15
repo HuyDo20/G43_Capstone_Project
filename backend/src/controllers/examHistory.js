@@ -4,6 +4,8 @@ const {
   getExamHistoryById,
   updateExamHistory,
   deleteExamHistory,
+  progressExam,
+  getAllExamHistoriesByExamIdAndAccountId
 } = require('../services/examHistoryService');
 const { ok, created, badRequest, notfound, error } = require('../handlers/response_handler');
 
@@ -27,10 +29,21 @@ class ExamHistoryController {
     }
   }
 
-  async getExamHistoryById(req, res) {
+   async getAllExamHistoriesByExamIdAndAccountId(req, res) {
     try {
-      const { exam_history_id } = req.params;
-      const examHistory = await getExamHistoryById(exam_history_id);
+      const { weekly_exam_id, accountId } = req.params;
+      console.log(weekly_exam_id, accountId);
+      const examHistories = await getAllExamHistoriesByExamIdAndAccountId(weekly_exam_id, accountId);
+      return ok(res, examHistories);
+    } catch (err) {
+      return error(res, err.message);
+    }
+  }
+
+    async getExamHistoryById(req, res) {
+    try {
+      const { examHistoryId } = req.params;
+      const examHistory = await getExamHistoryById(examHistoryId);
       if (!examHistory) {
         return notfound(res, 'ExamHistory not found');
       }
@@ -39,6 +52,7 @@ class ExamHistoryController {
       return notfound(res, err.message);
     }
   }
+
 
   async updateExamHistory(req, res) {
     try {
@@ -60,6 +74,17 @@ class ExamHistoryController {
       }
       return ok(res, 'ExamHistory deleted successfully');
     } catch (err) {
+      return badRequest(res, err.message);
+    }
+  }
+
+   async progressExam(req, res) {
+    try {
+      const { exam_id, account_id, userAnswers } = req.body;
+      const { content, score , examHistoryId} = await progressExam(exam_id, account_id, userAnswers);
+      return ok(res, { content, score, examHistoryId });
+    } catch (err) {
+      console.log(err);
       return badRequest(res, err.message);
     }
   }

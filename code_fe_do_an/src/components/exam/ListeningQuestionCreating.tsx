@@ -13,11 +13,12 @@ interface ListeningQuestionProps {
   onDelete: (id: number) => void;
   onConfirm: (id: number, questions: any[], audioUrl: string | null) => void;
   onEdit: (id: number) => void;
+  onCancel: () => void;
   isEditing?: boolean;
   isConfirmed?: boolean;
 }
 
-const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, isEditing = true, isConfirmed = false }) => {
+const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionId, onDelete, onConfirm, onEdit, onCancel, isEditing = true, isConfirmed = false }) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [fileList, setFileList] = useState([]);
@@ -90,11 +91,18 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
   };
 
   const beforeUpload = (file: RcFile) => {
-    if (fileList.length >= 1) {
-      alert('You can only upload one audio file.');
-      return false;
-    }
-    return true;
+  const isMp3 = file.type === 'audio/mp3' || file.name.endsWith('.mp3');
+  if (!isMp3) {
+    message.error('Bạn chỉ có thể chọn tệp có định dạng .mp3');
+    return false;
+  }
+
+  if (fileList.length >= 1) {
+    message.error('Bạn chỉ có thể tải lên một tệp.');
+    return false;
+  }
+
+  return true;
   };
 
   const handleRemoveAudio = () => {
@@ -110,6 +118,10 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
     onConfirm(questionId, questions, audioUrl);
   };
 
+  const handleCancel = () => {
+    onCancel();
+  };
+
   return (
     <ListeningContainer>
       <ListeningHeader>
@@ -122,6 +134,7 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
       {isEditing && (
         <>
           <Upload
+            className='mt-3'
             customRequest={handleUpload}
             listType="picture-card"
             fileList={fileList}
@@ -157,9 +170,14 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({ questionI
         </AddQuestionButton>
       )}
       {isEditing && (
-        <ConfirmButton type="primary" onClick={handleConfirm}>
-          Confirm
-        </ConfirmButton>
+         <ButtonContainer>
+          <ConfirmButton type="primary" onClick={handleConfirm}>
+            Confirm
+          </ConfirmButton>
+          <CancelButton type="default" onClick={handleCancel}>
+            Cancel
+          </CancelButton>
+        </ButtonContainer>
       )}
     </ListeningContainer>
   );
@@ -195,7 +213,22 @@ const AddQuestionButton = styled(Button)`
   gap: 10px;
 `;
 
+
+const ButtonContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+
 const ConfirmButton = styled(Button)`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CancelButton = styled(Button)`
   margin-top: 10px;
   display: flex;
   align-items: center;

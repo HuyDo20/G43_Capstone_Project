@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DaySchedule } from "@/components/course";
+import { Card, CardContent } from '@/components/ui/card';
+import { Spin, message } from 'antd';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,177 +12,90 @@ import {
 } from "@/components/ui/breadcrumb";
 import Header from "@/layout/header/Header";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/hook/AuthContext";
 import ExamHistoryItem from '@/components/exam/ExamHistoryItem';
 import ExamHistoryDetail from '@/components/exam/ExamHistoryDetail';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-
-// Provided test data
-const testData = [
-  {
-    "examTitle": "Final Exam",
-    "createdTime": "2024-08-07T10:00:00.000Z",
-    "multiChoice": {
-      "correct": 1,
-      "total": 2
-    },
-    "reading": {
-      "correct": 2,
-      "total": 3
-    },
-    "listening": {
-      "correct": 3,
-      "total": 4
-    },
-    "score": 85
-  },
-  {
-    "examTitle": "Midterm Exam",
-    "createdTime": "2024-08-01T09:30:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 3
-    },
-    "reading": {
-      "correct": 3,
-      "total": 4
-    },
-    "listening": {
-      "correct": 4,
-      "total": 5
-    },
-    "score": 90
-  },
-  {
-    "examTitle": "Quiz 1",
-    "createdTime": "2024-07-25T14:00:00.000Z",
-    "multiChoice": {
-      "correct": 1,
-      "total": 1
-    },
-    "reading": {
-      "correct": 1,
-      "total": 1
-    },
-    "listening": {
-      "correct": 2,
-      "total": 2
-    },
-    "score": 95
-  },
-  {
-    "examTitle": "Quiz 2",
-    "createdTime": "2024-07-18T11:00:00.000Z",
-    "multiChoice": {
-      "correct": 0,
-      "total": 1
-    },
-    "reading": {
-      "correct": 1,
-      "total": 1
-    },
-    "listening": {
-      "correct": 1,
-      "total": 1
-    },
-    "score": 75
-  },
-  {
-    "examTitle": "Practice Exam 1 ",
-    "createdTime": "2024-06-30T08:45:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 2
-    },
-    "reading": {
-      "correct": 3,
-      "total": 3
-    },
-    "listening": {
-      "correct": 4,
-      "total": 4
-    },
-    "score": 90
-  },
-   {
-    "examTitle": "Practice Exam 2",
-    "createdTime": "2024-06-30T08:45:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 2
-    },
-    "reading": {
-      "correct": 3,
-      "total": 3
-    },
-    "listening": {
-      "correct": 4,
-      "total": 4
-    },
-    "score": 80
-  },
-    {
-    "examTitle": "Practice Exam 3",
-    "createdTime": "2024-06-30T08:45:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 2
-    },
-    "reading": {
-      "correct": 3,
-      "total": 3
-    },
-    "listening": {
-      "correct": 4,
-      "total": 4
-    },
-    "score": 65
-  },
-     {
-    "examTitle": "Practice Exam 4",
-    "createdTime": "2024-06-30T08:45:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 2
-    },
-    "reading": {
-      "correct": 3,
-      "total": 3
-    },
-    "listening": {
-      "correct": 4,
-      "total": 4
-    },
-    "score": 60
-  }, {
-    "examTitle": "Practice Exam 5",
-    "createdTime": "2024-06-30T08:45:00.000Z",
-    "multiChoice": {
-      "correct": 2,
-      "total": 2
-    },
-    "reading": {
-      "correct": 3,
-      "total": 3
-    },
-    "listening": {
-      "correct": 4,
-      "total": 4
-    },
-    "score": 75
-  }
-
-];
+import axios from 'axios';
 
 export default function WeeklyExamHistory() {
-  const [courseData] = useState({ course_name: "Sample Course" });
-  const [weekSelected] = useState({ week_name: "Sample Week" });
-  const [examHistory] = useState(testData);
-  const { id } = useParams();
+  const [courseData, setCourseData] = useState([]);
+  const [weekSelected, setWeekSelected] = useState({});
+  const [examHistory, setExamHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { handleFetch } = useAuth();
+  const { id, week_id, weekly_exam_id } = useParams();
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const handleFetchData = async () => {
+      try {
+        const response = await handleFetch({
+          method: "get",
+          url: `/course-detail/${id}`,
+        });
+        if (response.statusCode === 200) {
+          const result = response.data;
+          setCourseData(result.courseData);
+          setWeekSelected(
+            result.weekData?.find((item) => item.week_id === parseInt(week_id))
+          );
+        }
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+        navigate('/error', { state: { message: error.message } });
+      }
+    };
+
+    const fetchExamHistories = async () => {
+      try {
+        let token = "";
+        let accountId;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        }
+        const url = `/examHistories/${weekly_exam_id}/${accountId}`;
+        const request = await axios.get(url, {
+          headers: {
+            Authorization: token,
+          },
+        });
+      
+        const response = request.data;
+        console.log(response);
+        if (response.statusCode === 200) {
+          const data = response.data;
+          const tempHistory = data.data;
+          tempHistory.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+          console.log(data.data);
+          setExamHistory(tempHistory);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching exam histories:', error);
+        navigate('/error', { state: { message: error.message } });
+      }
+    };
+
+    handleFetchData();
+    fetchExamHistories();
+  }, [id, week_id, weekly_exam_id, handleFetch, navigate]);
 
   const handleLearningByWeek = () => {
     navigate(`/learningByWeek/${id}`);
   };
+
+  
+  const handleViewDetailExamHistory = (examHistoryId) => {
+    if (examHistoryId === null) {
+      message.error("Exam history id is null");
+    }
+     return navigate(`/weeklyExam/${id}/${week_id}/${examHistoryId}/reviewing`);
+  }
 
   return (
     <div>
@@ -231,43 +146,91 @@ export default function WeeklyExamHistory() {
           {/* Main Content */}
           <div className="flex justify-center w-full mt-7">
             <div className="w-full max-w-6xl max-h-[800px] overflow-y-auto bg-white rounded-lg shadow-lg p-6 border-2">
-              {/* Section 1: Latest Exam History */}
-              {examHistory.length > 0 && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
-                  <ExamHistoryDetail exam={examHistory[0]} />
+              {loading ? (
+                <div className="flex justify-center items-center h-full">
+                  <Spin size="large" />
                 </div>
-              )}
-              {/* Section 2: Older Exam History */}
-              {examHistory.length > 1 && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
-                  {examHistory.slice(1).map((exam, index) => (
-                    <ExamHistoryItem key={index} exam={exam} />
-                  ))}
-                </div>
-              )}
-              {/* Section 3: Column Chart */}
-              <div className="mt-8">
-                <h2 className="text-2xl font-semibold mb-4">Lịch sử kiểm tra</h2>
-                <BarChart
-                  width={400}
-                  height={400}
-                  data={examHistory.map(exam => ({
-                    name: exam.examTitle,
-                    score: exam.score,
-                    date: new Date(exam.createdTime).toLocaleDateString(),
-                  }))}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="score" fill="#82ca9d" />
-                </BarChart>
-              </div>
+              ) : (
+                  <>
+                      {examHistory.length === 0 && (
+                        <>
+                          <div className="text-1xl  mb-4">
+                            <h1>Không có dữ liệu lịch sử kiểm tra</h1>
+                          </div>
+                        </>
+                      )}
+         {/* Main Container */}
+          <div className="mt-8 flex flex-col space-y-6">
+          {/* Top Row: Section 1 and Section 3 Horizontally Aligned */}
+          <div className="flex flex-row space-x-8">
+           {/* Section 1: Latest Exam History */}
+            <div className="w-1/2">
+            {examHistory.length > 0 && (
+           <div>
+            <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
+            <Card className="m-8">
+           <CardContent className="p-8 bg-white rounded-lg shadow-md">
+          <div className="flex justify-between items-center">
+          <div>
+            <div className="text-xl font-bold mb-2">{examHistory[0].examTitle}</div>
+            <div className="text-md mb-2">Ngày làm: {new Date(examHistory[0].createdTime).toLocaleString()}</div>
+            <div className="text-lg mb-2">Câu hỏi nhiều lựa chọn: {examHistory[0].multiChoice.correct} / {examHistory[0].multiChoice.total}</div>
+            <div className="text-lg mb-2">Bài đọc: {examHistory[0].reading.correct} / {examHistory[0].reading.total}</div>
+            <div className="text-lg mb-2">Bài nghe: {examHistory[0].listening.correct} / {examHistory[0].listening.total}</div>
+            <div className="text-md font-bold mb-2">Điểm: {examHistory[0].score}%</div>
+           <button className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-all duration-300" onClick={()=>handleViewDetailExamHistory(examHistory[0].examHistoryId)}>
+            View Detailed
+          </button>
+          </div>
+        </div>
+        </CardContent>
+        </Card>
+         </div>
+          )}
+         </div>
+    
+         {/* Section 3: Column Chart */}
+       <div className="w-1/2">
+        {examHistory.length > 0 && (
+        <>
+        <h2 className="text-2xl font-semibold mb-5">Lịch sử kiểm tra</h2>
+        <BarChart
+          width={400}
+          height={400}
+          data={examHistory.map(exam => ({
+          date: new Date(exam.createdTime).toLocaleDateString(),  // Use date as the key
+          score: exam.score,
+         }))}
+        margin={{ top: 5, right: 2, left: 25, bottom: 5 }}
+           >
+      <CartesianGrid strokeDasharray="5 5" />
+      <XAxis dataKey="date" />  {/* Display date on the X-axis */}
+      <YAxis />
+      <Tooltip formatter={(value, name, props) => [`Score: ${value}`, `Date: ${props.payload.date}`]} /> {/* Tooltip shows date and score */}
+      <Legend />
+      <Bar dataKey="score" fill="#82ca9d" />
+      </BarChart>
+      </>
+       )}
+      </div>
+  </div>
+  {/* Bottom Row: Section 2 Full Width Below */}
+  <div className="flex flex-col w-full">
+    {examHistory.length > 1 && (
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
+        <div className="overflow-y-auto max-h-[800px]">
+          {examHistory.slice(1).map((exam, index) => (
+            <ExamHistoryItem key={index} exam={exam} onClickDetail={() => handleViewDetailExamHistory(exam.examHistoryId)}/>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+                    
+    </div>
+     </>
+     )}
             </div>
           </div>
         </div>

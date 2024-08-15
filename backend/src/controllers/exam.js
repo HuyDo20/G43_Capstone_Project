@@ -1,6 +1,7 @@
 const {createExam,
   getAllExams,
-  getExamById,
+   getExamWithAnswerById,
+  getExamWithoutAnswerById,
   updateExam,
   deleteExam,
   assignExamToCourse,
@@ -21,7 +22,6 @@ class ExamController {
 
   async getAllExams(req, res) {
     try {
-      console.log("get all exam");
       const exams = await getAllExams();
       return ok(res, exams);
     } catch (err) {
@@ -29,10 +29,10 @@ class ExamController {
     }
   }
 
-  async getExamById(req, res) {
+  async getExamWithAnswerById(req, res) {
     try {
       const { weekly_exam_id } = req.params;
-      const exam = await getExamById(weekly_exam_id);
+      const exam = await getExamWithAnswerById(weekly_exam_id);
       if (!exam) {
         return notfound(res, 'Exam not found');
       }
@@ -41,6 +41,20 @@ class ExamController {
       return notfound(res, err.message);
     }
   }
+
+   async getExamWithoutAnswerById(req, res) {
+    try {
+      const { weekly_exam_id } = req.params;
+      const exam = await getExamWithoutAnswerById(weekly_exam_id);
+      if (!exam) {
+        return notfound(res, 'Exam not found');
+      }
+      return ok(res, exam);
+    } catch (err) {
+      return notfound(res, err.message);
+    }
+  }
+
 
   async updateExam(req, res) {
     try {
@@ -83,6 +97,7 @@ class ExamController {
       return badRequest(res, err.message);
     }
   }
+  
 }
 
 module.exports = new ExamController();
