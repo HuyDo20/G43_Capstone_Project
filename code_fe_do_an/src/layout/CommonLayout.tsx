@@ -32,8 +32,8 @@ const CommonLayout = ({ children }) => {
       const userEncode = localStorage.getItem("user");
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
-          // setRole(userDecode?.role_id.toString());
-            setRole("2");
+          setRole(userDecode?.role_id.toString());
+           
     }
   }, [auth])
   

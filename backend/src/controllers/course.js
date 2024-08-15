@@ -694,4 +694,3 @@ module.exports = {
 	getProgressByDayId,
 	getProgressByWeekId
 };
-npm
