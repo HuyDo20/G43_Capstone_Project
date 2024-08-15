@@ -203,7 +203,7 @@ const getCourseDetailById = async (req, res) => {
 		const courseDetails = await Course.findOne({
 			where: {
 				course_id: course_id,
-				course_status_id: { [Op.or]: [1, 2] }
+				course_status_id: { [Op.or]: [1, 2, 3] }
 			},
 			include: [
 				{
@@ -694,4 +694,3 @@ module.exports = {
 	getProgressByDayId,
 	getProgressByWeekId
 };
-npm

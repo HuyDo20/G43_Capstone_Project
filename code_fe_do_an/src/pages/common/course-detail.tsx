@@ -82,7 +82,7 @@ function CourseDetailPage() {
           });
           setTimeout(() => {
             setWaitingCreate(false);
-            navigate("/admin/course-management/manage");
+            navigate("/contentCreator/course-management/manage");
           }, 2000);
         }
       } else {
@@ -310,7 +310,9 @@ function CourseDetailPage() {
         });
         setTimeout(() => {
           setWaitingCreate(false);
-          navigate("/admin/course-management/manage");
+          navigate("/contentCreator/course-management/manage");
+         
+          
         }, 2000);
       }
     } catch (e) {

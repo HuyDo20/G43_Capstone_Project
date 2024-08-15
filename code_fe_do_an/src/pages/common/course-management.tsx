@@ -12,7 +12,7 @@ interface Course {
   course_status_id: number;
   course_image: string;
   week: number;
-  deactive_reason?: string; // Optional field for deactivation reason
+  deactive_reason?: string; 
 }
 
 const statusLabels = {
@@ -41,9 +41,7 @@ const CoursesManagementPage: React.FC = () => {
       const userEncode = localStorage.getItem("user");
         if (userEncode) {
           const userDecode = JSON.parse(userEncode);
-          // setRole(userDecode?.role_id.toString());
-            setRole("2");
-          
+          setRole(userDecode?.role_id.toString());
     }
   }, [auth])
 
@@ -65,6 +63,12 @@ const CoursesManagementPage: React.FC = () => {
     
   }
 
+   const handleActionEdit= (course_id: number) => {
+   navigate(`/contentCreator/course-management/${course_id}`, {
+        state: { mode: "edit" },
+      });
+  }
+
 const handleOk = async () => {
   try {
     if (!confirmAction) return;
@@ -75,7 +79,7 @@ const handleOk = async () => {
     let requestData = {course_status_id, note, deactivationReason};
 
     if (action === "activate") {
-      course_status_id = 2; // Assuming 2 is the status ID for active
+      course_status_id = 2; 
       requestData.note = ""; 
     } else if (action === "reject") {
       if (deactivationReason === "" || !deactivationReason) {
@@ -162,48 +166,59 @@ const handleOk = async () => {
         return (
           <div className="flex flex-row gap-2">
             <Button onClick={() => handleActionView(course.course_id)}>
-              View
+              Xem
             </Button>
-            <Button
+            {role === "2" && (
+              <>
+              <Button
               type="primary"
               onClick={() => showConfirmModal(course.course_id, "activate")}
             >
-              Activate
+              Chấp thuận
             </Button>
             <Button
               danger
               onClick={() => showConfirmModal(course.course_id, "reject")}
             >
-              Reject
-            </Button>
+              Từ chối
+            </Button></>
+            )}
+           
           </div>
         );
       case 2: // Active
         return (
           <div className="flex flex-row gap-2">
             <Button onClick={() => handleActionView(course.course_id)}>
-              View
+              Xem
             </Button>
-            <Button
+            {role === "2" &&(<Button
               danger
               onClick={() => showConfirmModal(course.course_id, "reject")}
             >
-              Reject
-            </Button>
+              Vô hiệu hóa
+            </Button>)}
+           
           </div>
         );
       case 3: // Deactivated
         return (
           <div className="flex flex-row gap-2">
             <Button onClick={() => handleActionView(course.course_id)}>
-              View
+              Xem
             </Button>
-            <Button
+            {role === "2" && ( <Button
               type="primary"
               onClick={() => showConfirmModal(course.course_id, "activate")}
             >
-              Activate
-            </Button>
+              Kích hoạt
+            </Button>)}
+            {role === "3" && ( <Button
+              type="primary"
+              onClick={() => handleActionEdit(course.course_id)}
+            >
+              Chỉnh sửa
+            </Button>)}
           </div>
         );
       default:
