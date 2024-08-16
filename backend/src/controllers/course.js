@@ -230,16 +230,6 @@ const getCourseDetailById = async (req, res) => {
 								},
 								{
 									model: Video,
-									include: [
-										{
-											model: VideoQuestion,
-											include: [
-												{
-													model: VideoOption,
-												},
-											],
-										},
-									],
 								},
 								{
 									model: Vocabulary,
