@@ -265,7 +265,7 @@ const getCourseDetailById = async (req, res) => {
 const getProgressByWeekId = async (req, res) => {
   try {
 	  const { accountId, weekId } = req.body;
-	  console.log("get progress for week id: " + weekId);
+	  //console.log("get progress for week id: " + weekId);
 
     // Fetch the week with associated days, each including vocabulary, kanji, grammar, and video records
     const week = await Week.findOne({

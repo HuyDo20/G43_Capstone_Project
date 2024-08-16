@@ -375,23 +375,23 @@ function AddLessonModal({
         <Form layout="vertical">
           <Form.Item
             name="lessonType"
-            label="Select Lesson Type:"
+            label="Chọn loại bài học:"
             rules={[
-              { required: true, message: "Please select the lesson type!" },
+              { required: true, message: "Hãy chọn loại bài học!" },
             ]}
           >
             <Radio.Group onChange={(e) => setUserSelected(e.target.value)}>
               <Space direction="vertical">
-                <Radio value={1}>Vocab</Radio>
+                <Radio value={1}>Từ vựng</Radio>
                 <Radio value={2}>Kanji</Radio>
-                <Radio value={3}>Grammar</Radio>
+                <Radio value={3}>Ngữ pháp</Radio>
                 <Radio value={4}>Video</Radio>
               </Space>
             </Radio.Group>
           </Form.Item>
           <Form.Item>
             <Button type="primary" onClick={() => setUserChose(userSelected)}>
-              Next
+              Tiếp
             </Button>
           </Form.Item>
         </Form>
@@ -400,7 +400,7 @@ function AddLessonModal({
           <Form layout="vertical" onFinish={onSubmit} form={form}>
             <Form.Item
               name="vocab_name"
-              label="Vocabulary Name"
+              label="Tên từ vựng: "
               rules={[{ required: true }]}
             >
               <Input readOnly={mode === "view"} />

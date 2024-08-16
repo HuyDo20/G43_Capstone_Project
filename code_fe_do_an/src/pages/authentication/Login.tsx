@@ -15,7 +15,7 @@ import Notification from "@/components/ui/notification";
 // Định nghĩa schema với Zod
 const emailSchema = z
   .string()
-  .email({ message: "Email không hợp lệ" })
+  .email({ message: "Không được để trống" })
   .refine((val) => val.endsWith("@gmail.com"), {
     message: "Email phải kết thúc bằng đuôi @gmail.com",
   });

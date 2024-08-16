@@ -16,7 +16,6 @@ module.exports = [
 	require("./quiz"),
 	require("./question"),
 	require("./enroll"),
-	require("./lesson"),
 	require("./vocabulary"),
 	require("./video"),
 	require("./account_day"),
