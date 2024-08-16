@@ -1,4 +1,5 @@
 import { useAuth } from "@/hook/AuthContext";
+import Alphabet from "@/pages/alphabet/Alphabet";
 import { SmileOutlined,FrownOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, Input, Typography, notification } from "antd";
 import { useEffect, useState } from "react";
@@ -130,6 +131,7 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
                 value={numQuestions}
                 onChange={(e) => setNumQuestions(Number(e.target.value))}
                 min={0}
+                max={data.length}
               />
               {/* ;
               <input

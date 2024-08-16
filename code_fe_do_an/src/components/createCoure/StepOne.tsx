@@ -100,6 +100,7 @@ const StepOne = ({
             name="week"
             value={course.week}
             min={0}
+            max={12}
             onChange={handleChangeInput}
           />
         </Form.Item>

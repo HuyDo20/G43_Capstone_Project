@@ -376,9 +376,7 @@ function AddLessonModal({
           <Form.Item
             name="lessonType"
             label="Chọn loại bài học:"
-            rules={[
-              { required: true, message: "Hãy chọn loại bài học!" },
-            ]}
+            rules={[{ required: true, message: "Hãy chọn loại bài học!" }]}
           >
             <Radio.Group onChange={(e) => setUserSelected(e.target.value)}>
               <Space direction="vertical">
@@ -512,19 +510,17 @@ function AddLessonModal({
           <Form layout="vertical" onFinish={onSubmit} form={form}>
             <Form.Item
               name="kanji_name"
-              label="Kanji Name"
-              rules={[
-                { required: true, message: "Please enter the kanji name." },
-              ]}
+              label="Tên kanji"
+              rules={[{ required: true, message: "Hãy nhập kanji." }]}
             >
               <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
               name="day_id"
-              label="Select Day"
-              rules={[{ required: true, message: "Please select the day!" }]}
+              label="Chọn ngày"
+              rules={[{ required: true, message: "Hãy chọn ngày!" }]}
             >
-              <Select disabled={mode === "view"} placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -537,24 +533,24 @@ function AddLessonModal({
             </Form.Item>
             <Form.Item
               name="kanji_status_id"
-              label="Example"
+              label="Ví dụ"
               style={{ display: "none" }}
             >
               <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
-            <Form.Item name="cv_spelling" label="CV Spelling">
+            <Form.Item name="cv_spelling" label="Âm Hán Việt">
               <Input readOnly={mode === "view"} />
             </Form.Item>
-            <Form.Item name="kanji_kunyomi" label="Kunyomi">
+            <Form.Item name="kanji_kunyomi" label="Âm Kun">
               <Input readOnly={mode === "view"} />
             </Form.Item>
-            <Form.Item name="kanji_onyomi" label="Onyomi">
+            <Form.Item name="kanji_onyomi" label="Âm On">
               <Input readOnly={mode === "view"} />
             </Form.Item>
             {/* <Form.Item name="kanji_image" label="Image URL">
               <Input readOnly={mode==="view"} />
             </Form.Item> */}
-            <Form.Item label="Image" name="kanji_image">
+            <Form.Item label="Ảnh" name="kanji_image">
               <ImgCrop rotationSlider>
                 <Upload
                   disabled={mode === "view"}
@@ -572,7 +568,7 @@ function AddLessonModal({
                     showDownloadIcon: false,
                   }}
                 >
-                  {fileImageList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Tải lên"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
@@ -594,7 +590,7 @@ function AddLessonModal({
                       >
                         <Input
                           readOnly={mode === "view"}
-                          placeholder="Kanji Word"
+                          placeholder="Từ ghép"
                         />
                       </Form.Item>
                       <Form.Item
@@ -603,17 +599,14 @@ function AddLessonModal({
                       >
                         <Input
                           readOnly={mode === "view"}
-                          placeholder="Hiragana Character"
+                          placeholder="Hiragana"
                         />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "kanji_word_meaning"]}
                       >
-                        <Input
-                          readOnly={mode === "view"}
-                          placeholder="Meaning"
-                        />
+                        <Input readOnly={mode === "view"} placeholder="Nghĩa" />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => remove(name)} />
                     </Space>
@@ -625,7 +618,7 @@ function AddLessonModal({
                       block
                       icon={<PlusOutlined />}
                     >
-                      Add Kanji Word
+                      Thêm từ ghép
                     </Button>
                   </Form.Item>
                 </>
@@ -642,10 +635,10 @@ function AddLessonModal({
                       setUserChose(0);
                     }}
                   >
-                    Return
+                    Quay lại
                   </Button>
                   <Button type="primary" htmlType="submit">
-                    Submit Kanji
+                    Xong
                   </Button>
                 </Flex>
               )}
@@ -662,27 +655,27 @@ function AddLessonModal({
           >
             <Form.Item
               name="grammar_name"
-              label="Grammar Name"
+              label="Tên ngữ pháp"
               rules={[{ required: true }]}
             >
               <Input
                 readOnly={mode === "view"}
-                placeholder="Enter Grammar name"
+                placeholder="Nhập tên ngữ pháp ..."
               />
             </Form.Item>
             <Form.Item
               name="grammar_status_id"
-              label="Example"
+              label="Ví dụ"
               style={{ display: "none" }}
             >
               <Input readOnly={mode === "view"} value={"1"} />
             </Form.Item>
             <Form.Item
               name="day_id"
-              label="Select Day"
+              label="Chọn ngày"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select disabled={mode === "view"} placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -693,22 +686,22 @@ function AddLessonModal({
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item name="grammar_structure" label="Grammar Structure">
+            <Form.Item name="grammar_structure" label="Cấu trúc ngữ pháp">
               <Input
                 readOnly={mode === "view"}
-                placeholder="Enter Grammar structure"
+                placeholder="Nhập cấu trúc ngữ pháp"
               />
             </Form.Item>
-            <Form.Item name="grammar_description" label="Grammar Description">
+            <Form.Item name="grammar_description" label="Mô tả">
               <Input
                 readOnly={mode === "view"}
-                placeholder="Enter Grammar description"
+                placeholder="Nhập mô tả cho ngữ pháp"
               />
             </Form.Item>
             {/* <Form.Item name="grammar_image" label="Image URL">
               <Input readOnly={mode==="view"} placeholder="Enter image URL" />
             </Form.Item> */}
-            <Form.Item label="Image" name="grammar_image">
+            <Form.Item label="Ảnh" name="grammar_image">
               <ImgCrop rotationSlider>
                 <Upload
                   disabled={mode === "view"}
@@ -726,7 +719,7 @@ function AddLessonModal({
                     showDownloadIcon: false,
                   }}
                 >
-                  {fileImageList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Tải lên"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
@@ -745,19 +738,13 @@ function AddLessonModal({
                         name={[name, "grammar_example"]}
                         rules={[{ required: true, message: "Missing example" }]}
                       >
-                        <Input
-                          readOnly={mode === "view"}
-                          placeholder="Grammar Example"
-                        />
+                        <Input readOnly={mode === "view"} placeholder="Ví dụ" />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "grammar_example_meaning"]}
                       >
-                        <Input
-                          readOnly={mode === "view"}
-                          placeholder="Example Meaning"
-                        />
+                        <Input readOnly={mode === "view"} placeholder="Nghĩa" />
                       </Form.Item>
                       {mode !== "view" && (
                         <MinusCircleOutlined onClick={() => remove(name)} />
@@ -772,7 +759,7 @@ function AddLessonModal({
                         block
                         icon={<PlusOutlined />}
                       >
-                        Add Grammar Example
+                        Thêm ví dụ
                       </Button>
                     </Form.Item>
                   )}
@@ -791,10 +778,10 @@ function AddLessonModal({
                       setUserChose(0);
                     }}
                   >
-                    Return
+                    Quay lại
                   </Button>
                   <Button type="primary" htmlType="submit">
-                    Submit Grammar
+                    Xong
                   </Button>
                 </Flex>
               )}
@@ -811,17 +798,14 @@ function AddLessonModal({
           >
             <Form.Item
               name="video_name"
-              label="Video Name"
+              label="Tên video"
               rules={[{ required: true }]}
             >
-              <Input
-                readOnly={mode === "view"}
-                placeholder="Enter video name"
-              />
+              <Input readOnly={mode === "view"} placeholder="Tiêu đề video" />
             </Form.Item>
             <Form.Item
               name="video_status_id"
-              label="Example"
+              label="Ví dụ"
               style={{ display: "none" }}
             >
               <Input readOnly={mode === "view"} value={"1"} />
@@ -851,16 +835,16 @@ function AddLessonModal({
                   showDownloadIcon: false,
                 }}
               >
-                {fileAudioAndVideoList.length < 5 && "+ Upload"}
+                {fileAudioAndVideoList.length < 5 && "+ Tải lên"}
               </Upload>
             </Form.Item>
 
             <Form.Item
               name="day_id"
-              label="Select Day"
+              label="Chọn ngày"
               rules={[{ required: true, message: "Please select the day!" }]}
             >
-              <Select disabled={mode === "view"} placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -889,27 +873,27 @@ function AddLessonModal({
                       <Form.Item
                         {...restField}
                         name={[name, "question_content"]}
-                        label="Question Content"
+                        label="Nội dung câu hỏi"
                         rules={[
                           {
                             required: true,
-                            message: "Missing question content",
+                            message: "Thiếu nội dung câu hỏi",
                           },
                         ]}
                       >
                         <Input
                           readOnly={mode === "view"}
-                          placeholder="Enter question content"
+                          placeholder="Nhập nội dung câu hỏi"
                         />
                       </Form.Item>
                       <Form.Item
                         {...restField}
                         name={[name, "question_answer"]}
-                        label="Question Answer"
+                        label="Đáp án"
                       >
                         <Input
                           readOnly={mode === "view"}
-                          placeholder="Enter correct answer"
+                          placeholder="Nhập đáp án đúng"
                         />
                       </Form.Item>
 
@@ -933,7 +917,7 @@ function AddLessonModal({
                                 >
                                   <Input
                                     readOnly={mode === "view"}
-                                    placeholder="Option content"
+                                    placeholder="Đáp án khác"
                                   />
                                 </Form.Item>
                                 <MinusCircleOutlined
@@ -947,7 +931,7 @@ function AddLessonModal({
                                 onClick={() => addOption()}
                                 icon={<PlusOutlined />}
                               >
-                                Add Option
+                                Thêm đáp án
                               </Button>
                             </Form.Item>
                           </>
@@ -963,7 +947,7 @@ function AddLessonModal({
                       onClick={() => add()}
                       icon={<PlusOutlined />}
                     >
-                      Add Question
+                      Thêm câu hỏi
                     </Button>
                   </Form.Item>
                 </>
@@ -981,10 +965,10 @@ function AddLessonModal({
                       setUserChose(0);
                     }}
                   >
-                    Return
+                    Quay lại
                   </Button>
                   <Button type="primary" htmlType="submit">
-                    Submit Video
+                    Xong
                   </Button>
                 </Flex>
               )}
