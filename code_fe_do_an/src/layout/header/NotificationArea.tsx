@@ -180,7 +180,7 @@ export function NotificationArea ({userId} : Props) {
               loading={loading}
               onClick={handleGetMoreNotifications}
             >
-              Get more notification
+              Xem thêm thông báo khác
             </Button>
           </div>
         </section>

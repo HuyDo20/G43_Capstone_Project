@@ -1,5 +1,5 @@
 import { useAuth } from "@/hook/AuthContext";
-import { SmileOutlined } from "@ant-design/icons";
+import { SmileOutlined,FrownOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, Input, Typography, notification } from "antd";
 import { useEffect, useState } from "react";
 import React from 'react';
@@ -53,10 +53,16 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
       icon: status ? (
         <SmileOutlined
           style={{
-            color: "#108ee9",
+            color: "#1b8a52",
           }}
         />
-      ) : null,
+      ) : (
+        <FrownOutlined
+          style={{
+            color: "#ff4d4f",
+          }}
+        />
+      ),
     });
   };
 
@@ -73,14 +79,14 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       } else {
         openNotification(
-          "Congratulations!",
-          "Congratulations! You have completed the quiz.",
+          "Chúc mừng!",
+          "Chúc mừng bạn đã hoàn thành bài kiểm tra.",
           true
         );
         setQuiz([]);
       }
     } else {
-      openNotification("Incorrect!", "Incorrect. Try again!", false);
+      openNotification("Sai!", "Vui lòng thử lại!", false);
     }
   };
 

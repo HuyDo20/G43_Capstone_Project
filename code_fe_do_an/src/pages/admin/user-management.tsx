@@ -6,13 +6,16 @@ import {
   Select,
   Space,
   Table,
-  Tag, Pagination,
-   message
+  Tag,
+  Pagination,
+  message,
 } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 interface User {
   id: number;
@@ -65,7 +68,6 @@ const ModalEdit: React.FC<ModalEditProps> = ({
   };
 
   useEffect(() => {
- 
     if (data) {
       setUserData({
         id: data.id,
@@ -85,29 +87,29 @@ const ModalEdit: React.FC<ModalEditProps> = ({
 
   const handleCreateAccount = async () => {
     if (!userData.password) {
-      userData.password = '12345678'; // Set your default password here
+      userData.password = "12345678"; // Set your default password here
     }
-  
+
     if (
       !userData.full_name.trim() ||
       !userData.email.trim() ||
       !userData.phone_number.trim() ||
       !userData.password.trim() ||
       !userData.role_id ||
-      userData.point === null || 
+      userData.point === null ||
       !userData.dob.trim() ||
       !userData.status_id
     ) {
-      message.warning("Please fill in all required fields");
+      message.warning("Hãy điền đầy đủ thông tin");
       return;
     }
-  
+
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(userData.phone_number)) {
       message.warning("Phone number is invalid");
       return;
     }
-  
+
     try {
       let token = "";
       const userEncode = localStorage.getItem("user");
@@ -115,7 +117,10 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
       }
-      const response = await axios.post("/account", { ...userData, role_id: userData.role_id });
+      const response = await axios.post("/account", {
+        ...userData,
+        role_id: userData.role_id,
+      });
       if (response.status === 201) {
         message.success("Create successful");
         setReload(true);
@@ -125,7 +130,7 @@ const ModalEdit: React.FC<ModalEditProps> = ({
       }
     } catch (error) {
       console.error(error);
-      navigate('/error', { state: { message: error} });
+      navigate("/error", { state: { message: error } });
     }
   };
 
@@ -154,19 +159,18 @@ const ModalEdit: React.FC<ModalEditProps> = ({
         </Form.Item>
 
         <Form.Item label="Mật khẩu">
-        <Input.Password
-        value={userData.password  ? userData.password : '12345678'}
-        onChange={handleChangeInput}
-        name="password"
-        readOnly
+          <Input.Password
+            value={userData.password ? userData.password : "12345678"}
+            onChange={handleChangeInput}
+            name="password"
+            readOnly
           />
         </Form.Item>
 
         <Form.Item label="Trạng thái">
           <Select
-            onChange={(value) => setUserData({ ...userData, status_id: value})}
+            onChange={(value) => setUserData({ ...userData, status_id: value })}
             value={userData.status_id}
-            
           >
             <Select.Option value={2}>Hoạt động</Select.Option>
             <Select.Option value={3}>Không hoạt động</Select.Option>
@@ -226,9 +230,18 @@ const UserManagementPage: React.FC = () => {
 
   const handleDeleteUser = async (id: number) => {};
 
+  const showSuccessNotification = () => {
+    notification.open({
+      message: "",
+      description: "Cập nhật thành công.",
+      icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />, // Green check mark
+      placement: "topRight",
+    });
+  };
+
   const handleUpdateUserData = async () => {
     if (!selectedItem.role_id || !selectedItem.status_id) {
-      message.warning("Please fill in all required fields");
+      message.warning("Hãy điền đầy đủ thông tin");
       return;
     }
 
@@ -241,15 +254,16 @@ const UserManagementPage: React.FC = () => {
       }
       const response = await axios.put(
         `/account/${selectedItem.account_id}`,
-        selectedItem, {
+        selectedItem,
+        {
           headers: {
-            Authorization : token
-          }
+            Authorization: token,
+          },
         }
       );
 
       if (response.status === 200) {
-        message.success("Cập nhật thành công");
+        showSuccessNotification();
         setReload(true);
         setSelectedItem(null);
       } else {
@@ -299,7 +313,7 @@ const UserManagementPage: React.FC = () => {
       key: "phone_number",
     },
     {
-      title: "Vị trí",
+      title: "Vai trò",
       dataIndex: "role_id",
       key: "role_id",
       render: (_: any, user: User) => {
@@ -337,7 +351,6 @@ const UserManagementPage: React.FC = () => {
                 }
                 value={selectedItem.role_id}
                 options={[
-              
                   { label: "Người duyệt nội dung", value: 2 },
                   { label: "Người tạo nội dung", value: 3 },
                   { label: "Người dùng", value: 4 },
@@ -482,7 +495,7 @@ const UserManagementPage: React.FC = () => {
         type="primary"
         style={{ marginBottom: "1%" }}
       >
-       Tạo người dùng mới
+        Tạo người dùng mới
       </Button>
       <Table
         loading={reload}
@@ -491,15 +504,14 @@ const UserManagementPage: React.FC = () => {
         pagination={{
           current: currentPage,
           total: totalPages * 10,
-          showSizeChanger:false,
+          showSizeChanger: false,
           onChange: (page) => {
             setCurrentPage(page);
             setReload(true);
           },
-          
         }}
       />
-       
+
       <ModalEdit
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
