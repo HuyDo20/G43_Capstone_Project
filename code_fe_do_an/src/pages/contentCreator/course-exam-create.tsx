@@ -407,7 +407,7 @@ const CourseExamCreate: React.FC = () => {
   </StyledButton> */}
 </Sidebar>
       <StyledButton type="primary" onClick={handleSaveExam}>
-        Complete
+        Xác nhận 
       </StyledButton>
     </ExamCreatePage>
   );

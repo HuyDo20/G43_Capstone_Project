@@ -50,20 +50,20 @@ export default function WeeklyExamHistory() {
 
     const fetchExamHistories = async () => {
       try {
-        let token = "";
-        let accountId;
-        const userEncode = localStorage.getItem("user");
-        if (userEncode) {
-          const userDecode = JSON.parse(userEncode);
-          token = userDecode?.token;
-          accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
-        }
-        const url = `/examHistories/${weekly_exam_id}/${accountId}`;
-        const request = await axios.get(url, {
-          headers: {
-            Authorization: token,
-          },
-        });
+           let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      }
+
+      const url = `/examHistoriesByExamIdAndAccountId`;
+   
+      const request = await axios.post(url, { weekly_exam_id: weekly_exam_id, accountId }, {
+        headers: { Authorization: token },
+      });
       
         const response = request.data;
         console.log(response);
