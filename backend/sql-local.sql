@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `swp_fpt` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `swp_fpt`;
+-- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
 --
 -- Host: localhost    Database: swp_fpt
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.0.29
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,7 +42,7 @@ CREATE TABLE `account` (
   KEY `status_id` (`status_id`),
   CONSTRAINT `account_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
   CONSTRAINT `account_ibfk_2` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,7 +51,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'Admin','admin@gmail.com','$2a$10$.SLoZzQHYFujJscYnH6ly.dnCeQ39hNhOs9nmGX8sDjBP0JkANcrS',NULL,NULL,1,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJmdWxsX25hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjpudWxsLCJkb2IiOm51bGwsImF2YXRhciI6bnVsbCwicm9sZV9pZCI6MSwicG9pbnQiOjAsInN0YXR1c19pZCI6MiwiaWF0IjoxNzIwMzIwNzY0LCJleHAiOjE3NTE4NTY3NjR9.rX8Bme4L81qFs5L05og-0nvZOwQDSuqfSSkOo9c7xUI',NULL),(2,'Content Manager','cm@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,2,0,2,NULL,NULL),(3,'Content Creator','cc@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,3,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozLCJmdWxsX25hbWUiOiJDb250ZW50IENyZWF0b3IiLCJlbWFpbCI6ImNjQGdtYWlsLmNvbSIsInBob25lX251bWJlciI6bnVsbCwiZG9iIjpudWxsLCJhdmF0YXIiOm51bGwsInJvbGVfaWQiOjMsInBvaW50IjowLCJzdGF0dXNfaWQiOjIsImlhdCI6MTcxODg0OTc3MCwiZXhwIjoxNzUwMzg1NzcwfQ.CtmyE2MA1bA-5HKzv-3UNRTY6P0RkMPLnxsNkCwSeqI',NULL),(4,'Nguyen Van A','user@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC','0123456789','string',4,1000,1,NULL,'2001-04-22'),(7,'Do Tran Qu','huy@gmail.com','$2a$10$edBlNlninVw8Yad1n9VOJun7VWDAwgDJJn1rVV9UjmHYnmgGYqPfq','01234554512','string',4,1000,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo3LCJmdWxsX25hbWUiOiJEbyBUcmFuIFF1IiwiZW1haWwiOiJodXlAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMDEyMzQ1NTQ1MTIiLCJkb2IiOiIyMDAxLTA2LTA1IiwiYXZhdGFyIjoic3RyaW5nIiwicm9sZV9pZCI6NCwicG9pbnQiOjEwMDAsInN0YXR1c19pZCI6MSwiaWF0IjoxNzIwMzIxNDgzLCJleHAiOjE3NTE4NTc0ODN9.bzJUUv8gofiqqiAjDqgNKtkv6LS0sv34LxmoKp_ni-I','2001-06-05'),(8,'Nguyễn Đình Thành Quang','quanggk98@gmail.com','$2a$10$9EqnGiTP5O5o8omqEJm7XO1/d5PXLF2clu6W.B2iBWGcT81Ju36I6',NULL,NULL,4,0,2,NULL,NULL),(9,'Nguyen Chi Hai','hai@gmail.com','$2a$10$DEOlKQoscNlHMXZUfyEU1eqlR9IIN7MTOvsJNNZF8Mq7fFiW/Aq/u',NULL,NULL,4,0,2,NULL,NULL),(10,'Tran Thi Thao','thao@gmail.com','$2a$10$4iDowFtAYoPDTmvkRemzYumYK9P5yOpbyL3yBttEtRqYUV6K4TuqG',NULL,NULL,4,0,2,NULL,NULL),(11,'Bui Kieu Mai','mai@gmail.com','$2a$10$ALDX1Cf7EBEQXQVfioG/sOHeXFdWeyfiGQOzm54lNUlInZf7mwgpG',NULL,NULL,4,0,2,NULL,NULL),(12,'Ta Nhat Minh','minh@gmail.com','$2a$10$6HCqA63.sxmdgcSbNnHA8.pFtaELbRfriizy1BTCqpfjZd64t0CAC',NULL,NULL,4,0,2,NULL,NULL),(14,'test','test@gmail.com','$2a$10$KdvoAYEmYR9WWrQz7br68OIuRTbO79DP7P1DyWXL7KP/HYLiMwDwe','0123456789','string',4,1000,1,NULL,'2001-04-22');
+INSERT INTO `account` VALUES (1,'Admin','admin@gmail.com','$2a$10$.SLoZzQHYFujJscYnH6ly.dnCeQ39hNhOs9nmGX8sDjBP0JkANcrS',NULL,NULL,1,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJmdWxsX25hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjpudWxsLCJkb2IiOm51bGwsImF2YXRhciI6bnVsbCwicm9sZV9pZCI6MSwicG9pbnQiOjAsInN0YXR1c19pZCI6MiwiaWF0IjoxNzIxMjUzMjIwLCJleHAiOjE3NTI3ODkyMjB9.uafJAaAFOMd5aFbEUOrV8inWgd9ySSNfXMc_zg810tQ',NULL),(2,'Content Manager','cm@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,2,0,2,NULL,NULL),(3,'Content Creator','cc@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC',NULL,NULL,3,0,2,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozLCJmdWxsX25hbWUiOiJDb250ZW50IENyZWF0b3IiLCJlbWFpbCI6ImNjQGdtYWlsLmNvbSIsInBob25lX251bWJlciI6bnVsbCwiZG9iIjpudWxsLCJhdmF0YXIiOm51bGwsInJvbGVfaWQiOjMsInBvaW50IjowLCJzdGF0dXNfaWQiOjIsImlhdCI6MTcxODg0OTc3MCwiZXhwIjoxNzUwMzg1NzcwfQ.CtmyE2MA1bA-5HKzv-3UNRTY6P0RkMPLnxsNkCwSeqI',NULL),(4,'Nguyen Van A','user@gmail.com','$2a$10$whXPvUfplRlRYklmooTDvuqNoInNw/9KU1erD8axd5XMH8MZsBLkC','0123456789','string',4,1000,2,NULL,'2001-04-22'),(7,'Do Tran Quang Huy','huy@gmail.com','$2a$10$edBlNlninVw8Yad1n9VOJun7VWDAwgDJJn1rVV9UjmHYnmgGYqPfq','01234554512','string',4,1000,2,NULL,'2001-06-05'),(8,'Nguyễn Đình Thành Quang','quanggk98@gmail.com','$2a$10$9EqnGiTP5O5o8omqEJm7XO1/d5PXLF2clu6W.B2iBWGcT81Ju36I6',NULL,NULL,4,0,2,NULL,NULL),(9,'Nguyen Chi Hai','hai@gmail.com','$2a$10$DEOlKQoscNlHMXZUfyEU1eqlR9IIN7MTOvsJNNZF8Mq7fFiW/Aq/u',NULL,NULL,4,0,2,NULL,NULL),(10,'Tran Thi Thao','thao@gmail.com','$2a$10$4iDowFtAYoPDTmvkRemzYumYK9P5yOpbyL3yBttEtRqYUV6K4TuqG',NULL,NULL,4,0,3,NULL,NULL),(11,'Bui Kieu Mai','mai@gmail.com','$2a$10$ALDX1Cf7EBEQXQVfioG/sOHeXFdWeyfiGQOzm54lNUlInZf7mwgpG',NULL,NULL,4,0,2,NULL,NULL),(12,'Ta Nhat Minh','minh@gmail.com','$2a$10$6HCqA63.sxmdgcSbNnHA8.pFtaELbRfriizy1BTCqpfjZd64t0CAC',NULL,NULL,4,0,3,NULL,NULL),(14,'test','test@gmail.com','$2a$10$KdvoAYEmYR9WWrQz7br68OIuRTbO79DP7P1DyWXL7KP/HYLiMwDwe','0123456789','string',4,1000,1,NULL,'2001-04-22'),(15,'Mai','buimai@gmail.com','$2a$10$KIa4/SjMfEqQBxDhImslzeBZI2k.N5DFpP16oa5kasnGwXvf04yOC',NULL,NULL,4,0,2,NULL,NULL),(16,'Do Tran Quang Huy ','huydo@gmail.com','$2a$10$DrcZyGV0jsN.LBsx2e3r9.7lR9OBovLREpVF6a65UJuFAzzxivvei',NULL,NULL,4,0,2,NULL,NULL),(17,'minhtn','minhtn123@gmail.com','$2a$10$z3xn6Ogay0z1ujzlwnnooO5YufOzIe/spgCYml88naAvU8xrEOtia','0955444578','',4,0,2,NULL,'2008-03-05'),(18,'Ta Nhat Minh','minhtn1234@gmail.com','$2a$10$pSdyrDMDdk1cIh/MuuguUuPT7J1wLhvFtI2wjFp1kRV8Nt8E2ecKu',NULL,NULL,4,0,2,NULL,NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,13 +210,15 @@ CREATE TABLE `course` (
   `course_id` int NOT NULL AUTO_INCREMENT,
   `course_name` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `course_level` text,
+  `course_skill` text,
   `course_status_id` int DEFAULT NULL,
   `course_image` text,
   `week` int DEFAULT NULL,
   PRIMARY KEY (`course_id`),
   KEY `course_status_id` (`course_status_id`),
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`course_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -223,7 +227,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (1,'Tiếng Nhật cơ bản 1','Khóa học dành cho người mới bắt đầu, tập trung vào việc phát triển các kỹ năng tiếng Nhật. Với phương pháp tiếp cận thực tế, giúp người học dễ dàng áp dụng ngôn ngữ vào cuộc sống hàng ngày và các tình huống giao tiếp thực tế.',2,'course/image/jpd113.png',5),(2,'Tiếng Nhật trung cấp 1','Khóa học dành cho người học trung cấp, tập trung vào việc phát triển các kỹ năng tiếng Nhật. Với phương pháp tiếp cận thực tế, giúp người học dễ dàng áp dụng ngôn ngữ vào cuộc sống hàng ngày và các tình huống giao tiếp thực tế.',2,'course/image/jpd113.png',6),(4,'1323','444',2,', http://localhost:5000/uploads/438173070_777075011236802_6840252571953289906_n-1719666821733-1719667241771.jpg, http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241.jpg',4),(5,'12323','312213312',1,'http://localhost:5000/uploads/438081579_777075177903452_1244932991696882456_n-1719672061651-1720156601353.jpg',3),(6,'12','',1,'',2);
+INSERT INTO `course` VALUES (1,'Tiếng Nhật cơ bản 1','Khóa học dành cho người mới bắt đầu, tập trung vào việc phát triển các kỹ năng tiếng Nhật. Với phương pháp tiếp cận thực tế, giúp người học dễ dàng áp dụng ngôn ngữ vào cuộc sống hàng ngày và các tình huống giao tiếp thực tế.',NULL,NULL,2,'http://localhost:5000/uploads/Screenshot 2024-07-04 183357-1720597145626.png',5),(2,'Tiếng Nhật trung cấp 1','Khóa học dành cho người học trung cấp, tập trung vào việc phát triển các kỹ năng tiếng Nhật. Với phương pháp tiếp cận thực tế, giúp người học dễ dàng áp dụng ngôn ngữ vào cuộc sống hàng ngày và các tình huống giao tiếp thực tế.',NULL,NULL,2,'http://localhost:5000/uploads/dekiru-nihongo-so-trung-cap-5q-resize-1720704618625.jpg',6),(4,'1323','444',NULL,NULL,3,', http://localhost:5000/uploads/438173070_777075011236802_6840252571953289906_n-1719666821733-1719667241771.jpg, http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241.jpg',4),(5,'12323','312213312',NULL,NULL,3,'http://localhost:5000/uploads/438081579_777075177903452_1244932991696882456_n-1719672061651-1720156601353.jpg',3),(6,'12','12',NULL,NULL,3,'',5),(7,'Course 3','Course 3 description ',NULL,NULL,1,'http://localhost:5000/uploads/Screenshot 2024-07-05 102453-1720702175715.png',3);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,7 +249,7 @@ CREATE TABLE `day` (
   KEY `day_status_id` (`day_status_id`),
   CONSTRAINT `day_ibfk_1` FOREIGN KEY (`week_id`) REFERENCES `week` (`week_id`),
   CONSTRAINT `day_ibfk_2` FOREIGN KEY (`day_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +258,7 @@ CREATE TABLE `day` (
 
 LOCK TABLES `day` WRITE;
 /*!40000 ALTER TABLE `day` DISABLE KEYS */;
-INSERT INTO `day` VALUES (1,'Ngày 1 ',1,2,NULL),(2,'Ngày 2',1,2,NULL),(3,'Ngày 3',1,2,NULL),(4,'Ngày 4',1,2,NULL),(5,'Ngày 5',1,2,NULL),(6,'Ngày 6',1,2,NULL),(7,'123132',4,1,NULL),(8,'62746',4,3,NULL),(9,'1',8,1,NULL),(10,'This is test',11,1,'null'),(11,'This is test2',11,1,'[\"Week 1 - Day 1\"]'),(12,'test week 2 -day 2',12,1,'[\"Week 1 - Day 1\",\"Week 1 - Day 2\"]');
+INSERT INTO `day` VALUES (1,'Ngày 1 ',1,2,'null'),(2,'Ngày 2',1,2,'null'),(3,'Ngày 3',1,2,'null'),(4,'Ngày 4',1,2,'null'),(5,'Ngày 5',1,2,'null'),(6,'Ngày 6',1,2,'null'),(7,'123132',4,1,NULL),(8,'62746',4,3,NULL),(9,'1',8,1,NULL),(10,'This is test',11,1,'null'),(11,'This is test2',11,1,'[\"Week 1 - Day 1\"]'),(12,'test week 2 -day 2',12,3,'[\"Week 1 - Day 1\",\"Week 1 - Day 2\"]'),(13,'Ngay 1 Tuan 2',3,1,'[]'),(14,'Ngay ２ Tuan 2',3,3,'[\"Week 1 - Day 2\"]'),(15,'Ngay 2 tuan 2',3,3,'[\"Week 1 - Day 2\"]'),(16,'Ngay 3 tuan 2',3,3,'[]'),(17,'Ngay 2 tuan 2',3,1,'[\"Week 1 - Day 2\"]');
 /*!40000 ALTER TABLE `day` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +312,7 @@ CREATE TABLE `grammar` (
   KEY `day_id` (`day_id`),
   CONSTRAINT `grammar_ibfk_1` FOREIGN KEY (`day_id`) REFERENCES `day` (`day_id`),
   CONSTRAINT `grammar_ibfk_2` FOREIGN KEY (`grammar_status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +321,7 @@ CREATE TABLE `grammar` (
 
 LOCK TABLES `grammar` WRITE;
 /*!40000 ALTER TABLE `grammar` DISABLE KEYS */;
-INSERT INTO `grammar` VALUES (1,1,'私の名前・国・仕事','私は（名前）です','Giới thiệu về tên','',2),(2,1,'私の名前・国・仕事','（国）人です','Giới thiệu quốc tịch','',2),(4,7,'2222222222222222','123321','123312','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719659305476.jpg, http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719659491010.jpg',3),(5,9,'test','têtteteteet','teettetete','http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241-1720156621674.jpg, http://localhost:5000/uploads/MTXX_MR20240701_210114243-1720167838597.jpg',1);
+INSERT INTO `grammar` VALUES (1,1,'私の名前・国・仕事','私は（名前）です','Giới thiệu về tên','',1),(2,1,'私の名前・国・仕事','（国）人です','Giới thiệu quốc tịch','',1);
 /*!40000 ALTER TABLE `grammar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,7 +343,7 @@ CREATE TABLE `grammarexample` (
   KEY `grammar_example_status_id` (`grammar_example_status_id`),
   CONSTRAINT `grammarexample_ibfk_1` FOREIGN KEY (`grammar_id`) REFERENCES `grammar` (`grammar_id`),
   CONSTRAINT `grammarexample_ibfk_2` FOREIGN KEY (`grammar_example_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1060 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,7 +352,7 @@ CREATE TABLE `grammarexample` (
 
 LOCK TABLES `grammarexample` WRITE;
 /*!40000 ALTER TABLE `grammarexample` DISABLE KEYS */;
-INSERT INTO `grammarexample` VALUES (1,1,'私はハイです。','Tôi là Hải.',2),(2,2,'ドイツじんです。','Tôi là người Đức.',2),(3,4,'12331','132213321',1),(4,5,'hehe','hêh',1),(5,5,'huh','huh',1),(6,5,'hehe','hêh',1),(7,5,'huh','huh',1),(8,5,'hehe','hêh',1),(9,5,'huh','huh',1),(10,5,'hehe','hêh',1),(11,5,'huh','huh',1),(12,5,'hehe','hêh',1),(13,5,'huh','huh',1),(14,5,'hehe','hêh',1),(15,5,'hehe','hêh',1),(16,5,'huh','huh',1),(17,5,'huh','huh',1),(18,5,'hehe','hêh',1),(19,5,'huh','huh',1);
+INSERT INTO `grammarexample` VALUES (1,1,'私はハイです。','Tôi là Hải.',2),(2,2,'ドイツじんです。','Tôi là người Đức.',2);
 /*!40000 ALTER TABLE `grammarexample` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -373,7 +377,7 @@ CREATE TABLE `kanji` (
   KEY `day_id` (`day_id`),
   CONSTRAINT `kanji_ibfk_1` FOREIGN KEY (`day_id`) REFERENCES `day` (`day_id`),
   CONSTRAINT `kanji_ibfk_2` FOREIGN KEY (`kanji_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -382,7 +386,7 @@ CREATE TABLE `kanji` (
 
 LOCK TABLES `kanji` WRITE;
 /*!40000 ALTER TABLE `kanji` DISABLE KEYS */;
-INSERT INTO `kanji` VALUES (1,4,'私','Tư','わたし','し','',2),(2,4,'人','Nhân','ひと','じん／にん','',2),(4,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(5,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(6,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(7,9,'This is test ','123','123','123','http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241-1720156621674.jpg',1);
+INSERT INTO `kanji` VALUES (1,4,'私','Tư','わたし','し','',1),(2,4,'人','Nhân','ひと','じん／にん','',1),(4,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(5,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(6,8,'213213','123312','123321','123132','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg, http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594-1719658597259.jpg',3),(7,9,'This is test ','123','123','123','http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241-1720156621674.jpg',1),(8,13,'kn1','12','12','12','',1);
 /*!40000 ALTER TABLE `kanji` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +416,7 @@ CREATE TABLE `kanjiword` (
 
 LOCK TABLES `kanjiword` WRITE;
 /*!40000 ALTER TABLE `kanjiword` DISABLE KEYS */;
-INSERT INTO `kanjiword` VALUES (1,1,'私','わたし','tôi',2),(2,1,'私たち','わたしたち','chúng tôi',2),(3,2,'ベトナム人','ベトナムじん','người Việt Nam',2),(4,2,'三人','さんにん','3 người',2),(5,7,'Haha','haha','haha',1),(6,7,'hehe','hehe','hehe',1);
+INSERT INTO `kanjiword` VALUES (1,1,'私','わたし','tôi',1),(2,1,'私たち','わたしたち','chúng tôi',1),(3,2,'ベトナム人','ベトナムじん','người Việt Nam',1),(4,2,'三人','さんにん','3 người',1);
 /*!40000 ALTER TABLE `kanjiword` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -475,6 +479,33 @@ CREATE TABLE `option` (
 LOCK TABLES `option` WRITE;
 /*!40000 ALTER TABLE `option` DISABLE KEYS */;
 /*!40000 ALTER TABLE `option` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `otp`
+--
+
+DROP TABLE IF EXISTS `otp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `otp` (
+  `otp_id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `otp_code` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `expires_at` datetime NOT NULL,
+  PRIMARY KEY (`otp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `otp`
+--
+
+LOCK TABLES `otp` WRITE;
+/*!40000 ALTER TABLE `otp` DISABLE KEYS */;
+INSERT INTO `otp` VALUES (1,'huyydoooo@gmail.com','TcKowk','2024-07-16 23:22:26','2024-07-16 23:23:26'),(4,'testotp@gmail.com','Ep6S8C','2024-07-17 14:27:02','2024-07-17 14:28:02'),(5,'minhtn1234@gmail.com','YTVSci','2024-07-17 22:08:56','2024-07-17 22:09:56');
+/*!40000 ALTER TABLE `otp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -631,10 +662,10 @@ DROP TABLE IF EXISTS `sequelizemeta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sequelizemeta` (
-  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`name`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -643,7 +674,7 @@ CREATE TABLE `sequelizemeta` (
 
 LOCK TABLES `sequelizemeta` WRITE;
 /*!40000 ALTER TABLE `sequelizemeta` DISABLE KEYS */;
-INSERT INTO `sequelizemeta` VALUES ('20240419163550-create-roles.js'),('20240529144037-create-status.js'),('20240530082643-create-alphabet-types.js'),('20240530141446-create-account.js'),('20240601022943-create-alphabet.js'),('20240601154845-create-course.js'),('20240601194222-create-quiztype.js'),('20240601200515-create-questiontype.js'),('20240602053128-create-week.js'),('20240602054823-create-vocabulary.js'),('20240602055254-create-grammar.js'),('20240602055613-create-grammar-example.js'),('20240602061032-create-kanji.js'),('20240602061038-create-kanji-word.js'),('20240602061049-create-quiz.js'),('20240602061053-create-question.js'),('20240602061100-create-option.js'),('20240602065613-create-account-quiz.js');
+INSERT INTO `sequelizemeta` VALUES ('20240419163550-create-roles.js'),('20240529144037-create-status.js'),('20240530082643-create-alphabet-types.js'),('20240530141446-create-account.js'),('20240601022943-create-alphabet.js'),('20240601154845-create-course.js'),('20240601194222-create-quiztype.js'),('20240601200515-create-questiontype.js'),('20240602053128-create-day.js'),('20240602053128-create-week.js'),('20240602054823-create-vocabulary.js'),('20240602055254-create-grammar.js'),('20240602055613-create-grammar-example.js'),('20240602061032-create-kanji.js'),('20240602061038-create-kanji-word.js'),('20240602061049-create-quiz.js'),('20240602061053-create-question.js'),('20240602061100-create-option.js'),('20240602065613-create-account-quiz.js'),('20240610144745-create-video.js'),('20240716092444-create-otp-table.js');
 /*!40000 ALTER TABLE `sequelizemeta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -655,10 +686,10 @@ DROP TABLE IF EXISTS `sequelizeseeder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sequelizeseeder` (
-  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`name`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -804,13 +835,13 @@ CREATE TABLE `vocabulary` (
   `vocab_image` text,
   `vocab_status_id` int NOT NULL,
   `vocab_audio` text,
-  `vocab_example_meaning` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `vocab_example_meaning` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`vocab_id`),
   KEY `vocab_status_id` (`vocab_status_id`),
   KEY `day_id` (`day_id`),
   CONSTRAINT `vocabulary_ibfk_1` FOREIGN KEY (`day_id`) REFERENCES `day` (`day_id`),
   CONSTRAINT `vocabulary_ibfk_2` FOREIGN KEY (`vocab_status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -819,7 +850,7 @@ CREATE TABLE `vocabulary` (
 
 LOCK TABLES `vocabulary` WRITE;
 /*!40000 ALTER TABLE `vocabulary` DISABLE KEYS */;
-INSERT INTO `vocabulary` VALUES (1,1,'わたし','私','Tôi','私はベトナム人です。','',2,'','Tôi là người Việt Nam.'),(2,1,'（お）なまえ','（お）名前','Tên (bạn)','お名前は何ですか？\n','',2,'','Tên bạn là gì?'),(3,1,'（お）くに','（お）国','Đất nước (bạn)','おくにはどちらですか？','',2,'','Bạn đến từ nước nào?'),(4,1,'にほん','日本','Nhật Bản','にほんはうつくしいくにです。','',2,'','Nhật Bản là một đất nước đẹp.'),(5,1,'かんこく','韓国','Hàn Quốc','かんこくがすきです。','',2,'','Tôi thích Hàn Quốc.'),(6,1,'ちゅうごく','中国','Trung Quốc','ちゅうごくは大きいくにです。','',2,'','Trung Quốc là một quốc gia lớn.'),(7,1,'アメリカ','','Mỹ','アメリカにいきたいです。','',2,'','Tôi muốn đến Mỹ.'),(8,1,'イタリア','','Ý','イタリアのピザがすきです。','',2,'','Tôi thích pizza của Ý.'),(9,1,'オーストラリア ','','Úc','オーストラリアのどうぶつはおもしろいです。','',2,'','Động vật ở Úc rất thú vị.'),(10,1,'ロシア','','Nga','ロシアのふゆはさむいです。','',2,'','Mùa đông ở Nga rất lạnh.'),(11,1,'タイ','','Thái Lan','タイりょうりがおいしいです。','',2,'','Ẩm thực Thái Lan rất ngon.'),(12,2,'こうこう','高校','Trường trung học phổ thông (cấp 3)','わたしのいもうとは こうこう に かよっています。',' ',2,'','Em gái của tôi đang học trung học phổ thông.'),(13,2,'だいがく','大学','Trường đại học','わたしは とうきょうだいがく の がくせい です。',' ',2,' ','Tôi là sinh viên của trường Đại học Tokyo.'),(14,2,'にほんごがっこう','日本語学校','Trường tiếng Nhật','かれは にほんごがっこう で にほんご を べんきょう しています。',' ',2,'','Anh ấy đang học tiếng Nhật tại trường tiếng Nhật.'),(15,2,'（お）しごと','(お）仕事','Công việc (của bạn)','かれの しごと は とても いそがしい です。',' ',2,'','Công việc của anh ấy rất bận rộn.'),(16,2,'がくせい','学生','Học sinh','わたしは がくせい です。',' ',2,'','Tôi là học sinh.'),(17,2,'せんせい','先生','Thầy/Cô giáo','たなかせんせい は わたしたち の すうがく の せんせい です。',' ',2,'','Thầy Tanaka là giáo viên dạy toán của chúng tôi.'),(18,2,'きょうし','教師','Giáo viên','かのじょ は けいけん ほうふ な きょうし です。',' ',2,'','Cô ấy là một giáo viên có nhiều kinh nghiệm.'),(19,2,'かいしゃいん','会社員','Nhân viên văn phòng','あに は かいしゃいん です。',' ',2,'','Anh trai tôi là nhân viên văn phòng.'),(20,2,'しゃいん','社員','Nhân viên (của công ty nào đó)','かれ は この かいしゃ の しゃいん です。',' ',2,'','Anh ấy là nhân viên của công ty này.'),(21,3,'～さん',' ','Anh/Chị/Ông/Bà/Bạn','たなかさん は どこ です か？','',2,'','Anh Tanaka ở đâu vậy?'),(22,3,'～じん','～人','Người (nước nào)','かのじょ は にほんじん です','',2,'','Cô ấy là người Nhật Bản.'),(23,3,'～ご','～語','Tiếng (nước nào)','あなた は えいご を はなせ ます か？','',2,'','Bạn có thể nói tiếng Anh không?'),(24,3,'どちら',' ','Ở đâu / Phía nào','トイレ は どちら です か？','',2,'','Nhà vệ sinh ở đâu vậy?'),(25,3,'はじめまして',' ','Xin chào (lần đầu gặp mặt)','はじめまして、たなか です。','',2,'','Đất nước của bạn là nước nào?'),(26,3,'（どうぞ）よろしくお願',' ','Rất mong nhận được sự giúp đỡ của bạn','はじめまして、たなか です。どうぞ よろしく おねがい します。','',2,'','Xin chào, tôi là Tanaka.'),(27,3,'こちらこそ',' ','Tôi cũng vậy!','どうぞ よろしく おねがい します。 B: こちらこそ。','',2,'','Xin chào, tôi là Tanaka. Rất mong nhận được sự giúp đỡ của bạn.'),(28,3,'あのう',' ','Anh / chị ơi…','あのう、ちょっと たずねます が。','',2,'',''),(29,3,'すみません',' ','Xin lỗi… cho tôi hỏi…','すみません、いま なんじ です か？','',2,'','Anh/chị ơi, cho tôi hỏi một chút.'),(30,3,'そうですか','','Thế à!','A: きのう は ゆき が ふり ました。 B: そうですか。','',2,'','Xin lỗi, bây giờ là mấy giờ?'),(31,8,'423','242432','234234','24342',NULL,1,NULL,NULL),(32,7,'132123','13321','31123','132312','http://localhost:5000/uploads/440935418_777072171237086_8369776791388599191_n-1719648991595-1719652536455-1719657666594.jpg',3,'http://localhost:5000/uploads/Old Town Road - Lil Nas X-1719650257239-1719650382283-1719652539018-1719656633456-1719656805904-1719657521288-1719657669799.mp3',NULL),(33,7,'わたし123','13321','sd','s','http://localhost:5000/uploads/438173070_777075011236802_6840252571953289906_n-1719666821733.jpg, http://localhost:5000/uploads/438081579_777075177903452_1244932991696882456_n-1719672061651.jpg',3,'http://localhost:5000/uploads/file_example_MP4_480_1_5MG-1719666827878.mp4, http://localhost:5000/uploads/Old Town Road - Lil Nas X-1719672082885.mp3',NULL),(34,9,'111','111','111','11','http://localhost:5000/uploads/440939000_777072197903750_6756265267936747519_n-1719672034241-1720156621674.jpg',1,'http://localhost:5000/uploads/Old Town Road - Lil Nas X-1720156627737.mp3',NULL),(35,10,'1','1','1','1','http://localhost:5000/uploads/MTXX_MR20240701_210114243-1720366747802.jpg',1,'http://localhost:5000/uploads/Old Town Road - Lil Nas X-1720366751037.mp3',NULL),(36,11,'1','1','1','1','http://localhost:5000/uploads/MTXX_MR20240701_210114243-1720366747802.jpg, http://localhost:5000/uploads/MTXX_MR20240701_210114243-1720366787281.jpg',1,'http://localhost:5000/uploads/Old Town Road - Lil Nas X-1720366751037.mp3, http://localhost:5000/uploads/Old Town Road - Lil Nas X-1720366789572.mp3',NULL),(37,12,'1','2','2','2','http://localhost:5000/uploads/MTXX_MR20240701_210114243-1720366830176.jpg',1,'http://localhost:5000/uploads/Old Town Road - Lil Nas X-1720366839673.mp3',NULL);
+INSERT INTO `vocabulary` VALUES (1,1,'わたし','私','Tôi','私はベトナム人です。','',1,'','Tôi là người Việt Nam.'),(2,1,'（お）なまえ','（お）名前','Tên (bạn)','お名前は何ですか？\n','',1,'','Tên bạn là gì?'),(3,1,'（お）くに','（お）国','Đất nước (bạn)','おくにはどちらですか？','',1,'','Bạn đến từ nước nào?'),(4,1,'にほん','日本','Nhật Bản','にほんはうつくしいくにです。','',1,'','Nhật Bản là một đất nước đẹp.'),(5,1,'かんこく','韓国','Hàn Quốc','かんこくがすきです。','',1,'','Tôi thích Hàn Quốc.'),(6,1,'ちゅうごく','中国','Trung Quốc','ちゅうごくは大きいくにです。','',1,'','Trung Quốc là một quốc gia lớn.'),(7,1,'アメリカ','','Mỹ','アメリカにいきたいです。','',1,'','Tôi muốn đến Mỹ.'),(8,1,'イタリア','','Ý','イタリアのピザがすきです。','',1,'','Tôi thích pizza của Ý.'),(9,1,'オーストラリア ','','Úc','オーストラリアのどうぶつはおもしろいです。','',1,'','Động vật ở Úc rất thú vị.'),(10,1,'ロシア','','Nga','ロシアのふゆはさむいです。','',1,'','Mùa đông ở Nga rất lạnh.'),(11,1,'タイ','','Thái Lan','タイりょうりがおいしいです。','',1,'','Ẩm thực Thái Lan rất ngon.'),(12,2,'こうこう','高校','Trường trung học phổ thông (cấp 3)','わたしのいもうとは こうこう に かよっています。',' ',1,'','Em gái của tôi đang học trung học phổ thông.'),(13,2,'だいがく','大学','Trường đại học','わたしは とうきょうだいがく の がくせい です。',' ',1,' ','Tôi là sinh viên của trường Đại học Tokyo.'),(14,2,'にほんごがっこう','日本語学校','Trường tiếng Nhật','かれは にほんごがっこう で にほんご を べんきょう しています。',' ',1,'','Anh ấy đang học tiếng Nhật tại trường tiếng Nhật.'),(15,2,'（お）しごと','(お）仕事','Công việc (của bạn)','かれの しごと は とても いそがしい です。',' ',1,'','Công việc của anh ấy rất bận rộn.'),(16,2,'がくせい','学生','Học sinh','わたしは がくせい です。',' ',1,'','Tôi là học sinh.'),(17,2,'せんせい','先生','Thầy/Cô giáo','たなかせんせい は わたしたち の すうがく の せんせい です。',' ',1,'','Thầy Tanaka là giáo viên dạy toán của chúng tôi.'),(18,2,'きょうし','教師','Giáo viên','かのじょ は けいけん ほうふ な きょうし です。',' ',1,'','Cô ấy là một giáo viên có nhiều kinh nghiệm.'),(19,2,'かいしゃいん','会社員','Nhân viên văn phòng','あに は かいしゃいん です。',' ',1,'','Anh trai tôi là nhân viên văn phòng.'),(20,2,'しゃいん','社員','Nhân viên (của công ty nào đó)','かれ は この かいしゃ の しゃいん です。',' ',1,'','Anh ấy là nhân viên của công ty này.'),(21,3,'～さん',' ','Anh/Chị/Ông/Bà/Bạn','たなかさん は どこ です か？','',1,'','Anh Tanaka ở đâu vậy?'),(22,3,'～じん','～人','Người (nước nào)','かのじょ は にほんじん です','',1,'','Cô ấy là người Nhật Bản.'),(23,3,'～ご','～語','Tiếng (nước nào)','あなた は えいご を はなせ ます か？','',1,'','Bạn có thể nói tiếng Anh không?'),(24,3,'どちら',' ','Ở đâu / Phía nào','トイレ は どちら です か？','',1,'','Nhà vệ sinh ở đâu vậy?'),(25,3,'はじめまして',' ','Xin chào (lần đầu gặp mặt)','はじめまして、たなか です。','',1,'','Đất nước của bạn là nước nào?'),(26,3,'（どうぞ）よろしくお願',' ','Rất mong nhận được sự giúp đỡ của bạn','はじめまして、たなか です。どうぞ よろしく おねがい します。','',1,'','Xin chào, tôi là Tanaka.'),(27,3,'こちらこそ',' ','Tôi cũng vậy!','どうぞ よろしく おねがい します。 B: こちらこそ。','',1,'','Xin chào, tôi là Tanaka. Rất mong nhận được sự giúp đỡ của bạn.'),(28,3,'あのう',' ','Anh / chị ơi…','あのう、ちょっと たずねます が。','',1,'',''),(29,3,'すみません',' ','Xin lỗi… cho tôi hỏi…','すみません、いま なんじ です か？','',1,'','Anh/chị ơi, cho tôi hỏi một chút.'),(30,3,'そうですか','','Thế à!','A: きのう は ゆき が ふり ました。 B: そうですか。','',1,'','Xin lỗi, bây giờ là mấy giờ?');
 /*!40000 ALTER TABLE `vocabulary` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -841,7 +872,7 @@ CREATE TABLE `week` (
   KEY `week_status_id` (`week_status_id`),
   CONSTRAINT `week_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
   CONSTRAINT `week_ibfk_2` FOREIGN KEY (`week_status_id`) REFERENCES `status` (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -850,9 +881,17 @@ CREATE TABLE `week` (
 
 LOCK TABLES `week` WRITE;
 /*!40000 ALTER TABLE `week` DISABLE KEYS */;
-INSERT INTO `week` VALUES (1,'Tuần 1',1,2,'初めて'),(2,'Tuần 2',1,3,'初めて'),(3,'Tuần 3',1,2,'初めて'),(4,'Week 1',4,1,'Title For Week 1'),(5,'Week 2',4,1,'Title For Week 2'),(6,'Week 3',4,1,'Title For Week 3'),(7,'Week 4',4,1,'Title For Week 4'),(8,'Week 1',5,1,'Title For Week 1'),(9,'Week 2',5,1,'Title For Week 2'),(10,'Week 3',5,1,'Title For Week 3'),(11,'Week 1',6,1,'Title For Week 1'),(12,'Week 2',6,1,'Title For Week 2');
+INSERT INTO `week` VALUES (1,'Week 1',1,1,'初めて'),(2,'Tuần 2',1,3,'初めて'),(3,'Week 2',1,1,'初めて'),(4,'Week 1',4,1,'Title For Week 1'),(5,'Week 2',4,1,'Title For Week 2'),(6,'Week 3',4,1,'Title For Week 3'),(7,'Week 4',4,1,'Title For Week 4'),(8,'Week 1',5,1,'Title For Week 1'),(9,'Week 2',5,1,'Title For Week 2'),(10,'Week 3',5,1,'Title For Week 3'),(11,'Week 1',6,1,'Title For Week 1'),(12,'Week 2',6,1,'Title For Week 2'),(13,'Week 1',7,1,'Title For Week 1'),(14,'Week 3',7,1,'Title For Week 3'),(15,'Week 2',7,1,'Title For Week 2');
 /*!40000 ALTER TABLE `week` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'swp_fpt'
+--
+
+--
+-- Dumping routines for database 'swp_fpt'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -863,4 +902,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-07 23:51:08
+-- Dump completed on 2024-07-19  0:26:40

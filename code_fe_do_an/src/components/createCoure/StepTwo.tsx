@@ -23,13 +23,15 @@ const StepTwo = ({
       setWeekData(
         Array.from({ length: week }, (_, index) => ({
           week_name: `Week ${index + 1}`,
-          week_topic: `Title For Week ${index + 1}`,
+          week_topic: `Tiêu đề tuần  ${index + 1}`,
           course_id: null,
           week_status_id: 1,
           days: [],
         }))
       );
   }, [week]);
+
+
 
   const weekCardData = id ? weekData : new Array(week).fill(null);
 
@@ -42,7 +44,7 @@ const StepTwo = ({
           items={weekCardData.map((_, i) => {
             const weekId = String(i + 1);
             return {
-              label: `Week ${weekId}`,
+              label: `Tuần ${weekId}`,
               key: weekId,
               children: (
                 <WeekCard
@@ -64,24 +66,15 @@ const StepTwo = ({
           style={{ marginTop: "2%" }}
         >
           <Button onClick={handlePreviousStep} style={{ width: "30%" }}>
-            Previous
+            Quay lại
           </Button>
-          {mode === "view" ? (
-            <Button
-              onClick={()=>navigate("/admin/course-management")}
-              
-              type="primary"
-              style={{ width: "30%" }}
-            >
-              Return Course Page
-            </Button>
-          ) : (
+          {mode !== "view" && (
             <Button
               onClick={handleNextStep}
               type="primary"
               style={{ width: "30%" }}
             >
-              Next
+              Tiếp theo
             </Button>
           )}
         </Flex>
@@ -89,5 +82,6 @@ const StepTwo = ({
     </>
   );
 };
+
 
 export default StepTwo;

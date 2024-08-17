@@ -58,8 +58,8 @@ export function Nav() {
           {auth.token !== "" ? (
             <NavigationMenuContent>
               <ul className="gap-3 p-6 text-xl w-60">
-                <ListItem href="/alphabet" title="Học bảng chữ cái" />
-                <ListItem href="/course" title="Học theo mã môn" />
+                <ListItem href="/alphabet" title="Bảng chữ cái" ></ListItem>
+                <ListItem href="/course" title="Khóa học" />
               </ul>
             </NavigationMenuContent>
           ) : (
@@ -70,7 +70,7 @@ export function Nav() {
             </NavigationMenuContent>
           )}
         </NavigationMenuItem>
-        <NavigationMenuItem  className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+        {/* <NavigationMenuItem  className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
           <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#6fb24d] text-[20px]">
             TRÒ CHƠI
           </NavigationMenuTrigger>
@@ -88,15 +88,15 @@ export function Nav() {
               </ul>
             </NavigationMenuContent>
           )}
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
         <NavigationMenuItem  className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
           <NavigationMenuTrigger className="bg-transparent w-40 font-semibold submenu-trigger text-[#6fb24d] text-[20px]">
             GIỚI THIỆU
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="gap-3 p-6 w-60">
-              <ListItem href="/" title="Về trang web" />
-              <ListItem href="/" title="Về giáo trình Dekiru Nihongo" />
+              <ListItem href="/aboutDNLS" title="Về trang web" />
+              <ListItem href="/aboutDekiru" title="Về giáo trình Dekiru Nihongo" />
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -138,7 +138,7 @@ export function Nav() {
                 </NavigationMenuContent>
               )}
             </NavigationMenuItem>
-            <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
+            {/* <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
               <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
                 TRÒ CHƠI
               </NavigationMenuTrigger>
@@ -156,7 +156,7 @@ export function Nav() {
                   </ul>
                 </NavigationMenuContent>
               )}
-            </NavigationMenuItem>
+            </NavigationMenuItem> */}
             <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
               <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
                 GIỚI THIỆU
@@ -183,8 +183,8 @@ if(window.innerWidth <= 750)
                   <ul className="gap-3 text-[#6fb24d] p-6 w-60">
                     <ListItem href="/alphabet" title="Học bảng chữ cái" />
                     <ListItem href="/course" title="Học theo mã môn" />
-                    <ListItem href="/" title="Trò chơi 1" />
-                    <ListItem href="/" title="Trò chơi 2" />
+                    {/* <ListItem href="/" title="Trò chơi 1" />
+                    <ListItem href="/" title="Trò chơi 2" /> */}
                     <ListItem href="/" title="Về trang web" />
                     <ListItem href="/" title="Về giáo trình Dekiru Nihongo" />
                   </ul>

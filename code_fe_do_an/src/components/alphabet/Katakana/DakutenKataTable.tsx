@@ -2,10 +2,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import CharacterCard from '../CharacterCard';
 import { AlphabetResponse } from '@/type';
+import { useNavigate } from "react-router-dom";
 
 export default function KatakanaBienAmTable() {
  
-const [dakutenKataList, setDakutenKataList] = useState<[]>([]);
+  const [dakutenKataList, setDakutenKataList] = useState<[]>([]);
+  const navigate = useNavigate();
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // const fetchData = useAuthAPI()
 useEffect(() => {
@@ -35,14 +37,16 @@ useEffect(() => {
         if(confirm) {
           window.location.href = "/";
         }
-      }
+      }else {
+          navigate('/error', { state: { message:error} });
+        }
     }
   };
   handleFetchData();
 }, []);
   return (
     <div className="flex flex-col gap-5">
-      <div className="text-xl font-semibold text-[#f1a72b] ">BIẾN ÂM</div>
+      <div className="text-xl font-semibold text-[#7db660] ">BIẾN ÂM</div>
       <div className="w-full h-[1180px] p-8 rounded-2xl">
         <div className="w-full h-[1130px] ">
           <div className="grid grid-cols-5 gap-4">

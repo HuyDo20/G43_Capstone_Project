@@ -1,4 +1,4 @@
-import { Form, Input, Button, Upload } from "antd";
+import { Form, Input, Button, Upload, notification } from "antd";
 import ImgCrop from "antd-img-crop";
 import axios from "axios";
 import { useEffect } from "react";
@@ -54,7 +54,10 @@ const StepOne = ({
         },
       ]);
     } catch (error) {
-      console.error("Upload failed:", error);
+       notification.error({
+          message: "Upload failed:",
+          description: `Error: ${error.message}`,
+        });
     }
   };
 
@@ -76,12 +79,12 @@ const StepOne = ({
     <>
       <Form layout="vertical" form={form}>
         <Form.Item
-          label="Course Name"
+          label="Tên khóa học"
           name="course_name"
-          rules={[{ required: true, message: "Please input the course name!" }]}
+          rules={[{ required: true, message: "Hãy nhập tên khóa học!" }]}
         >
           <Input
-            placeholder="Enter course name"
+            placeholder="Nhập tên khóa học"
             name="course_name"
             value={course.course_name}
             onChange={handleChangeInput}
@@ -89,7 +92,7 @@ const StepOne = ({
           />
         </Form.Item>
 
-        <Form.Item label="Week" name="week">
+        <Form.Item label="Số tuần" name="week">
           <Input
             readOnly={mode === "view"}
             placeholder="Enter number of weeks"
@@ -97,11 +100,12 @@ const StepOne = ({
             name="week"
             value={course.week}
             min={0}
+            max={12}
             onChange={handleChangeInput}
           />
         </Form.Item>
 
-        <Form.Item label="Image" name="course_image">
+        <Form.Item label="Hình ảnh" name="course_image">
           <ImgCrop rotationSlider>
             <Upload
               customRequest={handleUpload}
@@ -121,20 +125,20 @@ const StepOne = ({
                 showDownloadIcon: false,
               }}
             >
-              {fileList.length < 5 && "+ Upload"}
+              {fileList.length < 5 && "+ Chọn ảnh"}
             </Upload>
           </ImgCrop>
         </Form.Item>
 
         <Form.Item
-          label="Description"
+          label="Mô tả khóa học :"
           name="description"
-          rules={[{ required: true, message: "Please input the description!" }]}
+          rules={[{ required: true, message: "Hãy nhập mô tả!!" }]}
         >
           <Input.TextArea
             readOnly={mode === "view"}
             rows={4}
-            placeholder="Enter description"
+            placeholder="Nhập nội dung mô tả khóa học......"
             name="description"
             value={course.description}
             onChange={handleChangeInput}
@@ -147,7 +151,7 @@ const StepOne = ({
             onClick={handleNextStep}
             style={{ width: "100%" }}
           >
-            Next
+            Tiếp theo 
           </Button>
         </Form.Item>
       </Form>

@@ -17,7 +17,12 @@ module.exports = {
       },
     },
     extend: {
-    
+      
+        fontFamily: {
+          times: ['"Times New Roman"', 'serif'], // Add Times New Roman to the font family list
+          dancing: ['"Dancing Script"', 'cursive'], // Add Dancing Script to the font family list
+          balooda: ['"Baloo Da 2"', 'cursive'], // Add Baloo Da 2 to the font family list
+        },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

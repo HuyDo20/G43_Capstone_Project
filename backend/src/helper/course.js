@@ -80,11 +80,7 @@ function transformCourseData(courseData) {
 				const grammarExamples = grammar.GrammarExamples.filter(
 					(item) =>
 						item.grammar_example_status_id === 2 || item.grammar_example_status_id === 1,
-				).map((ge) => ({
-					grammar_example_id: grammar.grammar_example_id,
-					grammar_example: ge.grammar_example,
-					grammar_example_meaning: ge.grammar_example_meaning,
-				}));
+				);
 				lessons.push({
 					grammar_id: grammar.grammar_id,
 					grammar_name: grammar.grammar_name,

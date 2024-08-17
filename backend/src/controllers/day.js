@@ -35,15 +35,22 @@ async function getAllDayByWeekId(req, res) {
 const createNewDay = async (req, res) => {
 	try {
 		const { accountId } = req;
-		const { account_id } = req.body;
+		const { day_name, day_status_id, week_id, repeat_lesson, account_id } = req.body;
 
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
 			return forbidden(res);
 		}
 
-		const day = await Day.create(req.body);
-		if (day) {
-			return responseWithData(res, 201, { data: day, message: DAY_CREATED });
+		const formattedRepeatLesson = typeof repeat_lesson === "object" ? JSON.stringify(repeat_lesson) : repeat_lesson;
+
+		    const newDay = await Day.create({
+     		day_name,
+    		day_status_id,
+     		week_id,
+      		repeat_lesson: formattedRepeatLesson,
+   			 });
+		if (newDay) {
+			return responseWithData(res, 201, { data: newDay, message: DAY_CREATED });
 		} else {
 			return badRequest(res, DAY_CREATED_FAILED);
 		}
