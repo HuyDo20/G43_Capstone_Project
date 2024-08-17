@@ -24,6 +24,7 @@ export default function LearningByWeek() {
   const [weekData, setWeekData] = useState([]);
   const [weekSelected, setWeekSelected] = useState([]);
 
+
   useEffect(() => {
     const handleFetchData = async () => {
       const response = await handleFetch({
@@ -37,9 +38,10 @@ export default function LearningByWeek() {
         setWeekSelected(result.weekData[0]);
       }
     };
+
     if (reload) {
       handleFetchData();
-   setReload(false);
+      setReload(false);
       }
     
   }, [reload,weekSelected]);

@@ -71,7 +71,6 @@ export default function WeeklyExamHistory() {
           const data = response.data;
           const tempHistory = data.data;
           tempHistory.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
-          console.log(data.data);
           setExamHistory(tempHistory);
           setLoading(false);
         }

@@ -29,12 +29,11 @@ class ExamHistoryController {
     }
   }
 
-   async getAllExamHistoriesByExamIdAndAccountId(req, res) {
+  async getAllExamHistoriesByExamIdAndAccountId(req, res) {
     try {
-      const { weekly_exam_id, accountId } = req.params;
-      console.log(weekly_exam_id, accountId);
-      const examHistories = await getAllExamHistoriesByExamIdAndAccountId(weekly_exam_id, accountId);
-      return ok(res, examHistories);
+    const { weekly_exam_id, accountId } = req.body;
+    const examHistories = await getAllExamHistoriesByExamIdAndAccountId(weekly_exam_id, accountId);
+     return ok(res, examHistories);
     } catch (err) {
       return error(res, err.message);
     }

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import axios from 'axios';
 import { CheckCircleOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { Tooltip, Spin } from 'antd';
+import { useNavigate } from "react-router-dom";
 
 export default function DaySchedule({ weekSelected, id = null }) {
   const [daySelected, setDaySelected] = useState(() => weekSelected?.days ? weekSelected?.days[0] : {});
@@ -10,6 +11,11 @@ export default function DaySchedule({ weekSelected, id = null }) {
   const [weeklyExamId, setWeeklyExamId] = useState(0);
   const [dayData, setDayData] = useState({});
   const [loadingDayData, setLoadingDayData] = useState(null);
+  const [examHistory, setExamHistory] = useState([]);
+  const [isPassedExam, setIsPassedExam] = useState(false);
+  const [isloading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   const EmptyCircleIcon = () => (
     <span
@@ -23,14 +29,21 @@ export default function DaySchedule({ weekSelected, id = null }) {
     ></span>
   );
 
+  const checkPassWeeklyExam = () => {
+    const passedExam = examHistory.filter(exam => exam.score > 80);
+    setIsPassedExam(passedExam.length > 0);
+  }
+
   const isCompletedDay = (index) => {
     const day = weekData[index];
     if (!day) return false;
+    const totalLess = day.vocabulary?.total + day.grammar?.total + day.kanji?.total + day.video?.total;
 
-    return day.vocabulary?.percentage === 100 &&
-      day.grammar?.percentage === 100 &&
-      day.video?.percentage === 100 &&
-      day.kanji?.percentage === 100;
+    if (totalLess > 0) {
+      const totalLearned = day.vocabulary?.learned + day.grammar?.learned + day.kanji?.learned + day.video?.watched;
+      return totalLess === totalLearned;
+    }
+    return false;
   };
 
   const getBackgroundColor = (percentage) => {
@@ -38,9 +51,9 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
   const handleFetchDetailCourseProgressByDayId = async (dayId) => {
-    if (loadingDayData === dayId) return; // Prevent duplicate fetching for the same day
+    if (loadingDayData === dayId) return;
 
-    setLoadingDayData(dayId); // Set loading state to the current day
+    setLoadingDayData(dayId);
 
     try {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -56,7 +69,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
         }));
       }
     } finally {
-      setLoadingDayData(null); // Reset loading state
+      setLoadingDayData(null);
     }
   };
 
@@ -70,22 +83,47 @@ export default function DaySchedule({ weekSelected, id = null }) {
 
     if (response.data.statusCode === 200) {
       setWeekData(response.data.data);
-
-
       const requestExam = await axios.post("/get_exam_by_course_and_week", { courseId: id, weekId }, {
         headers: { Authorization: token },
       });
-
       const responseExam = requestExam.data;
       setWeeklyExamId(responseExam.statusCode === 200 ? responseExam.data.data.exam_id : 0);
+      await fetchExamHistories();
+    }
+  };
+  
+  const fetchExamHistories = async () => {
+    try {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+      }
+
+      const url = `/examHistoriesByExamIdAndAccountId`;
+   
+      const request = await axios.post(url, { weekly_exam_id: weeklyExamId, accountId }, {
+        headers: { Authorization: token },
+      });
+      
+      const response = request.data;
+      if (response.statusCode === 200) {
+        const data = response.data;
+        const tempHistory = data.data;
+        checkPassWeeklyExam();
+        setExamHistory(tempHistory);
+      }
+    } catch (error) {
+      console.error('Error fetching exam histories:', error);
+      navigate('/error', { state: { message: error.message } });
+    } finally { 
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (weekSelected.week_id) {
-      handleFetchDetailCourseProgressByWeekId(weekSelected.week_id);
-    }
-  }, [weekSelected]);
 
   const handleDaySelect = (day) => {
     setDaySelected(day);
@@ -118,8 +156,22 @@ export default function DaySchedule({ weekSelected, id = null }) {
     window.location.href = `/${id}/${weekSelected.week_id}/${weeklyExamId}/examsHistory`;
   };
 
+
+  useEffect(() => {
+    if (weekSelected.week_id) {
+      handleFetchDetailCourseProgressByWeekId(weekSelected.week_id);
+    }
+  }, [weekSelected]);
+
   return (
-    <div>
+    <>
+    {
+      isloading?(
+          <div className = "flex justify-center items-center h-full" >
+          <Spin size="large" />
+          </div>
+           ) : (<>
+        <div>
       <Accordion
         type="single"
         collapsible
@@ -132,12 +184,14 @@ export default function DaySchedule({ weekSelected, id = null }) {
             onClick={() => handleDaySelect(day)}
           >
             <AccordionTrigger className='bg-[#c6edc3] pl-12 pr-6 flex items-center justify-between'>
-              <div className="flex items-center">
-                {isCompletedDay(index) && (
+                  <div className="flex items-center">
+                  {isCompletedDay(index) ? (
                   <Tooltip title="Learned">
-                    <CheckCircleOutlined style={{ color: 'green', fontSize: '25px' }} />
+                  <CheckCircleOutlined style={{ color: 'green', fontSize: '25px' }} />
                   </Tooltip>
-                )}
+                  ) : (<Tooltip title="Unlearned">
+                  <EmptyCircleIcon style={{ color: 'green', fontSize: '25px' }} />
+                  </Tooltip>)}
                 <span className='ml-2'>Ngày {index + 1}: {day?.day_name}</span>
               </div>
             </AccordionTrigger>
@@ -167,7 +221,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.grammar?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickGrammar(day)}
-                className={`${getBackgroundColor(dayData[day.day_id]?.grammar?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>
@@ -189,7 +243,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.video?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickVideo(day)}
-                className={`${getBackgroundColor(dayData[day.day_id]?.video?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>
@@ -211,7 +265,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.kanji?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickKanji(day)}
-                className={`${getBackgroundColor(dayData[day.day_id]?.kanji?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>
@@ -235,7 +289,17 @@ export default function DaySchedule({ weekSelected, id = null }) {
         {weeklyExamId !== 0 ? (
           <AccordionItem value="item-7">
             <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
-              Kiểm tra tổng hợp
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div>
+                  {isPassedExam === true &&(
+                      <Tooltip title="Learned">
+                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                      </Tooltip>
+                  )}
+                  </div>
+                  <span style={{ marginLeft: '8px' }}>Kiểm tra tổng hợp</span>
+              </div>
+              
             </AccordionTrigger>
             <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExam}>
               Kiểm tra
@@ -256,5 +320,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
         )}
       </Accordion>
     </div>
+  </>)
+}
+     </>
   );
 }
