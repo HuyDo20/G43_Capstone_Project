@@ -73,7 +73,7 @@ export function NotificationArea ({userId} : Props) {
     setLoading(false)
   }
   
-  const getSystemNoti = async (next_page: number = 1, type: NotiType = 'allWithUnsent', limit: number = PAGE_LIMIT) => {
+  const getSystemNoti = async (next_page: number = 1, type: NotiType = 'all', limit: number = PAGE_LIMIT) => {
     setLoading(true)
     const newFetchedNotis = await fetchNoti('system', type, next_page, limit)
 
