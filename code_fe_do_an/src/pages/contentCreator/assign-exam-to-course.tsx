@@ -117,6 +117,9 @@ const AssignWeeklyExamToCourse: React.FC = () => {
   };
 
   const handleAssign = async () => {
+    
+    console.log(selectedCourse, selectedWeek, selectedExam);
+    
     if (!selectedCourse || !selectedWeek || !selectedExam) {
       message.warning('Please select a course, a week, and an exam.');
       return;
@@ -131,7 +134,6 @@ const AssignWeeklyExamToCourse: React.FC = () => {
         accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
       }
       const request = await axios.post(`/assign`, {
-        account_id: accountId,
         course_id: selectedCourse,
         week_id: selectedWeek,
         exam_id: selectedExam
@@ -141,12 +143,14 @@ const AssignWeeklyExamToCourse: React.FC = () => {
         },
       });
 
+
       if (request.status === 200) {
         message.success('Exam assigned successfully!');
       }
     } catch (error) {
       message.error('Failed to save exam.');
-      navigate('/error', { state: { message: error.message } });
+      // navigate('/error', { state: { message: error.message } });
+      console.log(error);
     }
   };
 

@@ -181,7 +181,7 @@ function WeekCard({
       </Flex>
 
       {/* Render dropdown to select exam if mode is not view and no examData */}
-      {mode !== "view" && !selectedExamId && (
+      {mode !== "view" && examData === null && (
         <Select
           style={{ width: "200px", marginTop: "10px" }}
           placeholder="Chọn bài kiểm tra"

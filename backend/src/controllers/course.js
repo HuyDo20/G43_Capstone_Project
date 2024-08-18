@@ -593,15 +593,12 @@ const updateCourseDetail = async (req, res) => {
                 }));
             }
         }
-
         return ok(res, COURSE_UPDATED);
     } catch (e) {
         console.error(e);
         return error(res);
     }
 };
-
-
 
 const createNewCourse = async (req, res) => {
 	try {
