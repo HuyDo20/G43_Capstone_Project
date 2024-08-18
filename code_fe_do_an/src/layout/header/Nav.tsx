@@ -138,25 +138,6 @@ export function Nav() {
                 </NavigationMenuContent>
               )}
             </NavigationMenuItem>
-            {/* <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
-              <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
-                TRÒ CHƠI
-              </NavigationMenuTrigger>
-              {auth.token !== "" ? (
-                <NavigationMenuContent>
-                  <ul className="gap-3 p-6 w-60">
-                    <ListItem href="/" title="Trò chơi 1" />
-                    <ListItem href="/" title="Trò chơi 2" />
-                  </ul>
-                </NavigationMenuContent>
-              ) : (
-                <NavigationMenuContent>
-                  <ul className="gap-3 p-6 w-60">
-                    <ListItem title="Bạn chưa đăng nhập!!!" />
-                  </ul>
-                </NavigationMenuContent>
-              )}
-            </NavigationMenuItem> */}
             <NavigationMenuItem className="hover:bg-[#B6DA9F] hover:text-black rounded-md">
               <NavigationMenuTrigger className="bg-transparent font-semibold submenu-trigger text-[#6fb24d] text-[15px]">
                 GIỚI THIỆU

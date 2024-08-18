@@ -30,7 +30,7 @@ async function loginAccount(req, res) {
 	try {
 		const { email, password } = req.body;
 
-		if (!email && !password) {
+		if (!email || !password) {
 			return badRequest(res, INVALID_USER_PASSWORD);
 		}
 
@@ -39,18 +39,33 @@ async function loginAccount(req, res) {
 			return notfound(res);
 		}
 		if (user.status_id !== 2) {
-			//Status của hệ thống: 1 :pending, 2: active, 3: deactive, 
+			// System status: 1: pending, 2: active, 3: deactive
 			return forbidden(res, ACCOUNT_DEACTIVE);
 		}
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return badRequest(res, INVALID_PASSWORD);
 		}
-		let userData = omitPassword(user);
+
+		// Retrieve full user data except the password
+		const userData = {
+			account_id: user.account_id,
+			full_name: user.full_name,
+			email: user.email,
+			phone_number: user.phone_number,
+			dob: user.dob,
+			avatar: user.avatar,
+			role_id: user.role_id,
+			point: user.point,
+			status_id: user.status_id,
+			// You can add more fields here if necessary
+		};
+
 		const token = generateToken(userData, false);
 		const refreshToken = generateToken(userData, true);
 		user.refresh_token = refreshToken;
 		await user.save();
+
 		res.cookie("refresh_token", refreshToken, {
 			httpOnly: true,
 			secure: true,
@@ -58,16 +73,19 @@ async function loginAccount(req, res) {
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 		userData.token = token;
+
 		const result = {
 			data: userData,
 			message: ACCOUNT_LOGIN,
 		};
+
 		return responseWithData(res, 200, result);
 	} catch (err) {
 		console.error("Error during login", err);
 		return error(res);
 	}
 }
+
 
 async function logoutAccount(req, res) {
 	try {
@@ -530,6 +548,7 @@ async function getUserById(req, res) {
 			return notfound(res);
 		}
 		const userData = omitPassword(user);
+		console.log(userData);
 		return responseWithData(res, 200, userData);
 	} catch (err) {
 		console.error("Error fetching user:", error);
