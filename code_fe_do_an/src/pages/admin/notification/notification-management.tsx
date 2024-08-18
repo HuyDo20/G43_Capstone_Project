@@ -58,7 +58,7 @@ export default function NotiManagementPage() {
 
   const [toast, contextHolder] = notification.useNotification() // TODO: update this notification for global use later
 
-  const PAGE_LIMIT = 10
+  const PAGE_LIMIT = 2
   const columns = [
     {
       title: "Id",
@@ -101,7 +101,7 @@ export default function NotiManagementPage() {
           <section className={`${(new Date(record.noti_date) < new Date()) ? 'invisible' : 'visible'}`}>
             <Button color="warning" className="mr-4 font-medium" onClick={() => openUpdateNoti(record)}>Sửa</Button>
             <Popconfirm
-              // title={`Delete notification`}
+               title={``}
               description={`Bạn có muốn xóa thông báo này ?`}
               onConfirm={() => deleteNoti(record.noti_id)}
               okText="Xóa"
@@ -130,7 +130,7 @@ export default function NotiManagementPage() {
       next_page,
       limit
     }
-    axios.post('/noti/findById', fetchNotiPayload)
+    axios.post('/getNoti', fetchNotiPayload)
       .then(res => {
         const data : NofiFetchResponse = res.data.data.data
         setNotifications(data.data)
@@ -138,7 +138,7 @@ export default function NotiManagementPage() {
         setTotalPages(data.total_pages)
       }).catch(err => {
         pushScreenNoti('Can not get notifications', 'error')
-        console.error('Can not get notifications: ', err)
+        //console.error('Can not get notifications: ', err)
       }).finally(() => {
         setLoading(false)
       })
@@ -275,7 +275,7 @@ const updateNoti = async () => {
   }
 
   const handleChangePageNoti = (page: number, pageSize: number) => {
-    fetchNoti('all', page, pageSize)
+    fetchNoti('allWithUnsent', page, pageSize)
   }
 
   const openUpdateNoti = (noti : Notification) => {
@@ -290,49 +290,47 @@ const updateNoti = async () => {
       message,
     });
   };
-
+ 
   return (
     <div className="notification-page h-full">
-        {contextHolder}
-        <Spin
-          fullscreen
-          size="large"
-          spinning={loading}
+      {contextHolder}
+      <Spin fullscreen size="large" spinning={loading} />
+      <Typography.Title level={2} className="text-center">
+        Quản lý thông báo
+      </Typography.Title>
+      <section className="notification-content h-full">
+        <Table
+          className="notication-content__list"
+          dataSource={notifications}
+          columns={columns}
+          pagination={false}
         />
-        <Typography.Title level={2} className="text-center">Quản lý thông báo</Typography.Title>
-        <section className="notification-content h-full">
-            <Table 
-              className="notication-content__list"
-              dataSource={notifications}
-              columns={columns}
-              pagination={false}
-            />
-            <Pagination
-              className="mt-4"
-              align="center"
-              current={activePage}
-              total={totalPages * PAGE_LIMIT}
-              onChange={handleChangePageNoti}
-            />
-        </section>
-        <Modal
-          open={openModifyNotiDialog}
-          onOk={handleSubmitCreateNoti}
-          onCancel={handleCancelCreateNoti}
-          title="Update notification"
-          centered
-          confirmLoading={loading}
-          maskClosable={false}
-          destroyOnClose={true}
-          okText="Update"
-        >
-          <NotificationModifier
-            loading={loading}
-            notification={tmpNotification}
-            handleChangeNoti={newNoti => setTmpNotification(newNoti)}
-          />
-        </Modal>
-
+        <Pagination
+          className="mt-4"
+          align="center"
+          current={activePage}
+          total={totalPages * PAGE_LIMIT}
+          pageSize={PAGE_LIMIT}
+          onChange={handleChangePageNoti}
+        />
+      </section>
+      <Modal
+        open={openModifyNotiDialog}
+        onOk={handleSubmitCreateNoti}
+        onCancel={handleCancelCreateNoti}
+        title="Update notification"
+        centered
+        confirmLoading={loading}
+        maskClosable={false}
+        destroyOnClose={true}
+        okText="Update"
+      >
+        <NotificationModifier
+          loading={loading}
+          notification={tmpNotification}
+          handleChangeNoti={(newNoti) => setTmpNotification(newNoti)}
+        />
+      </Modal>
     </div>
   );
 }
