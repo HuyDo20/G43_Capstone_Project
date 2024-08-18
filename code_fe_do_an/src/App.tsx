@@ -33,9 +33,9 @@ const contentStyle = {
 };
 const content = <div style={contentStyle} />;
 
-const AdminRoutes = lazy(() => import("@/pages/admin/"));
-const ContentCreatorRoutes = lazy(() => import("@/pages/contentCreator/"));
-const ContentManagerRoutes = lazy(() => import("@/pages/contentManager/"));
+const AdminRoutes = lazy(() => import("../src/pages/admin/"));
+const ContentCreatorRoutes = lazy(() => import("../src/pages/contentCreator"));
+const ContentManagerRoutes = lazy(() => import("../src/pages/contentManager/"));
 
 const SpinnerComponent = (
   <Flex

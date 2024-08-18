@@ -119,7 +119,7 @@ const ExamManagementPage: React.FC = () => {
         <div className="flex flex-row gap-2">
           <FaRegEye size={24} color="#2E75B5"
             onClick={() => {
-              navigate(`/admin/exam-management/${record.exam_id}`, {
+              navigate(`/contentCreator/exam-management/${record.exam_id}`, {
                 state: { mode: "view" },
               });
             }}

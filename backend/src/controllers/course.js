@@ -188,7 +188,8 @@ const getCourseById = async (req, res) => {
 				course_id,
 			},
 		});
-		if (course) {
+    if (course) {
+   
 			return responseWithData(res, 200, course);
 		} else {
 			return notfound(res);
@@ -198,7 +199,6 @@ const getCourseById = async (req, res) => {
 		return error(res);
 	}
 };
-
 
 const getCourseDetailById = async (req, res) => {
     try {
@@ -262,7 +262,7 @@ const getCourseDetailById = async (req, res) => {
                         week.Exams.push(examWithoutAnswer);
                     }
                 }
-            }
+          }
 
             return responseWithData(res, 200, transformedCourseData);
         } else {
@@ -277,7 +277,6 @@ const getCourseDetailById = async (req, res) => {
 const getProgressByWeekId = async (req, res) => {
   try {
 	  const { accountId, weekId } = req.body;
-	  //console.log("get progress for week id: " + weekId);
 
     // Fetch the week with associated days, each including vocabulary, kanji, grammar, and video records
     const week = await Week.findOne({
@@ -465,6 +464,8 @@ const updateCourseDetail = async (req, res) => {
         course_image,
         course_status_id = 1,
         week,
+        course_level,
+        course_skill
     } = courseData;
 
     try {
@@ -475,13 +476,12 @@ const updateCourseDetail = async (req, res) => {
             course_image,
             course_status_id,
             week,
+            course_level,
+            course_skill
         });
-
-        console.log({ weeksData });
 
         for (const week of weeksData) {
             const { week_id, week_name, week_topic, week_status_id = 1, days } = week;
-            console.log({ week });
 
             const [weekRecord] = await Week.upsert(
                 { week_id, week_name, week_topic, week_status_id, course_id },

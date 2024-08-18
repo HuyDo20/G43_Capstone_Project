@@ -1,4 +1,4 @@
-import { StepOne, StepThree, StepTwo } from "@/components/createCoure";
+import { StepOne, StepThree, StepTwo } from "../../components/createCoure"
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { Card, Steps, Typography, notification } from "antd";
 import axios from "axios";
@@ -21,6 +21,8 @@ function CourseDetailPage() {
     course_image: "",
     course_status_id: 1,
     week: "0",
+    course_level:"",
+    course_skill: ""
   });
   const [weekData, setWeekData] = useState([]);
 
@@ -47,6 +49,7 @@ function CourseDetailPage() {
   const handlePreviousStep = () => setStep(step - 1);
 
   const handleSubmit = async () => {
+    console.log(weekData);
     try {
       let token = "";
       let userId = "";
@@ -118,6 +121,7 @@ function CourseDetailPage() {
               }
             );
             if (createWeek.status === 201) {
+              let selectedExamId = week.selectedExamId;
               const createWeekResponse = createWeek.data?.data?.data;
               const weekId = createWeekResponse.week_id;
               await week.days.forEach(async (day) => {
@@ -297,6 +301,20 @@ function CourseDetailPage() {
                   });
                 }
               });
+
+
+              if (selectedExamId) {
+                await axios.post(`/assign`, {
+               account_id: id,
+               course_id: courseId,
+               week_id: weekId,
+              exam_id: selectedExamId
+                }, {
+               headers: {
+                Authorization: token,
+               },
+                });
+              }
             }
           });
         }

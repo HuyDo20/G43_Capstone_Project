@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Select, message } from 'antd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hook/AuthContext';
-
+import { useAuth } from '../../hook/AuthContext'
 
 const { Option } = Select;
 

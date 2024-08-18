@@ -15,6 +15,7 @@ import Header from "@/layout/header/Header";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Progress } from "../../components/ui/progress";
 
 export default function LearningByWeek() {
   const { id } = useParams();
@@ -97,14 +98,43 @@ export default function LearningByWeek() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="flex flex-col items-center gap-3 pt-10">
-            {/* <div>
-              <ResetDeadline />
-            </div> */}
-            <div className="w-[800px]">
-              <DaySchedule weekSelected={weekSelected} id={id} />
-            </div>
-          </div>
+          {/*start */}
+
+
+<div className="flex flex-row justify-between gap-10 pt-10">
+  <div className="basis-4/5"> {/* DaySchedule section set to 80% width */}
+    <DaySchedule weekSelected={weekSelected} id={id} />
+  </div>
+  <div className="basis-1/5 flex flex-col gap-4 p-6 border border-[#56a251] rounded-lg bg-[#f9f9f9] shadow-md self-start"> {/* Styled course progress section with height adjustment */}
+    <div className="text-lg font-semibold text-[#56a251] text-center mb-2">Quá trình</div> {/* Section Title */}
+    <div className="flex flex-row items-center gap-2">
+      <div className="basis-2/5 text-sm">Từ vựng</div> {/* Adjusted text size */}
+      <Progress className="h-[8px] basis-3/5" value={10} /> {/* Adjusted progress bar */}
+      <div className="text-[#9cda58] text-xs">{10}%</div> {/* Adjusted percentage size */}
+    </div>
+    <div className="flex flex-row items-center gap-2">
+      <div className="basis-2/5 text-sm">Kanji</div>
+      <Progress className="h-[8px] basis-3/5" value={10} />
+      <div className="text-[#9cda58] text-xs">{10}%</div>
+    </div>
+    <div className="flex flex-row items-center gap-2">
+      <div className="basis-2/5 text-sm">Ngữ pháp</div>
+      <Progress className="h-[8px] basis-3/5" value={10} />
+      <div className="text-[#9cda58] text-xs">{10}%</div>
+    </div>
+    <div className="flex flex-row items-center gap-2">
+      <div className="basis-2/5 text-sm">Video</div>
+      <Progress className="h-[8px] basis-3/5" value={10} />
+      <div className="text-[#9cda58] text-xs">{10}%</div>
+    </div>
+  </div>
+</div>
+
+
+
+          
+          {/*end */}
+
         </div>
       </div>
     </div>

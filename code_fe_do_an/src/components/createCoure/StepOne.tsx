@@ -1,7 +1,9 @@
-import { Form, Input, Button, Upload, notification } from "antd";
+import { Form, Input, Button, Upload, notification, Select } from "antd";
 import ImgCrop from "antd-img-crop";
 import axios from "axios";
 import { useEffect } from "react";
+
+const { Option } = Select;
 
 const StepOne = ({
   course,
@@ -65,6 +67,11 @@ const StepOne = ({
     const { name, value } = e.target;
     setCourse({ ...course, [name]: value });
   };
+
+  const handleSelectChange = (name, value) => {
+    setCourse({ ...course, [name]: value });
+  };
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -72,6 +79,8 @@ const StepOne = ({
       course_name: course.course_name,
       week: course.week,
       description: course.description,
+      course_skill: course.course_skill,
+      course_level: course.course_level,
     });
   }, [course, form]);
 
@@ -142,6 +151,40 @@ const StepOne = ({
             name="description"
             value={course.description}
             onChange={handleChangeInput}
+          />
+        </Form.Item>
+
+        {/* New Form Item for Course Level */}
+        <Form.Item
+          label="Course Level"
+          name="course_level"
+          rules={[{ required: true, message: "Please select a course level!" }]}
+        >
+          <Select
+            disabled={mode === "view"}
+            value={course.course_level}
+            onChange={(value) => handleSelectChange("course_level", value)}
+          >
+            {["N1", "N2", "N3", "N4", "N5"].map((level) => (
+              <Option key={level} value={level}>
+                {level}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* New Form Item for Course Skill */}
+        <Form.Item
+          label="Course Skill"
+          name="course_skill"
+          rules={[{ required: true, message: "Please enter course skill!" }]}
+        >
+          <Input
+            placeholder="Enter course skill"
+            name="course_skill"
+            value={course.course_skill}
+            onChange={handleChangeInput}
+            readOnly={mode === "view"}
           />
         </Form.Item>
 

@@ -17,6 +17,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+          course_level: {
+        type: DataTypes.ENUM('N1', 'N2', 'N3', 'N4', 'N5'),
+        allowNull: false, 
+      },
+          course_skill: {
+        type: DataTypes.STRING,
+        allowNull: false, 
+      },
       week: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -33,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+  
       note: {
         type: DataTypes.STRING,  
         allowNull: true,

@@ -1,12 +1,16 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Typography, Input, List, Collapse } from "antd"; // Import Collapse component
+import { Button, Flex, Typography, Input, List, Collapse, Select } from "antd"; // Import Select component
 import { useEffect, useState } from "react";
 import AddDayModal from "../Modal/AddDay";
 import AddLessonModal from "../Modal/AddLesson";
 import DayCard from "./DayCard";
 import ExamTaking from "../exam/ExamTaking";
+import axios from 'axios';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Panel } = Collapse;
+const { Option } = Select; // Use Option for the dropdown
 
 function WeekCard({
   weekIndex = 0,
@@ -20,13 +24,53 @@ function WeekCard({
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dayData, setDayData] = useState([]);
-  const [examData, setExamData] = useState([]); 
+  const [listExam, setListExams] = useState([]);
+  const [examData, setExamData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [topicName, setTopicName] = useState(weekData[weekIndex]?.week_topic);
   const [daySelected, setDaySelected] = useState(null);
   const [dayIndexSelected, setDayIndexSelected] = useState(null);
   const [lessonSelected, setLessonSelected] = useState(null);
   const [lessonIndexSelected, setLessonIndexSelected] = useState(null);
+  const [selectedExamId, setSelectedExamId] = useState(weekData[weekIndex]?.selectedExamId || null); // State to track selected exam ID
+  const navigate = useNavigate();
+
+  const fetchExams = async () => {
+    try {
+      let token = "";
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+      }
+
+      const request = await axios.get('/getAllExam', {
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (request.status === 200) {
+        setListExams(request.data.data.data);
+      } else {
+        setListExams([]);
+      }
+    } catch (error) {
+      message.error('Failed to fetch exams.');
+      navigate('/error', { state: { message: error.message } });
+    }
+  };
+
+  const handleExamSelect = (examId) => {
+    setSelectedExamId(examId);
+
+    // Save selected exam ID in weekData
+    let cloneWeekData = [...weekData];
+    cloneWeekData[weekIndex] = {
+      ...cloneWeekData[weekIndex],
+      selectedExamId: examId, // Set selectedExamId here
+    };
+    setWeekData(cloneWeekData);
+  };
 
   const showLessonModal = () => {
     setIsModalVisible(true);
@@ -59,9 +103,10 @@ function WeekCard({
   };
 
   useEffect(() => {
-    if (id) { 
+    if (id) {
       setDayData(weekData[weekIndex]?.days || []);
-      setExamData(weekData[weekIndex]?.Exams || []); 
+      setExamData(weekData[weekIndex]?.Exams || []);
+      setSelectedExamId(weekData[weekIndex]?.selectedExamId || null); // Initialize selectedExamId from weekData
     }
   }, [id, reload]);
 
@@ -73,15 +118,22 @@ function WeekCard({
       course_id: null,
       week_status_id: 1,
       days: dayData,
-      Exams: examData, 
+      Exams: examData,
+      selectedExamId: selectedExamId, // Ensure selectedExamId is saved
       week_id: cloneWeekData[weekIndex]?.week_id,
     };
     setWeekData(cloneWeekData);
-  }, [dayData, examData, topicName]); 
+  }, [dayData, examData, topicName, selectedExamId]); // Include selectedExamId in dependency array
 
   useEffect(() => {
     setTopicName(weekData[weekIndex]?.week_topic);
   }, [weekData, weekIndex]);
+
+  useEffect(() => {
+    if (mode !== "view" && examData.length === 0) {
+      fetchExams();
+    }
+  }, [mode, examData]);
 
   return (
     <>
@@ -128,6 +180,21 @@ function WeekCard({
         )}
       </Flex>
 
+      {/* Render dropdown to select exam if mode is not view and no examData */}
+      {mode !== "view" && !selectedExamId && (
+        <Select
+          style={{ width: "200px", marginTop: "10px" }}
+          placeholder="Chọn bài kiểm tra"
+          onChange={handleExamSelect}
+        >
+          {listExam.map((exam) => (
+            <Option key={exam.exam_id} value={exam.exam_id}>
+              {exam.exam_name}
+            </Option>
+          ))}
+        </Select>
+      )}
+
       <DayCard
         dayData={dayData}
         setDayData={setDayData}
@@ -141,7 +208,6 @@ function WeekCard({
         mode={mode}
       />
 
-      {/* Add Collapse for Exams */}
       <Collapse>
         <Panel header="Bài kiểm tra" key="1">
           {examData.map((exam, index) => (

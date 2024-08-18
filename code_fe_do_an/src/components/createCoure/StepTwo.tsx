@@ -27,6 +27,8 @@ const StepTwo = ({
           course_id: null,
           week_status_id: 1,
           days: [],
+          Exams: [], // Initialize an empty array for Exams
+          selectedExamId: null, // Initialize exam_id variable for selected exam id
         }))
       );
     }
@@ -81,6 +83,5 @@ const StepTwo = ({
     </>
   );
 };
-
 
 export default StepTwo;

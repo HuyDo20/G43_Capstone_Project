@@ -146,6 +146,9 @@ function transformCourseData(courseData) {
 		course_image: courseData.course_image,
 		course_status_id: courseData.course_status_id,
 		week: courseData.week.toString(),
+		course_note: courseData.course_note,
+		course_level: courseData.course_level,
+		course_skill: courseData.course_skill
 	};
 
 	return { weekData: transformedWeeks, courseData: courseDetails };
