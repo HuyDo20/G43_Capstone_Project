@@ -19,6 +19,7 @@ import { FaCamera } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Upload, message } from "antd";
 import ImgCrop from 'antd-img-crop';
+import { IoMdSettings } from "react-icons/io";
 
 
 
@@ -27,6 +28,8 @@ export default function UserProfile() {
   const [input, setInput] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user.avatar || null);
   const [fileList, setFileList] = useState([]);
+  const [showUpload, setShowUpload] = useState(false); 
+
 
   const navigate = useNavigate();
 
@@ -94,7 +97,7 @@ export default function UserProfile() {
       // Update the user's avatar in the database
       const updateResponse = await axios.put(
         `/account/${user.account_id}`,
-        { avatar: avatarPreview }, // Update the avatar field with the file path
+        { avatar: avatarPreview }, 
         {
           headers: {
             Authorization: user.token,
@@ -103,15 +106,15 @@ export default function UserProfile() {
       );
 
       if (updateResponse.status === 200) {
-        message.success("Avatar updated successfully!");
-          setUser((prevUser) => {
+        message.success("Cập nhật avatar thành công!");
+        setUser((prevUser) => {
         if (!prevUser) return null;
         return {
           ...prevUser,
           avatar: avatarPreview,
         };
-          });
-        
+        });
+        setShowUpload(false);
       } else {
         throw new Error("Failed to update avatar in the database.");
       }
@@ -151,35 +154,40 @@ export default function UserProfile() {
                     />
                       <AvatarFallback></AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col items-center w-full max-w-sm gap-3">
-                      <div className="flex flex-row items-center justify-center gap-3">
-                        <FaCamera />
-                        <Label className="text-center">Ảnh xem trước</Label>
-                      </div>
-                      <div className="flex gap-3 w-[100px]">
-                        <ImgCrop rotationSlider>
-                        <Upload
-                          customRequest={handleUpload}
-                          listType="picture-card"
-                          fileList={fileList}
-                          beforeUpload={beforeUpload}
-                          maxCount={1}
-                          onRemove={handleRemoveImage}
-                          showUploadList={{
-                            showPreviewIcon: false,
-                            showRemoveIcon: true,
-                            showDownloadIcon: false,
-                          }}
-                        >
-                          {fileList.length < 1 && '+ Upload'}
-                        </Upload>
-                      </ImgCrop>
+                    
+                  {/* Button Icon */}
+           <Button
+        className="mt-0"
+        onClick={() => setShowUpload(!showUpload)} // Toggle visibility
+      >
+        <IoMdSettings />
+      </Button>
 
+      {/* Conditional Rendering of Upload Section */}
+      {showUpload && (
+        <div className="flex flex-col items-center mt-4">
+          <ImgCrop rotationSlider>
+            <Upload
+              customRequest={handleUpload}
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={beforeUpload}
+              maxCount={1}
+              onRemove={handleRemoveImage}
+              showUploadList={{
+                showPreviewIcon: false,
+                showRemoveIcon: true,
+                showDownloadIcon: false,
+              }}
+            >
+              {fileList.length < 1 && '+ Upload'}
+              </Upload>
+              </ImgCrop>
+              <Button className="mt-2" onClick={handleOnSubmitFile}>
+                  Cập nhật
+                </Button>
                       </div>
-                       <Button className="w-2/5" onClick={handleOnSubmitFile}>
-                          Cập nhật
-                        </Button>
-                    </div>
+                   )}
                     <TabsList className="flex flex-col w-full gap-2 mt-12 bg-[#f1f8e9]">
                       <TabsTrigger value="account" className="mb-2">
                         Thông tin cá nhân
