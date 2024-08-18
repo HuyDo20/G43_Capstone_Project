@@ -34,6 +34,9 @@ const {
 } = require("../messages/course");
 const { transformCourseData } = require("../helper/course");
 const { Op, where } = require("sequelize");
+const { getExamWithoutAnswerById } = require('../services/examService');
+const { getExamByCourseAndWeek } = require('../services/courseExamService');
+
 
 const getAllCourse = async (req, res) => {
 	try {
@@ -196,60 +199,79 @@ const getCourseById = async (req, res) => {
 	}
 };
 
-const getCourseDetailById = async (req, res) => {
-	try {
-		const { course_id } = req.params;
 
-		const courseDetails = await Course.findOne({
-			where: {
-				course_id: course_id,
-				course_status_id: { [Op.or]: [1, 2, 3] }
-			},
-			include: [
-				{
-					model: Week,
-					include: [
-						{
-							model: Day,
-							include: [
-								{
-									model: Grammar,
-									include: [
-										{
-											model: GrammarExample,
-										}
-									],
-								},
-								{
-									model: Kanji,
-									include: [
-										{
-											model: KanjiWord,
-										},
-									],
-								},
-								{
-									model: Video,
-								},
-								{
-									model: Vocabulary,
-								},
-							],
-						},
-					],
-				},
-			],
-		});
-		if (courseDetails) {
-			const data = transformCourseData(courseDetails);
-			return responseWithData(res, 200, data);
-		} else {
-			return notfound(res);
-		}
-	} catch (e) {
-		console.log("getCourseDetailById", e);
-		return error(res);
-	}
+const getCourseDetailById = async (req, res) => {
+    try {
+        const { course_id } = req.params;
+
+        const courseDetails = await Course.findOne({
+            where: {
+                course_id: course_id,
+                course_status_id: { [Op.or]: [1, 2, 3] }
+            },
+            include: [
+                {
+                    model: Week,
+                    include: [
+                        {
+                            model: Day,
+                            include: [
+                                {
+                                    model: Grammar,
+                                    include: [
+                                        {
+                                            model: GrammarExample,
+                                        }
+                                    ],
+                                },
+                                {
+                                    model: Kanji,
+                                    include: [
+                                        {
+                                            model: KanjiWord,
+                                        },
+                                    ],
+                                },
+                                {
+                                    model: Video,
+                                },
+                                {
+                                    model: Vocabulary,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+
+        if (courseDetails) {
+            const transformedCourseData = transformCourseData(courseDetails);
+
+            // Iterate directly over weekData
+            transformedCourseData.weekData = transformedCourseData.weekData || []; 
+
+            for (const week of transformedCourseData.weekData) {
+                week.Exams = [];
+                
+                // Fetch exam ID based on course_id and week_id
+                const exam = await getExamByCourseAndWeek(course_id, week.week_id);
+                if (exam) {
+                    const examWithoutAnswer = await getExamWithoutAnswerById(exam.exam_id);
+                    if (examWithoutAnswer) {
+                        week.Exams.push(examWithoutAnswer);
+                    }
+                }
+            }
+
+            return responseWithData(res, 200, transformedCourseData);
+        } else {
+            return notfound(res);
+        }
+    } catch (e) {
+        console.log("getCourseDetailById", e);
+        return error(res);
+    }
 };
 
 const getProgressByWeekId = async (req, res) => {

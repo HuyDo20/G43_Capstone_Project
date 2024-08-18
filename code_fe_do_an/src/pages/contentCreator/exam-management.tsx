@@ -126,7 +126,7 @@ const ExamManagementPage: React.FC = () => {
           />
           <CiEdit size={24} color="#feb32a"
             onClick={() => {
-              navigate(`/admin/exam-management/${record.exam_id}`);
+              navigate(`/contentCreator/exam-management/edit/${record.exam_id}`);
             }}
           />
           <MdDeleteOutline size={24} color="red"

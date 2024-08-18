@@ -1,9 +1,12 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Typography, Input, List } from "antd";
+import { Button, Flex, Typography, Input, List, Collapse } from "antd"; // Import Collapse component
 import { useEffect, useState } from "react";
 import AddDayModal from "../Modal/AddDay";
 import AddLessonModal from "../Modal/AddLesson";
 import DayCard from "./DayCard";
+import ExamTaking from "../exam/ExamTaking";
+
+const { Panel } = Collapse;
 
 function WeekCard({
   weekIndex = 0,
@@ -17,6 +20,7 @@ function WeekCard({
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dayData, setDayData] = useState([]);
+  const [examData, setExamData] = useState([]); 
   const [isEditing, setIsEditing] = useState(false);
   const [topicName, setTopicName] = useState(weekData[weekIndex]?.week_topic);
   const [daySelected, setDaySelected] = useState(null);
@@ -55,7 +59,10 @@ function WeekCard({
   };
 
   useEffect(() => {
-    if (id) setDayData(weekData[weekIndex]?.days);
+    if (id) { 
+      setDayData(weekData[weekIndex]?.days || []);
+      setExamData(weekData[weekIndex]?.Exams || []); 
+    }
   }, [id, reload]);
 
   useEffect(() => {
@@ -66,10 +73,11 @@ function WeekCard({
       course_id: null,
       week_status_id: 1,
       days: dayData,
+      Exams: examData, 
       week_id: cloneWeekData[weekIndex]?.week_id,
     };
     setWeekData(cloneWeekData);
-  }, [dayData, topicName]);
+  }, [dayData, examData, topicName]); 
 
   useEffect(() => {
     setTopicName(weekData[weekIndex]?.week_topic);
@@ -132,6 +140,23 @@ function WeekCard({
         setReload={setReload}
         mode={mode}
       />
+
+      {/* Add Collapse for Exams */}
+      <Collapse>
+        <Panel header="Bài kiểm tra" key="1">
+          {examData.map((exam, index) => (
+            <ExamTaking
+              key={index}
+              examTitle={exam.title}
+              questions={exam.questions}
+              mode={"view"}
+              onSubmit={null}
+              score={0}
+            />
+          ))}
+        </Panel>
+      </Collapse>
+
       <AddDayModal
         dayData={dayData}
         setDayData={setDayData}

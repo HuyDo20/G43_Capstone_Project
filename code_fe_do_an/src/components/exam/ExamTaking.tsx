@@ -42,58 +42,66 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
   }, [mode]);
 
   const handleReadingAnswerSelect = (questionId, optionId) => {
-    setSelectedAnswers(prevState => ({
-      ...prevState,
-      [questionId]: optionId
-    }));
-    setErrors(prevState => ({
-      ...prevState,
-      [questionId]: undefined
-    }));
+    if (mode !== 'view') {
+      setSelectedAnswers(prevState => ({
+        ...prevState,
+        [questionId]: optionId
+      }));
+      setErrors(prevState => ({
+        ...prevState,
+        [questionId]: undefined
+      }));
+    }
   };
 
   const handleListeningAnswerSelect = (questionId, optionId) => {
-    setSelectedAnswers(prevState => ({
-      ...prevState,
-      [questionId]: optionId
-    }));
-    setErrors(prevState => ({
-      ...prevState,
-      [questionId]: undefined
-    }));
+    if (mode !== 'view') {
+      setSelectedAnswers(prevState => ({
+        ...prevState,
+        [questionId]: optionId
+      }));
+      setErrors(prevState => ({
+        ...prevState,
+        [questionId]: undefined
+      }));
+    }
   };
 
   const handleVocabularyAnswerSelect = (questionId, optionId) => {
-    setSelectedAnswers(prevState => ({
-      ...prevState,
-      [questionId]: optionId
-    }));
-    setErrors(prevState => ({
-      ...prevState,
-      [questionId]: undefined
-    }));
+    if (mode !== 'view') {
+      setSelectedAnswers(prevState => ({
+        ...prevState,
+        [questionId]: optionId
+      }));
+      setErrors(prevState => ({
+        ...prevState,
+        [questionId]: undefined
+      }));
+    }
   };
 
   const handleSubmit = () => {
-    const unansweredQuestions = {};
-    const allQuestions = [
-      ...multiChoiceQuestions.map(q => q.id),
-      ...readingQuestions.flatMap(q => q.subQuestions.map(sq => sq.id)),
-      ...listeningQuestions.flatMap(q => q.subQuestions.map(sq => sq.id))
-    ];
+    if (mode !== 'view') {
+      const unansweredQuestions = {};
+      const allQuestions = [
+        ...multiChoiceQuestions.map(q => q.id),
+        ...readingQuestions.flatMap(q => q.subQuestions.map(sq => sq.id)),
+        ...listeningQuestions.flatMap(q => q.subQuestions.map(sq => sq.id))
+      ];
 
-    allQuestions.forEach(questionId => {
-      if (selectedAnswers[questionId] === undefined) {
-        unansweredQuestions[questionId] = true;
+      allQuestions.forEach(questionId => {
+        if (selectedAnswers[questionId] === undefined) {
+          unansweredQuestions[questionId] = true;
+        }
+      });
+
+      if (Object.keys(unansweredQuestions).length > 0) {
+        setErrors(unansweredQuestions);
+        return;
       }
-    });
 
-    if (Object.keys(unansweredQuestions).length > 0) {
-      setErrors(unansweredQuestions);
-      return;
+      onSubmit(selectedAnswers);
     }
-
-    onSubmit(selectedAnswers);
   };
 
   const handleReview = () => {
@@ -160,7 +168,7 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
                 subQuestions={question.subQuestions}
                 onAnswerSelect={handleReadingAnswerSelect}
                 errors={errors}
-                showResults={mode === 'reviewing'}
+                showResults={mode === 'reviewing' || mode === 'view'}
                 selectedAnswers={selectedAnswers}
                 mode={mode}
               />
@@ -176,7 +184,7 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
                 subQuestions={question.subQuestions}
                 onAnswerSelect={handleListeningAnswerSelect}
                 errors={errors}
-                showResults={mode === 'reviewing'}
+                showResults={mode === 'reviewing' || mode === 'view'}
                 selectedAnswers={selectedAnswers}
                 mode={mode}
               />

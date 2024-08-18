@@ -19,8 +19,8 @@ const StepTwo = ({
   };
 
   useEffect(() => {
-    if (!id)
-      setWeekData(
+    if (!id) { 
+       setWeekData(
         Array.from({ length: week }, (_, index) => ({
           week_name: `Week ${index + 1}`,
           week_topic: `Tiêu đề tuần  ${index + 1}`,
@@ -29,9 +29,8 @@ const StepTwo = ({
           days: [],
         }))
       );
+    }
   }, [week]);
-
-
 
   const weekCardData = id ? weekData : new Array(week).fill(null);
 

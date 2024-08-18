@@ -10,6 +10,7 @@ export const contentCreatorRoutes = [
   { path: "course-management/create", element: CourseDetailPage },
   { path: "course-management/:id", element: CourseDetailPage },
   { path: "exam-management/create", element: ExamCreatePage },
+  { path: "exam-management/edit/:exam_id", element: ExamCreatePage },
   { path: "exam-management/manage", element: ExamManagementPage },
   { path: "exam-management/assign", element: ExamAssignPage }
 ];

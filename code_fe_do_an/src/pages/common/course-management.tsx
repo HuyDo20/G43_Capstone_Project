@@ -35,6 +35,10 @@ const CoursesManagementPage: React.FC = () => {
   } | null>(null);
   const [deactivationReason, setDeactivationReason] = useState<string>("");
   const [role, setRole] = useState("");
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [editedReason, setEditedReason] = useState<string>("");
+
 
   
   useEffect(() => {
@@ -130,6 +134,47 @@ const handleOk = async () => {
     setDeactivationReason("");
   };
 
+ const handleEditReason = (course: Course) => {
+    setSelectedCourse(course);
+    setEditedReason(course.note || ""); 
+    setIsEditModalVisible(true);
+};
+
+    const handleSaveReason = async () => {
+    if (selectedCourse) {
+      try {
+        let token = "";
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
+
+        const response = await axios.put(
+          `/course/${selectedCourse.course_id}`,
+          { note: editedReason },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          message.success("Lý do đã được cập nhật thành công");
+          setReload(true); // Trigger reload of data
+          setIsEditModalVisible(false);
+        } else {
+          message.error("Cập nhật lý do thất bại");
+        }
+      } catch (error) {
+        console.error("Error updating reason:", error);
+        message.error("Đã xảy ra lỗi khi cập nhật lý do");
+      }
+    }
+  };
+
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -146,7 +191,6 @@ const handleOk = async () => {
         });
         const response = request.data;
         if (response.statusCode === 200) {
-          console.log(response.data);
           setCourses(response.data);
         }
       } catch (error) {
@@ -219,6 +263,11 @@ const handleOk = async () => {
             >
               Chỉnh sửa
             </Button>)}
+            {role === "2" &&
+             <Button type="primary" onClick={() => handleEditReason(course)}>
+              Chỉnh sửa lý do
+              </Button>
+            }
           </div>
         );
       default:
@@ -327,6 +376,21 @@ const deactivatedColumns = [
         ) : (
           <p>Bạn có chắc muốn {confirmAction?.action} khóa này?</p>
         )}
+
+      {/* edit reason */}
+      </Modal>
+        <Modal
+        title="Chỉnh sửa lý do"
+        visible={isEditModalVisible}
+        onOk={handleSaveReason}
+        onCancel={() => setIsEditModalVisible(false)}
+      >
+        <Input.TextArea
+          value={editedReason}
+          onChange={(e) => setEditedReason(e.target.value)}
+          placeholder="Nhập lý do vô hiệu hóa"
+          rows={4}
+        />
       </Modal>
     </>
   );

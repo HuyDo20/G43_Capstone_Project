@@ -340,7 +340,9 @@ function CourseDetailPage() {
           },
         });
         if (request.status === 200) {
+         
           const response = request.data.data;
+          console.log(response);
           const listFileCourse = response.courseData?.course_image
             ? response.courseData?.course_image?.split()
             : [];
