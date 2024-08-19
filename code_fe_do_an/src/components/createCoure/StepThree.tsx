@@ -20,7 +20,7 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
       <Flex
         style={{ display: "flex", justifyContent: "center", marginTop: "2%" }}
       >
-       <Button
+       {/* <Button
           style={{ width: "25%" }}
           type="default"
           onClick={() => {
@@ -28,7 +28,7 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
           }}
         >
           Quay lại
-        </Button> 
+        </Button>  */}
         <div style={{ width: "20px" }}></div>
         <Button
           style={{ width: "25%" }}
