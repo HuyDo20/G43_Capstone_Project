@@ -92,58 +92,51 @@ const CourseExamCreate: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { exam_id } = params;
-  const [examData, setExamData] = useState<any>(null);
 
   useEffect(() => {
     if (reload) setReload(false);
   }, [reload]);
 
-  const transformFetchedData = (data: any) => {
-    return {
-      examTitle: data.exam_name,
-      examData: {
-        readingQuestions: data.questions.readingQuestions.map((question: any) => ({
-          id: question.id,
-          type: question.type,
-          content: question.content,
-          imageUrl: question.imageUrl,
-          subQuestions: question.subQuestions.map((subQuestion: any) => ({
-            id: subQuestion.id,
-            questionContent: subQuestion.questionContent,
-            options: subQuestion.options,
-            imageUrl: subQuestion.imageUrl,
-            userAnsweredId: subQuestion.userAnsweredId || null,
-            correctOptionId: subQuestion.correctOptionId,
-          })),
-        })),
-        listeningQuestions: data.questions.listeningQuestions.map((question: any) => ({
-          id: question.id,
-          type: question.type,
-          audioUrl: question.audioUrl,
-          subQuestions: question.subQuestions.map((subQuestion: any) => ({
-            id: subQuestion.id,
-            questionContent: subQuestion.questionContent,
-            options: subQuestion.options,
-            imageUrl: subQuestion.imageUrl,
-            userAnsweredId: subQuestion.userAnsweredId || null,
-            correctOptionId: subQuestion.correctOptionId,
-          })),
-        })),
-        multiChoiceQuestions: data.questions.multiChoiceQuestions.map((question: any) => ({
-          id: question.id,
-          type: question.type,
-          content: question.content,
-          options: question.options,
-          imageUrl: question.imageUrl,
-          userAnsweredId: question.userAnsweredId || null,
-          correctOptionId: question.correctOptionId,
-        })),
-      },
-    };
-  };
+ const transformFetchedData = (data: any) => ({
+    examTitle: data.exam_name,
+    readingQuestions: data.questions.readingQuestions.map((question: any) => ({
+      id: question.id,
+      type: question.type,
+      content: question.content,
+      imageUrl: question.imageUrl,
+      subQuestions: question.subQuestions.map((subQuestion: any) => ({
+        id: subQuestion.id,
+        questionContent: subQuestion.questionContent,
+        options: subQuestion.options,
+        imageUrl: subQuestion.imageUrl,
+        correctOptionId: subQuestion.correctOptionId,
+      })),
+    })),
+    listeningQuestions: data.questions.listeningQuestions.map((question: any) => ({
+      id: question.id,
+      type: question.type,
+      audioUrl: question.audioUrl,
+      subQuestions: question.subQuestions.map((subQuestion: any) => ({
+        id: subQuestion.id,
+        questionContent: subQuestion.questionContent,
+        options: subQuestion.options,
+        imageUrl: subQuestion.imageUrl,
+        correctOptionId: subQuestion.correctOptionId,
+      })),
+    })),
+    multiChoiceQuestions: data.questions.multiChoiceQuestions.map((question: any) => ({
+      id: question.id,
+      type: question.type,
+      content: question.content,
+      options: question.options,
+      imageUrl: question.imageUrl,
+      correctOptionId: question.correctOptionId,
+    })),
+  });
 
-  useEffect(() => {
-    const fetchExamDetails = async (exam_id: any) => {
+
+    useEffect(() => {
+    const fetchExamDetails = async (exam_id: string) => {
       try {
         let token = "";
         const userEncode = localStorage.getItem("user");
@@ -158,10 +151,15 @@ const CourseExamCreate: React.FC = () => {
             Authorization: token,
           },
         });
+
         if (request.status === 200) {
           const fetchedData = request.data.data.data;
           const transformedData = transformFetchedData(fetchedData);
-          setExamData(transformedData);
+
+          setExamName(transformedData.examTitle);
+          setReadingQuestions(transformedData.readingQuestions);
+          setListeningQuestions(transformedData.listeningQuestions);
+          setMultiChoiceQuestions(transformedData.multiChoiceQuestions);
         } else {
           message.error('Failed to fetch exam details.');
         }
@@ -170,6 +168,7 @@ const CourseExamCreate: React.FC = () => {
         navigate('/error', { state: { message: error.message } });
       }
     };
+
     if (exam_id) fetchExamDetails(exam_id);
   }, [exam_id]);
 
@@ -216,42 +215,53 @@ const CourseExamCreate: React.FC = () => {
     setIsEditingQuestion(false);
   };
 
-  const handleSaveExam = async () => {
+ const handleSaveExam = async () => {
     try {
-      let token = "";
-      let accountId;
-      const userEncode = localStorage.getItem("user");
-      if (userEncode) {
-        const userDecode = JSON.parse(userEncode);
-        token = userDecode?.token;
-        accountId = userDecode?.account_id;
-      }
+        let token = "";
+        let accountId;
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+            const userDecode = JSON.parse(userEncode);
+            token = userDecode?.token;
+            accountId = userDecode?.account_id;
+        }
 
-      const examData = {
-        exam_name: examName,
-        account_id: accountId,
-        questions: {
-          multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
-          readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
-          listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
-        },
-      };
+        const examData = {
+            exam_name: examName,
+            account_id: accountId,
+            questions: {
+                multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
+                readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
+                listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
+            },
+        };
 
-      const request = await axios.post(`/exams`, { account_id: accountId, exam_data: examData }, {
-        headers: {
-          Authorization: token,
-        },
-      });
+        let request;
+        if (exam_id) {
+            // Update the existing exam
+            request = await axios.put(`/exams/${exam_id}`, { account_id: accountId, exam_data: examData }, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+        } else {
+            // Create a new exam
+            request = await axios.post(`/exams`, { account_id: accountId, exam_data: examData }, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+        }
 
-      if (request.status === 201) {
-        message.success('Exam saved successfully!');
-        setReload(true);
-      }
+        if (request.status === 201 || request.status === 200) {
+            message.success(`Exam ${exam_id ? 'updated' : 'saved'} successfully!`);
+            setReload(true);
+        }
     } catch (error) {
-      message.error('Failed to save exam.');
-      navigate('/error', { state: { message: error.message } });
+        message.error(`Failed to ${exam_id ? 'update' : 'save'} exam.`);
+        navigate('/error', { state: { message: error.message } });
     }
-  };
+};
 
   const handleDragEnd = (result: DropResult, questions: Question[], setQuestions: React.Dispatch<React.SetStateAction<Question[]>>) => {
     if (!result.destination) return;
@@ -395,6 +405,10 @@ const CourseExamCreate: React.FC = () => {
                   {type === 'Multi-choice' ? (
                     <MultiChoiceQuestionCreating
                       questionId={question.id}
+                      content={question.content}
+                      options={question.options}
+                      correctOptionId={question.correctOptionId}
+                      imageUrl={question.imageUrl}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, content, options, correctOptionId, imageUrl) =>
                         handleConfirmQuestion(question.type, id, content, options, correctOptionId, imageUrl)
@@ -407,6 +421,9 @@ const CourseExamCreate: React.FC = () => {
                   ) : type === 'Reading' ? (
                     <ReadingQuestionCreating
                       questionId={question.id}
+                      content={question.content}
+                      subQuestions={question.subQuestions}
+                      imageUrl={question.imageUrl}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, content, subQuestions, imageUrl) =>
                         handleConfirmQuestion(question.type, id, content, [], null, imageUrl, subQuestions)
@@ -419,6 +436,8 @@ const CourseExamCreate: React.FC = () => {
                   ) : type === 'Listening' ? (
                     <ListeningQuestionCreating
                       questionId={question.id}
+                      subQuestions={question.subQuestions}
+                      audioUrl={question.audioUrl}
                       onDelete={() => handleDeleteQuestion(question.type, question.id)}
                       onConfirm={(id, subQuestions, audioUrl) =>
                         handleConfirmQuestion(question.type, id, '', [], null, null, subQuestions, audioUrl)
@@ -440,7 +459,7 @@ const CourseExamCreate: React.FC = () => {
             icon={<AiOutlinePlus />}
             disabled={isEditingQuestion}
           >
-            Thêm câu hỏi
+            Add Question
           </StyledButton>
         </QuestionSection>
       )}
@@ -450,18 +469,20 @@ const CourseExamCreate: React.FC = () => {
   return (
     <ExamCreatePage>
       <Form layout="vertical">
-        <Form.Item label="Name">
+        <Form.Item label="Exam Name">
           <Input value={examName} onChange={(e) => setExamName(e.target.value)} />
         </Form.Item>
       </Form>
       <DragDropContext
         onDragEnd={(result) => {
-          if (selectedType === 'Multi-choice') {
-            handleDragEnd(result, multiChoiceQuestions, setMultiChoiceQuestions);
-          } else if (selectedType === 'Reading') {
-            handleDragEnd(result, readingQuestions, setReadingQuestions);
-          } else if (selectedType === 'Listening') {
-            handleDragEnd(result, listeningQuestions, setListeningQuestions);
+          if (result.destination) {
+            if (result.source.droppableId === 'Multi-choice') {
+              handleDragEnd(result, multiChoiceQuestions, setMultiChoiceQuestions);
+            } else if (result.source.droppableId === 'Reading') {
+              handleDragEnd(result, readingQuestions, setReadingQuestions);
+            } else if (result.source.droppableId === 'Listening') {
+              handleDragEnd(result, listeningQuestions, setListeningQuestions);
+            }
           }
         }}
       >
@@ -470,7 +491,7 @@ const CourseExamCreate: React.FC = () => {
         {renderQuestionsByType('Listening', listeningQuestions, setListeningQuestions)}
       </DragDropContext>
       <StyledButton type="primary" onClick={handleSaveExam}>
-        Xác nhận
+        Save Exam
       </StyledButton>
     </ExamCreatePage>
   );

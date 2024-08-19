@@ -245,9 +245,8 @@ const getCourseDetailById = async (req, res) => {
             ],
         });
 
-        if (courseDetails) {
+      if (courseDetails) {
             const transformedCourseData = transformCourseData(courseDetails);
-
             // Iterate directly over weekData
             transformedCourseData.weekData = transformedCourseData.weekData || []; 
 

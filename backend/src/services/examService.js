@@ -54,9 +54,11 @@ async function getExamWithoutAnswerById(examId) {
 }
 
 
-  async function updateExam(examId, updatedData) {
+async function updateExam(examId, updatedData) {
+  console.log("update exam");
+    
     const exam = await Exam.findOne({
-			where: { exam_id },
+			where: { examId },
 		});
     if (!exam) {
       throw new Error('Exam not found');
