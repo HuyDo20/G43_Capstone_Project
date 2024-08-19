@@ -136,7 +136,7 @@ const handleOk = async () => {
 
  const handleEditReason = (course: Course) => {
     setSelectedCourse(course);
-    setEditedReason(course.note || ""); 
+    setEditedReason(course.deactive_reason || ""); 
     setIsEditModalVisible(true);
 };
 

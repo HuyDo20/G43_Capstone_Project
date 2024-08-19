@@ -44,6 +44,32 @@ async function assignExamToCourse({ course_id, exam_id, week_id }) {
 }
 
 
+  async function updateCourseExam({ course_id, exam_id, week_id }) {
+  try {
+    // Find the existing CourseExam entry by course_id and week_id
+    const courseExam = await CourseExam.findOne({
+      where: {
+        course_id: course_id,
+        week_id: week_id
+      }
+    });
+
+    if (!courseExam) {
+      throw new Error('CourseExam not found');
+    }
+
+    // Update the exam_id field
+    courseExam.exam_id = exam_id;
+
+    // Save the updated record
+    await courseExam.save();
+
+    return courseExam;
+  } catch (error) {
+    console.error("Error updating course exam:", error);
+    throw new Error("An error occurred while updating the course exam.");
+  }
+}
 
 async function removeExamFromCourse(courseId, examId) {
   const courseExam = await CourseExam.findOne({
@@ -113,6 +139,7 @@ async function getExamByCourseAndWeek(course_id, week_id) {
 
 module.exports = {
   assignExamToCourse,
+  updateCourseExam,
   removeExamFromCourse,
   getAllExamsByCourse,
   getAllCoursesByExam,

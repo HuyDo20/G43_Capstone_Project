@@ -35,7 +35,7 @@ const {
 const { transformCourseData } = require("../helper/course");
 const { Op, where } = require("sequelize");
 const { getExamWithoutAnswerById } = require('../services/examService');
-const { getExamByCourseAndWeek } = require('../services/courseExamService');
+const { getExamByCourseAndWeek, assignExamToCourse } = require('../services/courseExamService');
 
 
 const getAllCourse = async (req, res) => {
@@ -478,12 +478,21 @@ const updateCourseDetail = async (req, res) => {
         });
 
         for (const week of weeksData) {
-            const { week_id, week_name, week_topic, week_status_id = 1, days } = week;
+            const { week_id, week_name, week_topic, week_status_id = 1, days, exam_id } = week;
 
             const [weekRecord] = await Week.upsert(
                 { week_id, week_name, week_topic, week_status_id, course_id },
                 { returning: true }
             );
+
+            // Assign or update the exam_id for the course and week
+            if (exam_id) {
+                await assignExamToCourse({
+                    course_id,
+                    exam_id,
+                    week_id: weekRecord.week_id
+                });
+            }
 
             for (const day of days) {
                 const { day_id, day_name, day_status_id = 1, lessons, repeat_lesson } = day;
@@ -596,6 +605,7 @@ const updateCourseDetail = async (req, res) => {
         return error(res);
     }
 };
+
 
 const createNewCourse = async (req, res) => {
 	try {

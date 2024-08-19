@@ -1,5 +1,6 @@
 import { Typography, Flex, Button, Space } from "antd";
 import { FcIdea } from "react-icons/fc";
+import { useEffect } from "react";
 
 function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
   return (
@@ -19,13 +20,15 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
       <Flex
         style={{ display: "flex", justifyContent: "center", marginTop: "2%" }}
       >
-        <Button
+       <Button
           style={{ width: "25%" }}
           type="default"
-          onClick={handlePreviousStep}
+          onClick={() => {
+            handlePreviousStep();
+          }}
         >
           Quay lại
-        </Button>
+        </Button> 
         <div style={{ width: "20px" }}></div>
         <Button
           style={{ width: "25%" }}
@@ -42,3 +45,4 @@ function StepThree({ handlePreviousStep, handleSubmit, waitingCreate, id }) {
 }
 
 export default StepThree;
+

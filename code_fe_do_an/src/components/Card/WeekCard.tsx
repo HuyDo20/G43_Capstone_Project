@@ -25,7 +25,6 @@ function WeekCard({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dayData, setDayData] = useState([]);
   const [listExam, setListExams] = useState([]);
-  const [examData, setExamData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [topicName, setTopicName] = useState(weekData[weekIndex]?.week_topic);
   const [daySelected, setDaySelected] = useState(null);
@@ -43,7 +42,6 @@ function WeekCard({
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
       }
-
       const request = await axios.get('/getAllExam', {
         headers: {
           Authorization: token,
@@ -51,7 +49,6 @@ function WeekCard({
       });
       if (request.status === 200) {
         setListExams(request.data.data.data);
-        console.log(request.data.data.data);
       } else {
         setListExams([]);
       }
@@ -68,7 +65,7 @@ function WeekCard({
     let cloneWeekData = [...weekData];
     cloneWeekData[weekIndex] = {
       ...cloneWeekData[weekIndex],
-      selectedExamId: examId, // Set selectedExamId here
+      selectedExamId: examId,
     };
     setWeekData(cloneWeekData);
   };
@@ -106,7 +103,6 @@ function WeekCard({
  useEffect(() => {
   if (id) {
     setDayData(weekData[weekIndex]?.days || []);
-    
     // Set selectedExamId if weekData.exam_id is not null
     if (weekData[weekIndex]?.exam_id) {
       setSelectedExamId(weekData[weekIndex].exam_id);
@@ -133,9 +129,7 @@ function WeekCard({
   }, [weekData, weekIndex]);
 
   useEffect(() => {
-  
       fetchExams();
-    
   }, [mode]);
 
   return (
@@ -189,7 +183,7 @@ function WeekCard({
       style={{ width: "200px", marginTop: "10px" }}
       placeholder="Chọn bài kiểm tra"
       onChange={handleExamSelect}
-      value={selectedExamId !== null ? selectedExamId : listExam[0]?.exam_id} // Select the first item if selectedExamId is null
+      value={selectedExamId !== null ? selectedExamId : undefined}
       >
       {listExam.map((exam) => (
       <Option key={exam.exam_id} value={exam.exam_id}>
@@ -215,7 +209,7 @@ function WeekCard({
       <Collapse>
       <Panel header="Bài kiểm tra" key="1">
       {listExam
-      .filter((exam) => exam.exam_id === selectedExamId) // Filter to match selectedExamId
+      .filter((exam) => exam.exam_id === selectedExamId)
       .map((exam, index) => (
         <ExamTaking
           key={index}

@@ -215,7 +215,8 @@ const StepOne = ({
               style={{ width: "100%" }}
               disabled={isButtonDisabled}
             >
-              Tiếp theo
+              {mode === "view" ? "Chi tiết khóa học" : "Tiếp theo"}
+           
             </Button>
           </Tooltip>
         </Form.Item>
