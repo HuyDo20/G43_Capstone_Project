@@ -59,6 +59,8 @@ export default function Course() {
                 course_image={courseData.course_image}
                 description={courseData.description}
                 week={courseData.week}
+                course_level={courseData.course_level}
+                course_skill={courseData.course_skill}
                 totalProgress={courseData.progress.progressPercentage}
               />
             ))}

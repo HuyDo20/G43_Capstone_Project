@@ -32,7 +32,7 @@ function WeekCard({
   const [dayIndexSelected, setDayIndexSelected] = useState(null);
   const [lessonSelected, setLessonSelected] = useState(null);
   const [lessonIndexSelected, setLessonIndexSelected] = useState(null);
-  const [selectedExamId, setSelectedExamId] = useState(weekData[weekIndex]?.selectedExamId || null); // State to track selected exam ID
+  const [selectedExamId, setSelectedExamId] = useState(weekData[weekIndex]?.exam_id || null); 
   const navigate = useNavigate();
 
   const fetchExams = async () => {
@@ -51,6 +51,7 @@ function WeekCard({
       });
       if (request.status === 200) {
         setListExams(request.data.data.data);
+        console.log(request.data.data.data);
       } else {
         setListExams([]);
       }
@@ -102,38 +103,40 @@ function WeekCard({
     setIsEditing(false);
   };
 
-  useEffect(() => {
-    if (id) {
-      setDayData(weekData[weekIndex]?.days || []);
-      setExamData(weekData[weekIndex]?.Exams || []);
-      setSelectedExamId(weekData[weekIndex]?.selectedExamId || null); // Initialize selectedExamId from weekData
-    }
-  }, [id, reload]);
+ useEffect(() => {
+  if (id) {
+    setDayData(weekData[weekIndex]?.days || []);
+    
+    // Set selectedExamId if weekData.exam_id is not null
+    if (weekData[weekIndex]?.exam_id) {
+      setSelectedExamId(weekData[weekIndex].exam_id);
+    } 
+  }
+}, [id, reload]);
 
   useEffect(() => {
     let cloneWeekData = [...weekData];
     cloneWeekData[weekIndex] = {
-      week_name: `Week ${weekIndex + 1}`,
+      week_name: `Tuần ${weekIndex + 1}`,
       week_topic: topicName,
       course_id: null,
       week_status_id: 1,
       days: dayData,
-      Exams: examData,
-      selectedExamId: selectedExamId, // Ensure selectedExamId is saved
+      exam_id: selectedExamId,
       week_id: cloneWeekData[weekIndex]?.week_id,
     };
     setWeekData(cloneWeekData);
-  }, [dayData, examData, topicName, selectedExamId]); // Include selectedExamId in dependency array
+  }, [dayData, topicName, selectedExamId]); 
 
   useEffect(() => {
     setTopicName(weekData[weekIndex]?.week_topic);
   }, [weekData, weekIndex]);
 
   useEffect(() => {
-    if (mode !== "view" && examData.length === 0) {
+  
       fetchExams();
-    }
-  }, [mode, examData]);
+    
+  }, [mode]);
 
   return (
     <>
@@ -181,18 +184,19 @@ function WeekCard({
       </Flex>
 
       {/* Render dropdown to select exam if mode is not view and no examData */}
-      {mode !== "view" && examData === null && (
-        <Select
-          style={{ width: "200px", marginTop: "10px" }}
-          placeholder="Chọn bài kiểm tra"
-          onChange={handleExamSelect}
-        >
-          {listExam.map((exam) => (
-            <Option key={exam.exam_id} value={exam.exam_id}>
-              {exam.exam_name}
-            </Option>
-          ))}
-        </Select>
+      {mode !== "view" && (
+      <Select
+      style={{ width: "200px", marginTop: "10px" }}
+      placeholder="Chọn bài kiểm tra"
+      onChange={handleExamSelect}
+      value={selectedExamId !== null ? selectedExamId : listExam[0]?.exam_id} // Select the first item if selectedExamId is null
+      >
+      {listExam.map((exam) => (
+      <Option key={exam.exam_id} value={exam.exam_id}>
+      {exam.exam_name}
+        </Option>
+      ))}
+      </Select>
       )}
 
       <DayCard
@@ -209,18 +213,20 @@ function WeekCard({
       />
 
       <Collapse>
-        <Panel header="Bài kiểm tra" key="1">
-          {examData.map((exam, index) => (
-            <ExamTaking
-              key={index}
-              examTitle={exam.title}
-              questions={exam.questions}
-              mode={"view"}
-              onSubmit={null}
-              score={0}
-            />
-          ))}
-        </Panel>
+      <Panel header="Bài kiểm tra" key="1">
+      {listExam
+      .filter((exam) => exam.exam_id === selectedExamId) // Filter to match selectedExamId
+      .map((exam, index) => (
+        <ExamTaking
+          key={index}
+          examTitle={exam.title}
+          questions={exam.questions}
+          mode={"reviewing"}
+          onSubmit={null}
+          score={0}
+        />
+      ))}
+      </Panel>
       </Collapse>
 
       <AddDayModal

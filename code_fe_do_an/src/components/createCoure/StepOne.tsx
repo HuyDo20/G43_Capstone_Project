@@ -1,7 +1,7 @@
-import { Form, Input, Button, Upload, notification, Select } from "antd";
+import { Form, Input, Button, Upload, notification, Select, Tooltip } from "antd";
 import ImgCrop from "antd-img-crop";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const { Option } = Select;
 
@@ -13,11 +13,26 @@ const StepOne = ({
   onPreview,
   handleNextStep,
   mode,
+  originalWeek
 }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    const validateForm = () => {
+    const { course_name, week, description, course_level, course_skill } = course;
+    if (!course_name || !week || !description || !course_level || !course_skill) {
+      setIsButtonDisabled(true);
+    } else if (mode === "edit" && parseInt(week) < originalWeek) {
+      setIsButtonDisabled(true);
+    } else {
+      setIsButtonDisabled(false);
+    }
+  };
+
   const onChange = (info) => {
     if (info.file.status === "done") {
       const newImageUrl = info.file.response.filePath;
       setFileList([newImageUrl]);
+      validateForm();
     }
   };
 
@@ -55,21 +70,24 @@ const StepOne = ({
           url: filePath,
         },
       ]);
+      validateForm();
     } catch (error) {
-       notification.error({
-          message: "Upload failed:",
-          description: `Error: ${error.message}`,
-        });
+      notification.error({
+        message: "Upload failed:",
+        description: `Error: ${error.message}`,
+      });
     }
   };
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     setCourse({ ...course, [name]: value });
+    validateForm();
   };
 
   const handleSelectChange = (name, value) => {
     setCourse({ ...course, [name]: value });
+    validateForm();
   };
 
   const [form] = Form.useForm();
@@ -82,6 +100,7 @@ const StepOne = ({
       course_skill: course.course_skill,
       course_level: course.course_level,
     });
+    validateForm(); 
   }, [course, form]);
 
   return (
@@ -101,7 +120,7 @@ const StepOne = ({
           />
         </Form.Item>
 
-        <Form.Item label="Số tuần" name="week">
+         <Form.Item label="Số tuần" name="week">
           <Input
             readOnly={mode === "view"}
             placeholder="Enter number of weeks"
@@ -156,9 +175,9 @@ const StepOne = ({
 
         {/* New Form Item for Course Level */}
         <Form.Item
-          label="Course Level"
+          label="Cấp độ"
           name="course_level"
-          rules={[{ required: true, message: "Please select a course level!" }]}
+          rules={[{ required: true, message: "Hãy chọn cấp độ học" }]}
         >
           <Select
             disabled={mode === "view"}
@@ -175,9 +194,9 @@ const StepOne = ({
 
         {/* New Form Item for Course Skill */}
         <Form.Item
-          label="Course Skill"
+          label="Kĩ năng"
           name="course_skill"
-          rules={[{ required: true, message: "Please enter course skill!" }]}
+          rules={[{ required: true, message: "Hãy chọn kĩ năng" }]}
         >
           <Input
             placeholder="Enter course skill"
@@ -189,13 +208,16 @@ const StepOne = ({
         </Form.Item>
 
         <Form.Item>
-          <Button
-            type="primary"
-            onClick={handleNextStep}
-            style={{ width: "100%" }}
-          >
-            Tiếp theo 
-          </Button>
+          <Tooltip title={isButtonDisabled ? "Hoàn thiện thông tin" : ""}>
+            <Button
+              type="primary"
+              onClick={handleNextStep}
+              style={{ width: "100%" }}
+              disabled={isButtonDisabled}
+            >
+              Tiếp theo
+            </Button>
+          </Tooltip>
         </Form.Item>
       </Form>
     </>

@@ -1,6 +1,7 @@
 import { Button, Flex, Tabs } from "antd";
 import WeekCard from "../Card/WeekCard";
 import { useEffect } from "react";
+import axios from "axios";
 
 const StepTwo = ({
   week,
@@ -18,21 +19,46 @@ const StepTwo = ({
     console.log(key);
   };
 
-  useEffect(() => {
-    if (!id) { 
-       setWeekData(
-        Array.from({ length: week }, (_, index) => ({
-          week_name: `Week ${index + 1}`,
-          week_topic: `Tiêu đề tuần  ${index + 1}`,
+useEffect(() => {
+  if (id) { 
+    const currentWeekCount = weekData.length;
+    if (week > currentWeekCount) {
+      // Add additional weeks if the new week count is greater
+      const additionalWeeks = Array.from(
+        { length: week - currentWeekCount },
+        (_, index) => ({
+          week_name: `Tuần ${currentWeekCount + index + 1}`,
+          week_topic: `Tiêu đề tuần  ${currentWeekCount + index + 1}`,
+          course_id: id, 
+          week_status_id: 1,
+          days: [],
+          exam_id: null,
+        })
+      );
+      setWeekData([...weekData, ...additionalWeeks]);
+    } else if (week < currentWeekCount) {
+      // Trim the weekData array if the new week count is less
+      setWeekData(weekData.slice(0, week));
+    }
+  } else {
+    // Handle the creation case
+    const currentWeekCount = weekData.length;
+    if (week > currentWeekCount) {
+      const additionalWeeks = Array.from(
+        { length: week - currentWeekCount },
+        (_, index) => ({
+          week_name: `Tuần ${currentWeekCount + index + 1}`,
+          week_topic: `Tiêu đề tuần  ${currentWeekCount + index + 1}`,
           course_id: null,
           week_status_id: 1,
           days: [],
-          Exams: [], // Initialize an empty array for Exams
-          selectedExamId: null, // Initialize exam_id variable for selected exam id
-        }))
+          exam_id: null,
+        })
       );
+      setWeekData([...weekData, ...additionalWeeks]);
     }
-  }, [week]);
+  }
+}, [week, weekData, id, setWeekData]);
 
   const weekCardData = id ? weekData : new Array(week).fill(null);
 

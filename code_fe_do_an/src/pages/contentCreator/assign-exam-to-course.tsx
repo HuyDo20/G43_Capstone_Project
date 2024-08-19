@@ -117,9 +117,6 @@ const AssignWeeklyExamToCourse: React.FC = () => {
   };
 
   const handleAssign = async () => {
-    
-    console.log(selectedCourse, selectedWeek, selectedExam);
-    
     if (!selectedCourse || !selectedWeek || !selectedExam) {
       message.warning('Please select a course, a week, and an exam.');
       return;
@@ -133,7 +130,9 @@ const AssignWeeklyExamToCourse: React.FC = () => {
         token = userDecode?.token;
         accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
       }
+
       const request = await axios.post(`/assign`, {
+        account_id: accountId,
         course_id: selectedCourse,
         week_id: selectedWeek,
         exam_id: selectedExam
@@ -142,7 +141,6 @@ const AssignWeeklyExamToCourse: React.FC = () => {
           Authorization: token,
         },
       });
-
 
       if (request.status === 200) {
         message.success('Exam assigned successfully!');

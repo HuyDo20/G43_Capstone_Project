@@ -53,7 +53,7 @@ module.exports = {
 
     // Add the composite unique constraint
     await queryInterface.addConstraint('course_exam', {
-      fields: ['exam_id', 'course_id', 'week_id'],
+      fields: ['exam_id', 'week_id', 'course_id'],
       type: 'unique',
       name: 'course_exam_exam_id_course_id_week_id_unique'
     });
@@ -63,7 +63,7 @@ module.exports = {
     // Remove the unique constraint first
     await queryInterface.removeConstraint('course_exam', 'course_exam_exam_id_course_id_week_id_unique');
 
-    // // Then drop the table
-    // await queryInterface.dropTable('course_exam');
+    // Then drop the table
+     await queryInterface.dropTable('course_exam');
   }
 };

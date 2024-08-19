@@ -104,12 +104,11 @@ const CourseItem: React.FC<CourseResponse> = (course: CourseResponse) => {
       >
         <div className="flex flex-col w-1/2 h-full gap-3 p-4">
           <h2 className="font-bold text-3xl text-green-700">{course.course_name}</h2>
-          <div><strong>Course Name:</strong> {course.course_name}</div>
-          <div><strong>Description:</strong> {course.description}</div>
-          <div><strong>Weeks:</strong> {course.week}</div>
-          {/* <div><strong>Level:</strong> {course.course_level}</div>
-          <div><strong>Skills:</strong> {course.course_skill}</div>
-          <div><strong>Status:</strong> {course.course_status_id}</div> */}
+          <div><strong>Tên khóa học:</strong> {course.course_name}</div>
+          <div><strong>Miêu tả ngắn:</strong> {course.description}</div>
+          <div><strong>Số tuần học:</strong> {course.week}</div>
+          <div><strong>Cấp độ:</strong> {course.course_level}</div>
+          <div><strong>Kĩ năng:</strong> {course.course_skill}</div>
         </div>
         <div className="flex flex-col w-1/2 h-full gap-3 p-4 items-center">
           <img className="w-full h-auto rounded-2xl" src={course.course_image} alt={course.course_name} />

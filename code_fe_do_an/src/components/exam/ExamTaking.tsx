@@ -136,7 +136,7 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
       </div>
       {results && (
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Điểm: {score}%</h3>
+          {/* <h3 className="text-2xl font-semibold mb-4">Điểm: {score}%</h3> */}
         </div>
       )}
       <div className="questions-container">

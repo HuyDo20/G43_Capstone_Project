@@ -252,17 +252,14 @@ const getCourseDetailById = async (req, res) => {
             transformedCourseData.weekData = transformedCourseData.weekData || []; 
 
             for (const week of transformedCourseData.weekData) {
-                week.Exams = [];
-                
                 // Fetch exam ID based on course_id and week_id
                 const exam = await getExamByCourseAndWeek(course_id, week.week_id);
                 if (exam) {
-                    const examWithoutAnswer = await getExamWithoutAnswerById(exam.exam_id);
-                    if (examWithoutAnswer) {
-                        week.Exams.push(examWithoutAnswer);
-                    }
+                    week.exam_id = exam.exam_id;
+                } else {
+                    week.exam_id = null; // Set to null if no exam is found
                 }
-          }
+            }
 
             return responseWithData(res, 200, transformedCourseData);
         } else {
