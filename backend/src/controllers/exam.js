@@ -1,6 +1,6 @@
 const {createExam,
   getAllExams,
-   getExamWithAnswerById,
+  getExamWithAnswerById,
   getExamWithoutAnswerById,
   updateExam,
   deleteExam,

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { AiOutlinePlus } from 'react-icons/ai';
 import styled from 'styled-components';
-import MultiChoiceQuestionCreating from "@/components/exam/MultiChoiceQuestionCreating";
+import MultiChoiceQuestionCreating from '@/components/exam/MultiChoiceQuestionCreating';
 import ReadingQuestionCreating from '@/components/exam/ReadingQuestionCreating';
 import ListeningQuestionCreating from '@/components/exam/ListeningQuestionCreating';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -51,9 +51,7 @@ interface ListeningQuestionType {
 
 type Question = MultiChoiceQuestionType | ReadingQuestionType | ListeningQuestionType;
 
-const generateRandomId = () => {
-  return Math.floor(100000 + Math.random() * 900000);
-};
+const generateRandomId = () => Math.floor(100000 + Math.random() * 900000);
 
 const defaultMultiChoiceQuestion: MultiChoiceQuestionType = {
   id: 0,
@@ -82,25 +80,100 @@ const defaultListeningQuestion: ListeningQuestionType = {
   confirmed: false,
 };
 
-
 const CourseExamCreate: React.FC = () => {
   const [examName, setExamName] = useState('');
-  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState([]);
-  const [readingQuestions, setReadingQuestions] = useState([]);
-  const [listeningQuestions, setListeningQuestions] = useState([]);
-   const [selectedType, setSelectedType] = useState('');
+  const [multiChoiceQuestions, setMultiChoiceQuestions] = useState<MultiChoiceQuestionType[]>([]);
+  const [readingQuestions, setReadingQuestions] = useState<ReadingQuestionType[]>([]);
+  const [listeningQuestions, setListeningQuestions] = useState<ListeningQuestionType[]>([]);
+  const [selectedType, setSelectedType] = useState('');
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
   const [reload, setReload] = useState(false);
   const [isEditingQuestion, setIsEditingQuestion] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
+  const { exam_id } = params;
+  const [examData, setExamData] = useState<any>(null);
 
   useEffect(() => {
-    if (reload) {
-      setReload(false);
-    }
+    if (reload) setReload(false);
   }, [reload]);
 
-  const handleAddQuestion = (questionType) => {
+  const transformFetchedData = (data: any) => {
+    return {
+      examTitle: data.exam_name,
+      examData: {
+        readingQuestions: data.questions.readingQuestions.map((question: any) => ({
+          id: question.id,
+          type: question.type,
+          content: question.content,
+          imageUrl: question.imageUrl,
+          subQuestions: question.subQuestions.map((subQuestion: any) => ({
+            id: subQuestion.id,
+            questionContent: subQuestion.questionContent,
+            options: subQuestion.options,
+            imageUrl: subQuestion.imageUrl,
+            userAnsweredId: subQuestion.userAnsweredId || null,
+            correctOptionId: subQuestion.correctOptionId,
+          })),
+        })),
+        listeningQuestions: data.questions.listeningQuestions.map((question: any) => ({
+          id: question.id,
+          type: question.type,
+          audioUrl: question.audioUrl,
+          subQuestions: question.subQuestions.map((subQuestion: any) => ({
+            id: subQuestion.id,
+            questionContent: subQuestion.questionContent,
+            options: subQuestion.options,
+            imageUrl: subQuestion.imageUrl,
+            userAnsweredId: subQuestion.userAnsweredId || null,
+            correctOptionId: subQuestion.correctOptionId,
+          })),
+        })),
+        multiChoiceQuestions: data.questions.multiChoiceQuestions.map((question: any) => ({
+          id: question.id,
+          type: question.type,
+          content: question.content,
+          options: question.options,
+          imageUrl: question.imageUrl,
+          userAnsweredId: question.userAnsweredId || null,
+          correctOptionId: question.correctOptionId,
+        })),
+      },
+    };
+  };
+
+  useEffect(() => {
+    const fetchExamDetails = async (exam_id: any) => {
+      try {
+        let token = "";
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
+
+        const url = `/get-exam-with-answers/${exam_id}`;
+        const request = await axios.get(url, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (request.status === 200) {
+          const fetchedData = request.data.data.data;
+          const transformedData = transformFetchedData(fetchedData);
+          setExamData(transformedData);
+        } else {
+          message.error('Failed to fetch exam details.');
+        }
+      } catch (error) {
+        message.error('An error occurred while fetching exam details.');
+        navigate('/error', { state: { message: error.message } });
+      }
+    };
+    if (exam_id) fetchExamDetails(exam_id);
+  }, [exam_id]);
+
+  const handleAddQuestion = (questionType: string) => {
     setSelectedType(questionType);
     if (isEditingQuestion) {
       message.warning('Please confirm the current question before adding a new one.');
@@ -112,7 +185,6 @@ const CourseExamCreate: React.FC = () => {
     if (questionType === 'Multi-choice') {
       newQuestion = { ...defaultMultiChoiceQuestion, id: generateRandomId() };
       setMultiChoiceQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
-      
     } else if (questionType === 'Reading') {
       newQuestion = { ...defaultReadingQuestion, id: generateRandomId() };
       setReadingQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
@@ -152,7 +224,7 @@ const CourseExamCreate: React.FC = () => {
       if (userEncode) {
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
-        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
+        accountId = userDecode?.account_id;
       }
 
       const examData = {
@@ -162,7 +234,6 @@ const CourseExamCreate: React.FC = () => {
           multiChoiceQuestions: multiChoiceQuestions.map(({ confirmed, ...rest }) => rest),
           readingQuestions: readingQuestions.map(({ confirmed, ...rest }) => rest),
           listeningQuestions: listeningQuestions.map(({ confirmed, ...rest }) => rest),
-          
         },
       };
 
@@ -182,7 +253,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const handleDragEnd = (result: DropResult, questions, setQuestions) => {
+  const handleDragEnd = (result: DropResult, questions: Question[], setQuestions: React.Dispatch<React.SetStateAction<Question[]>>) => {
     if (!result.destination) return;
     const items = Array.from(questions);
     const [reorderedItem] = items.splice(result.source.index, 1);
@@ -190,7 +261,16 @@ const CourseExamCreate: React.FC = () => {
     setQuestions(items);
   };
 
-  const handleConfirmQuestion = (type: string, id: number, questionContent: string, options: any[], correctOptionId: number | null, imageUrl: string | null, subQuestions?: any[], audioUrl?: string | null) => {
+  const handleConfirmQuestion = (
+    type: string,
+    id: number,
+    questionContent: string,
+    options: MultiChoiceOption[],
+    correctOptionId: number | null,
+    imageUrl: string | null,
+    subQuestions?: SubQuestion[],
+    audioUrl?: string | null
+  ) => {
     if (type === 'Multi-choice') {
       updateOrCreateMultiChoiceQuestion(id, questionContent, options, correctOptionId, imageUrl);
     } else if (type === 'Reading') {
@@ -202,7 +282,13 @@ const CourseExamCreate: React.FC = () => {
     setIsEditingQuestion(false);
   };
 
-  const updateOrCreateMultiChoiceQuestion = (id: number, questionContent: string, options: any[], correctOptionId: number | null, imageUrl: string | null) => {
+  const updateOrCreateMultiChoiceQuestion = (
+    id: number,
+    questionContent: string,
+    options: MultiChoiceOption[],
+    correctOptionId: number | null,
+    imageUrl: string | null
+  ) => {
     const questionExists = multiChoiceQuestions.some((q) => q.id === id);
     if (questionExists) {
       setMultiChoiceQuestions((prevQuestions) =>
@@ -222,7 +308,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const updateOrCreateReadingQuestion = (id: number, content: string, subQuestions: any[], imageUrl: string | null) => {
+  const updateOrCreateReadingQuestion = (id: number, content: string, subQuestions: SubQuestion[], imageUrl: string | null) => {
     const questionExists = readingQuestions.some((q) => q.id === id);
     if (questionExists) {
       setReadingQuestions((prevQuestions) =>
@@ -241,7 +327,7 @@ const CourseExamCreate: React.FC = () => {
     }
   };
 
-  const updateOrCreateListeningQuestion = (id: number, subQuestions: any[], audioUrl: string | null) => {
+  const updateOrCreateListeningQuestion = (id: number, subQuestions: SubQuestion[], audioUrl: string | null) => {
     const questionExists = listeningQuestions.some((q) => q.id === id);
     if (questionExists) {
       setListeningQuestions((prevQuestions) =>
@@ -293,73 +379,73 @@ const CourseExamCreate: React.FC = () => {
     setIsEditingQuestion(false);
   };
 
-  const renderQuestionsByType = (type: string, questions, setQuestions) => (
-  <Droppable droppableId={type} key={type}>
-    {(provided) => (
-      <QuestionSection ref={provided.innerRef} {...provided.droppableProps}>
-        <h3>{type} Questions</h3>
-        {questions.map((question, index) => (
-          <Draggable key={question.id} draggableId={String(question.id)} index={index} isDragDisabled={!question.confirmed}>
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.draggableProps} {...(question.confirmed ? provided.dragHandleProps : {})}>
-                {type === 'Multi-choice' ? (
-                  <MultiChoiceQuestionCreating
-                    questionId={question.id}
-                    onDelete={() => handleDeleteQuestion(question.type, question.id)}
-                    onConfirm={(id, content, options, correctOptionId, imageUrl) =>
-                      handleConfirmQuestion(question.type, id, content, options, correctOptionId, imageUrl)
-                    }
-                    onEdit={() => handleEditQuestion(question.type, question.id)}
-                    onCancel={handleCancelQuestion}
-                    isConfirmed={question.confirmed}
-                    isEditing={editingQuestionId === question.id}
-                  />
-                ) : type === 'Reading' ? (          
+  const renderQuestionsByType = (
+    type: string,
+    questions: Question[],
+    setQuestions: React.Dispatch<React.SetStateAction<Question[]>>
+  ) => (
+    <Droppable droppableId={type} key={type}>
+      {(provided) => (
+        <QuestionSection ref={provided.innerRef} {...provided.droppableProps}>
+          <h3>{type} Questions</h3>
+          {questions.map((question, index) => (
+            <Draggable key={question.id} draggableId={String(question.id)} index={index} isDragDisabled={!question.confirmed}>
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.draggableProps} {...(question.confirmed ? provided.dragHandleProps : {})}>
+                  {type === 'Multi-choice' ? (
+                    <MultiChoiceQuestionCreating
+                      questionId={question.id}
+                      onDelete={() => handleDeleteQuestion(question.type, question.id)}
+                      onConfirm={(id, content, options, correctOptionId, imageUrl) =>
+                        handleConfirmQuestion(question.type, id, content, options, correctOptionId, imageUrl)
+                      }
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
+                      isConfirmed={question.confirmed}
+                      isEditing={editingQuestionId === question.id}
+                    />
+                  ) : type === 'Reading' ? (
                     <ReadingQuestionCreating
-                    questionId={question.id}
-                    onDelete={() => handleDeleteQuestion(question.type, question.id)}
-                    onConfirm={(id, content, subQuestions, imageUrl) =>
-                      handleConfirmQuestion(question.type, id, content, [], null, imageUrl, subQuestions)
-                    }
-                    onEdit={() => handleEditQuestion(question.type, question.id)}
-                    onCancel={handleCancelQuestion}
-                    isConfirmed={question.confirmed}
-                    isEditing={editingQuestionId === question.id}
-                  />
-                  
-                ) : type === 'Listening' ? (
-                  <ListeningQuestionCreating
-                    questionId={question.id}
-                    onDelete={() => handleDeleteQuestion(question.type, question.id)}
-                    onConfirm={(id, subQuestions, audioUrl) =>
-                      handleConfirmQuestion(question.type, id, '', [], null, null, subQuestions, audioUrl)
-                    }
-                    onEdit={() => handleEditQuestion(question.type, question.id)}
-                    onCancel={handleCancelQuestion}
-                    isConfirmed={question.confirmed}
-                    isEditing={editingQuestionId === question.id}
-                  />
-                ) : null}
-              </div>
-            )}
-          </Draggable>
-        ))}
-        {provided.placeholder}
-
-        {/* Add the "Thêm câu hỏi" button for each question type */}
-        <StyledButton
-          type="dashed"
-          onClick={() => handleAddQuestion(type)}
-          icon={<AiOutlinePlus />}
-          disabled={isEditingQuestion}
-        >
-          Thêm câu hỏi
-        </StyledButton>
-      </QuestionSection>
-    )}
-  </Droppable>
-);
-
+                      questionId={question.id}
+                      onDelete={() => handleDeleteQuestion(question.type, question.id)}
+                      onConfirm={(id, content, subQuestions, imageUrl) =>
+                        handleConfirmQuestion(question.type, id, content, [], null, imageUrl, subQuestions)
+                      }
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
+                      isConfirmed={question.confirmed}
+                      isEditing={editingQuestionId === question.id}
+                    />
+                  ) : type === 'Listening' ? (
+                    <ListeningQuestionCreating
+                      questionId={question.id}
+                      onDelete={() => handleDeleteQuestion(question.type, question.id)}
+                      onConfirm={(id, subQuestions, audioUrl) =>
+                        handleConfirmQuestion(question.type, id, '', [], null, null, subQuestions, audioUrl)
+                      }
+                      onEdit={() => handleEditQuestion(question.type, question.id)}
+                      onCancel={handleCancelQuestion}
+                      isConfirmed={question.confirmed}
+                      isEditing={editingQuestionId === question.id}
+                    />
+                  ) : null}
+                </div>
+              )}
+            </Draggable>
+          ))}
+          {provided.placeholder}
+          <StyledButton
+            type="dashed"
+            onClick={() => handleAddQuestion(type)}
+            icon={<AiOutlinePlus />}
+            disabled={isEditingQuestion}
+          >
+            Thêm câu hỏi
+          </StyledButton>
+        </QuestionSection>
+      )}
+    </Droppable>
+  );
 
   return (
     <ExamCreatePage>
@@ -378,36 +464,13 @@ const CourseExamCreate: React.FC = () => {
             handleDragEnd(result, listeningQuestions, setListeningQuestions);
           }
         }}
-       >
+      >
         {renderQuestionsByType('Multi-choice', multiChoiceQuestions, setMultiChoiceQuestions)}
         {renderQuestionsByType('Reading', readingQuestions, setReadingQuestions)}
         {renderQuestionsByType('Listening', listeningQuestions, setListeningQuestions)}
       </DragDropContext>
-      <Sidebar>
-  {/* <StyledButton 
-    onClick={() => setSelectedType('Multi-choice')} 
-    disabled={isEditingQuestion}
-    selected={selectedType === 'Multi-choice'}
-  >
-    Multi-choice
-  </StyledButton>
-  <StyledButton 
-    onClick={() => setSelectedType('Reading')} 
-    disabled={isEditingQuestion}
-    selected={selectedType === 'Reading'}
-  >
-    Reading
-  </StyledButton>
-  <StyledButton 
-    onClick={() => setSelectedType('Listening')} 
-    disabled={isEditingQuestion}
-    selected={selectedType === 'Listening'}
-  >
-    Listening
-  </StyledButton> */}
-</Sidebar>
       <StyledButton type="primary" onClick={handleSaveExam}>
-        Xác nhận 
+        Xác nhận
       </StyledButton>
     </ExamCreatePage>
   );
@@ -423,13 +486,9 @@ const ExamCreatePage = styled.div`
 
 const Sidebar = styled.div`
   margin-top: 20px;
-  button {
-    display: block;
-    margin-bottom: 10px;
-  }
 `;
 
-const StyledButton = styled(Button)<{ selected: boolean }>`
+const StyledButton = styled(Button)<{ selected?: boolean }>`
   display: block;
   margin-bottom: 10px;
   background-color: ${({ selected }) => (selected ? '#6495ed' : '#f0f0f0')};
@@ -450,19 +509,18 @@ const QuestionSection = styled.div`
   border-radius: 5px;
 
   &:nth-child(1) {
-    border-color: #ffa07a; /* Light Salmon for Multi-choice */
+    border-color: #ffa07a;
   }
 
   &:nth-child(2) {
-    border-color: #8fbc8f; /* Dark Sea Green for Reading */
+    border-color: #8fbc8f;
   }
 
   &:nth-child(3) {
-    border-color: #6495ed; /* Cornflower Blue for Listening */
+    border-color: #6495ed;
   }
 
   h3 {
     margin-bottom: 10px;
   }
 `;
-
