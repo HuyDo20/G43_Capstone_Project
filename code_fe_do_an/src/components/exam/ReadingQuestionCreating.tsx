@@ -156,7 +156,6 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
   return (
     <ReadingContainer>
        <ReadingHeader>
-        <h3>Reading Question {questionId}:</h3>
         <ReadingActions>
           {!isEditing && (
             <AiOutlineEdit onClick={() => onEdit(questionId)} />
@@ -211,7 +210,7 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
       ))}
       {isEditing && (
         <AddQuestionButton type="dashed" onClick={handleAddQuestion} icon={<AiOutlinePlus />}>
-          Add Question
+            Thêm câu hỏi
         </AddQuestionButton>
       )}
       {isEditing && (

@@ -155,7 +155,6 @@ const handleImageUpload = (info: UploadChangeParam) => {
   return (
       <QuestionContainer>
       <QuestionHeader>
-        <h3>Question {questionId}:</h3>
         <QuestionActions>
           {isEditing ? (
             <AiOutlineEdit onClick={handleEdit} />

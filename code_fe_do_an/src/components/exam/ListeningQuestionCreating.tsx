@@ -158,7 +158,6 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({
   return (
     <ListeningContainer>
         <ListeningHeader>
-        <h3>Listening Question {questionId}:</h3>
         <ListeningActions>
           {!isEditing && (
             <AiOutlineEdit onClick={() => onEdit(questionId)} />
@@ -204,7 +203,7 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({
       ))}
       {isEditing && (
         <AddQuestionButton type="dashed" onClick={handleAddQuestion} icon={<AiOutlinePlus />}>
-          Add Question
+          Thêm câu hỏi
         </AddQuestionButton>
       )}
       {isEditing && (

@@ -139,59 +139,63 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
           {/* <h3 className="text-2xl font-semibold mb-4">Điểm: {score}%</h3> */}
         </div>
       )}
-      <div className="questions-container">
-        <div className="multi-choice-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Câu hỏi nhiều lựa chọn</h3>
-          {multiChoiceQuestions.map((question) => (
-            <div key={question.id}>
-              <VocabularyTestItem
-                question={question.content}
-                options={question.options.map(opt => ({ id: opt.id, content: opt.content }))}
-                correctAnswer={question.correctOptionId}
-                onAnswerSelect={(optionId) => handleVocabularyAnswerSelect(question.id, optionId)}
-                image={question.imageUrl || undefined}
-                error={errors[question.id]}
-                showResults={mode === 'reviewing'}
-                userAnsweredId={question.userAnsweredId}
-                mode={mode}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="reading-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Bài đọc</h3>
-          {readingQuestions.map((question) => (
-            <div key={question.id}>
-              <ReadingTestItem
-                content={question.content}
-                image={question.imageUrl}
-                subQuestions={question.subQuestions}
-                onAnswerSelect={handleReadingAnswerSelect}
-                errors={errors}
-                showResults={mode === 'reviewing' || mode === 'view'}
-                selectedAnswers={selectedAnswers}
-                mode={mode}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="listening-section mb-8">
-          <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
-          {listeningQuestions.map((question) => (
-            <div key={question.id}>
-              <ListeningTestItem
-                audioUrl={question.audioUrl}
-                subQuestions={question.subQuestions}
-                onAnswerSelect={handleListeningAnswerSelect}
-                errors={errors}
-                showResults={mode === 'reviewing' || mode === 'view'}
-                selectedAnswers={selectedAnswers}
-                mode={mode}
-              />
-            </div>
-          ))}
-        </div>
+<div className="questions-container">
+  <div className="multi-choice-section mb-8">
+    <h3 className="text-2xl font-semibold mb-4">Câu hỏi nhiều lựa chọn</h3>
+    {multiChoiceQuestions.map((question, index) => (
+      <div key={question.id}>
+        <p>{`Câu hỏi ${index + 1}`}</p> 
+        <VocabularyTestItem
+          question={question.content}
+          options={question.options.map(opt => ({ id: opt.id, content: opt.content }))}
+          correctAnswer={question.correctOptionId}
+          onAnswerSelect={(optionId) => handleVocabularyAnswerSelect(question.id, optionId)}
+          image={question.imageUrl || undefined}
+          error={errors[question.id]}
+          showResults={mode === 'reviewing'}
+          userAnsweredId={question.userAnsweredId}
+          mode={mode}
+        />
       </div>
+    ))}
+  </div>
+  <div className="reading-section mb-8">
+    <h3 className="text-2xl font-semibold mb-4">Bài đọc</h3>
+    {readingQuestions.map((question, index) => (
+      <div key={question.id}>
+        <p>{`Câu hỏi  ${index + 1}`}</p> {/* Display the question index */}
+        <ReadingTestItem
+          content={question.content}
+          image={question.imageUrl}
+          subQuestions={question.subQuestions}
+          onAnswerSelect={handleReadingAnswerSelect}
+          errors={errors}
+          showResults={mode === 'reviewing' || mode === 'view'}
+          selectedAnswers={selectedAnswers}
+          mode={mode}
+        />
+      </div>
+    ))}
+  </div>
+  <div className="listening-section mb-8">
+    <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
+    {listeningQuestions.map((question, index) => (
+      <div key={question.id}>
+        <p>{`Câu hỏi  ${index + 1}`}</p> {/* Display the question index */}
+        <ListeningTestItem
+          audioUrl={question.audioUrl}
+          subQuestions={question.subQuestions}
+          onAnswerSelect={handleListeningAnswerSelect}
+          errors={errors}
+          showResults={mode === 'reviewing' || mode === 'view'}
+          selectedAnswers={selectedAnswers}
+          mode={mode}
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
       {mode === 'doing' && (
         <button
           onClick={handleSubmit}

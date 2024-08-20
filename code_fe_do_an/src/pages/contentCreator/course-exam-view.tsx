@@ -3,6 +3,10 @@ import { message } from 'antd';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import ExamTaking from '../../components/exam/ExamTaking';
+import { Card, Typography, Layout, Row, Col } from 'antd';
+
+const { Title, Text } = Typography;
+const { Content } = Layout;
 
 const ViewExam: React.FC = () => {
   const params = useParams();
@@ -54,51 +58,48 @@ const ViewExam: React.FC = () => {
     };
   };
 
-    useEffect(() => {
-      
-  const fetchExamDetails = async (exam_id: any) => {
-    try {
-      let token = "";
-      const userEncode = localStorage.getItem("user");
-      if (userEncode) {
-        const userDecode = JSON.parse(userEncode);
-        token = userDecode?.token;
-      }
+  useEffect(() => {
+    const fetchExamDetails = async (exam_id: any) => {
+      try {
+        let token = "";
+        const userEncode = localStorage.getItem("user");
+        if (userEncode) {
+          const userDecode = JSON.parse(userEncode);
+          token = userDecode?.token;
+        }
 
-      const url = `/get-exam-with-answers/${exam_id}`;
-      const request = await axios.get(url, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      if (request.status === 200) {
-        const fetchedData = request.data.data.data;
-      
-        const transformedData = transformFetchedData(fetchedData);
-        console.log(JSON.stringify(transformedData));
-        setExamData(transformedData);
-      } else {
-        message.error('Failed to fetch exam details.');
+        const url = `/get-exam-with-answers/${exam_id}`;
+        const request = await axios.get(url, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (request.status === 200) {
+          const fetchedData = request.data.data.data;
+
+          const transformedData = transformFetchedData(fetchedData);
+          console.log(JSON.stringify(transformedData));
+          setExamData(transformedData);
+        } else {
+          message.error('Failed to fetch exam details.');
+        }
+      } catch (error) {
+        message.error('An error occurred while fetching exam details.');
+        navigate('/error', { state: { message: error.message } });
       }
-    } catch (error) {
-      message.error('An error occurred while fetching exam details.');
-      navigate('/error', { state: { message: error.message } });
-    }
-  };
+    };
     if (exam_id) {
-        fetchExamDetails(exam_id);
+      fetchExamDetails(exam_id);
     }
   }, [exam_id]);
 
   if (!examData) {
-    return <div>Loading exam details...</div>;
+    return <div>Đang tải bài kiểm tra...</div>;
   }
 
   return (
-    <div>
-      <h1>Xem bài kiểm tra</h1>
-      <div>
-        <h2>Exam Details</h2>
+    <Content style={{ padding: '20px', backgroundColor: '#f0f2f5' }}>
+      <Card style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
         <ExamTaking 
           examTitle={examData.examTitle || []} 
           questions={examData.examData || []} 
@@ -106,8 +107,8 @@ const ViewExam: React.FC = () => {
           onSubmit={null} 
           score={0} 
         />
-      </div>
-    </div>
+      </Card>
+    </Content>
   );
 };
 
