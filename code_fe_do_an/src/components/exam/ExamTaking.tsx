@@ -181,7 +181,7 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
     <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
     {listeningQuestions.map((question, index) => (
       <div key={question.id}>
-        <p>{`Câu hỏi  ${index + 1}`}</p> {/* Display the question index */}
+        <p>{`Câu hỏi  ${index + 1}`}</p> 
         <ListeningTestItem
           audioUrl={question.audioUrl}
           subQuestions={question.subQuestions}

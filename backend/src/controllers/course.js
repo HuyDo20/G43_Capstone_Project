@@ -571,25 +571,25 @@ const updateCourseDetail = async (req, res) => {
                                 },
                                 { returning: true }
                             );
-                            await Promise.all(lesson.questions?.map(async question => {
-                                const [questionRecord] = await VideoQuestion.upsert(
-                                    {
-                                        video_question_id: question.video_question_id,
-                                        ...question,
-                                        video_question_status_id: question.video_question_status_id || lessonDefaults.video_status_id,
-                                        video_id: videoRecord.video_id,
-                                    },
-                                    { returning: true }
-                                );
-                                await Promise.all(question.options?.map(option =>
-                                    VideoOption.upsert({
-                                        option_id: option.option_id,
-                                        ...option,
-                                        video_option_status_id: option.video_option_status_id || lessonDefaults.video_status_id,
-                                        video_question_id: questionRecord.video_question_id,
-                                    })
-                                ));
-                            }));
+                            // await Promise.all(lesson.questions?.map(async question => {
+                            //     const [questionRecord] = await VideoQuestion.upsert(
+                            //         {
+                            //             video_question_id: question.video_question_id,
+                            //             ...question,
+                            //             video_question_status_id: question.video_question_status_id || lessonDefaults.video_status_id,
+                            //             video_id: videoRecord.video_id,
+                            //         },
+                            //         { returning: true }
+                            //     );
+                            //     await Promise.all(question.options?.map(option =>
+                            //         VideoOption.upsert({
+                            //             option_id: option.option_id,
+                            //             ...option,
+                            //             video_option_status_id: option.video_option_status_id || lessonDefaults.video_status_id,
+                            //             video_question_id: questionRecord.video_question_id,
+                            //         })
+                            //     ));
+                            // }));
                             break;
                         default:
                             console.error('Unknown lesson type:', lesson.type);
