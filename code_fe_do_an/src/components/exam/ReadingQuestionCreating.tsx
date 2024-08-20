@@ -152,7 +152,6 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
     onCancel();
   };
 
-
   return (
     <ReadingContainer>
        <ReadingHeader>
