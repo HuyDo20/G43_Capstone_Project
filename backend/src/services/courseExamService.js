@@ -43,7 +43,6 @@ async function assignExamToCourse({ course_id, exam_id, week_id }) {
   }
 }
 
-
   async function updateCourseExam({ course_id, exam_id, week_id }) {
   try {
     // Find the existing CourseExam entry by course_id and week_id
