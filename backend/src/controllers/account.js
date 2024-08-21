@@ -341,7 +341,7 @@ async function createOtp(email) {
                 Data: 'Your OTP Code',
             },
         },
-        Source: 'nguyenmanhsonbg@gmail.com', // Replace with your verified SES sender email address
+        Source: 'quanghuytrn204@gmail.com', // Replace with your verified SES sender email address
     };
 
     try {
