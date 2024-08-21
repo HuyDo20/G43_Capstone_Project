@@ -12,8 +12,11 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../middleware/auth");
 const { omitPassword } = require("../helper/user");
+require('dotenv').config();
 const RANDOM_OTP_CHARACTER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const crypto = require('crypto');
+const AWS = require('aws-sdk');
+
 const { INVALID_USER_PASSWORD, ACCOUNT_LOGOUT_FAILED, ACCOUNT_LOGIN, OTP_GENERATED, OTP_EXPIRED, OTP_INVALID, CURRENT_PASSWORD_WRONG, CHANGE_PASSWORD_SUCCESS, ACCOUNT_NOT_EXISTED, OTP_VERIFIED } = require("../messages/user");
 
 const {
@@ -25,6 +28,13 @@ const {
 	ACCOUNT_CREATED,
 	ACCOUNT_DEACTIVE,
 } = require("../messages").userMessages;
+
+// Set up AWS SES using credentials from the environment variables
+const ses = new AWS.SES({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION
+});
 
 async function loginAccount(req, res) {
 	try {
@@ -278,22 +288,73 @@ async function resendOtp(req, res) {
     }
 }
 
-async function createOtp(email){
-if(email === null)
-	return;
-//create otp code
-let otp = getOtp();
-//expire in 60s
-let expireTime = getExpirationDate(60);
-//delete exit email otp
-await Otp.destroy({ where: { email: email } });
-//create otp in database
-return await Otp.create({
-email: email,
-otp_code: otp,
-expires_at: expireTime
-});
+// async function createOtp(email){
+// 			if(email === null)
+// 			return;
+// 			//create otp code
+// 			let otp = getOtp();
+// 			//expire in 60s
+// 			let expireTime = getExpirationDate(60);
+// 			//delete exit email otp
+// 		await Otp.destroy({ where: { email: email } });
+// 		//create otp in database
+// 		return await Otp.create({
+// 		email: email,
+// 		otp_code: otp,
+// 		expires_at: expireTime
+// 		});
+// }
+
+async function createOtp(email) {
+    if (email === null) return;
+
+    // Create OTP code
+    let otp = getOtp();
+
+    // Set expiration time for 60 seconds
+    let expireTime = getExpirationDate(60);
+
+    // Delete existing OTP for this email
+    await Otp.destroy({ where: { email: email } });
+
+    // Create new OTP in the database
+    await Otp.create({
+        email: email,
+        otp_code: otp,
+        expires_at: expireTime
+    });
+
+    // Send OTP email using AWS SES
+    const params = {
+        Destination: {
+            ToAddresses: [email], // The recipient's email address
+        },
+        Message: {
+            Body: {
+                Text: {
+                    Charset: 'UTF-8',
+                    Data: `Your OTP code is: ${otp}. It will expire in 60 seconds.`,
+                },
+            },
+            Subject: {
+                Charset: 'UTF-8',
+                Data: 'Your OTP Code',
+            },
+        },
+        Source: 'nguyenmanhsonbg@gmail.com', // Replace with your verified SES sender email address
+    };
+
+    try {
+        const result = await ses.sendEmail(params).promise();
+        console.log('Email sent successfully:', result);
+    } catch (err) {
+        // Log the error but continue
+        console.error('Error sending email:', err);
+    }
+
+    // Continue with the rest of your logic, if any
 }
+
 
 async function getOtpExpiration(req, res) {
 	 try {
