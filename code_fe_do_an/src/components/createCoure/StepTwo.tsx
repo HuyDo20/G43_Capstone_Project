@@ -20,7 +20,7 @@ const StepTwo = ({
 
   const validateWeekData = () => {
     // Check if all weekData entries have days and exam_id defined
-    return weekData.every(week => week.days.length > 0 && week.exam_id !== null);
+    return weekData.every(week => week.days.length > 0);
   };
 
   useEffect(() => {

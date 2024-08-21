@@ -227,6 +227,13 @@ const handleOk = async () => {
               Từ chối
             </Button></>
             )}
+            
+            {role === "3" && ( <Button
+              type="primary"
+              onClick={() => handleActionEdit(course.course_id)}
+            >
+              Chỉnh sửa
+            </Button>)}
            
           </div>
         );

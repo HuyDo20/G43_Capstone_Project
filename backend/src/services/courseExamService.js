@@ -134,7 +134,7 @@ async function getExamByCourseAndWeek(course_id, week_id) {
     ],
   });
   
-  return courseExam.Exam;
+  return courseExam ? courseExam.Exam : null;
 }
 
 module.exports = {

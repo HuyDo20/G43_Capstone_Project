@@ -255,11 +255,10 @@ const getCourseDetailById = async (req, res) => {
                 const exam = await getExamByCourseAndWeek(course_id, week.week_id);
                 if (exam) {
                     week.exam_id = exam.exam_id;
-                } else {
-                    week.exam_id = null; // Set to null if no exam is found
+                } else { 
+                    week.exam_id = null; 
                 }
             }
-
             return responseWithData(res, 200, transformedCourseData);
         } else {
             return notfound(res);
@@ -614,7 +613,6 @@ const createNewCourse = async (req, res) => {
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
 			return forbidden(res);
 		}
-		console.log(req.body);
 		const course = await Course.create(req.body);
 		if (course) {
 			return responseWithData(res, 201, {
@@ -631,7 +629,6 @@ const createNewCourse = async (req, res) => {
 };
 
 const updateCourseById = async (req, res) => {
-  console.log("Update course request received");
   try {
     const { accountId } = req;
     const { course_status_id, course_name, description, week, course_image, note } = req.body;
