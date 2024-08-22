@@ -50,7 +50,7 @@ export default function NotificationCreator() {
       return false;
     } catch (error) {
       pushScreenNoti("Can not create new notification", "error");
-      console.error("Can not create new notification", error);
+      //console.error("Can not create new notification", error);
       return false;
     }
   };
