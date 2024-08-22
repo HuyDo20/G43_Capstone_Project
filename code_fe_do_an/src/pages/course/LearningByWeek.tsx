@@ -1,6 +1,5 @@
-import { DaySchedule, ResetDeadline } from "@/components/course";
 import React from 'react';
-
+import { DaySchedule } from "@/components/course";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,14 +23,35 @@ export default function LearningByWeek() {
   const [courseData, setCourseData] = useState([]);
   const [weekData, setWeekData] = useState([]);
   const [weekSelected, setWeekSelected] = useState([]);
-
+  const [listCourse, setCourseList] = useState([]);
 
   useEffect(() => {
+    const handleFetchAllCourseData = async () => {
+      let token = "";
+      let accountId;
+      const userEncode = localStorage.getItem("user");
+      if (userEncode) {
+        const userDecode = JSON.parse(userEncode);
+        token = userDecode?.token;
+        accountId = userDecode?.account_id;
+      }
+      const request = await axios.post("/all_course_extend", { accountId }, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = request.data;
+      if (response.statusCode === 200) {
+        setCourseList(response.data);
+      }
+    };
+
     const handleFetchData = async () => {
       const response = await handleFetch({
         method: "get",
         url: `/course-detail/${id}`,
       });
+
       if (response.statusCode === 200) {
         const result = response.data;
         setCourseData(result.courseData);
@@ -41,13 +61,19 @@ export default function LearningByWeek() {
     };
 
     if (reload) {
+      handleFetchAllCourseData();
       handleFetchData();
       setReload(false);
-      }
-    
-  }, [reload,weekSelected]);
+    }
+  }, [reload, id]);
+
+  // Find the course that matches the current id
+  const matchedCourse = listCourse.find(course => course.course_id === parseInt(id));
+
+  console.log(matchedCourse);
+  console.log(listCourse);
+
   return (
- 
     <div>
       <div className="bg-[#f2fae9]">
         <Header />
@@ -98,42 +124,50 @@ export default function LearningByWeek() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          {/*start */}
-
-
-<div className="flex flex-row justify-between gap-10 pt-10">
-  <div className="basis-4/5"> {/* DaySchedule section set to 80% width */}
+          <div className="flex flex-row justify-between gap-10 pt-10">
+  <div className="basis-4/5">
     <DaySchedule weekSelected={weekSelected} id={id} />
   </div>
-  <div className="basis-1/5 flex flex-col gap-4 p-6 border border-[#56a251] rounded-lg bg-[#f9f9f9] shadow-md self-start"> {/* Styled course progress section with height adjustment */}
-    <div className="text-lg font-semibold text-[#56a251] text-center mb-2">Quá trình</div> {/* Section Title */}
+  <div className="basis-1/5 flex flex-col gap-4 p-6 border border-[#56a251] rounded-lg bg-[#f9f9f9] shadow-md self-start">
+    <div className="text-lg font-semibold text-[#56a251] text-center mb-2">Quá trình</div>
     <div className="flex flex-row items-center gap-2">
-      <div className="basis-2/5 text-sm">Từ vựng</div> {/* Adjusted text size */}
-      <Progress className="h-[8px] basis-3/5" value={10} /> {/* Adjusted progress bar */}
-      <div className="text-[#9cda58] text-xs">{10}%</div> {/* Adjusted percentage size */}
+      <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
+        Từ vựng
+      </div>
+      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.vocabulary?.percentage || 0} />
+      <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
+        {matchedCourse?.progress?.vocabulary?.percentage || 0}%
+      </div>
     </div>
     <div className="flex flex-row items-center gap-2">
-      <div className="basis-2/5 text-sm">Kanji</div>
-      <Progress className="h-[8px] basis-3/5" value={10} />
-      <div className="text-[#9cda58] text-xs">{10}%</div>
+      <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
+        Kanji
+      </div>
+      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.kanji?.percentage || 0} />
+      <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
+        {matchedCourse?.progress?.kanji?.percentage || 0}%
+      </div>
     </div>
     <div className="flex flex-row items-center gap-2">
-      <div className="basis-2/5 text-sm">Ngữ pháp</div>
-      <Progress className="h-[8px] basis-3/5" value={10} />
-      <div className="text-[#9cda58] text-xs">{10}%</div>
+      <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
+        Ngữ pháp
+      </div>
+      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.grammar?.percentage || 0} />
+      <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
+        {matchedCourse?.progress?.grammar?.percentage || 0}%
+      </div>
     </div>
     <div className="flex flex-row items-center gap-2">
-      <div className="basis-2/5 text-sm">Video</div>
-      <Progress className="h-[8px] basis-3/5" value={10} />
-      <div className="text-[#9cda58] text-xs">{10}%</div>
+      <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
+        Video
+      </div>
+      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.video?.percentage || 0} />
+      <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
+        {matchedCourse?.progress?.video?.percentage || 0}%
+      </div>
     </div>
   </div>
 </div>
-
-
-
-          
-          {/*end */}
 
         </div>
       </div>

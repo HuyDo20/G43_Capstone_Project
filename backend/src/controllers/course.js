@@ -63,7 +63,8 @@ const getAllCourseExtend = async (req, res) => {
       where: {
         [Op.or]: [
           { course_status_id: 1 },
-          { course_status_id: 2 }
+          { course_status_id: 2 },
+          { course_status_id: 3 }
         ]
       },
       include: {

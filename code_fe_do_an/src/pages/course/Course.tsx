@@ -64,10 +64,9 @@ export default function Course() {
            week={courseData.week}
            course_level={courseData.course_level}
            course_skill={courseData.course_skill}
-           totalProgress={courseData.progress.progressPercentage}
+           totalProgress={courseData.progress.totalProgress}
            />
-  ))}
-
+            ))}
           </div>
         </div>
         <Footer />
