@@ -69,10 +69,6 @@ export default function LearningByWeek() {
 
   // Find the course that matches the current id
   const matchedCourse = listCourse.find(course => course.course_id === parseInt(id));
-
-  console.log(matchedCourse);
-  console.log(listCourse);
-
   return (
     <div>
       <div className="bg-[#f2fae9]">
@@ -134,36 +130,36 @@ export default function LearningByWeek() {
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Từ vựng
       </div>
-      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.vocabulary?.percentage || 0} />
+      <Progress className="h-[8px] basis-3/5" value={Math.ceil(matchedCourse?.progress?.vocabulary?.percentage || 0)} />
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
-        {matchedCourse?.progress?.vocabulary?.percentage || 0}%
+        {Math.ceil(matchedCourse?.progress?.vocabulary?.percentage || 0)}%
       </div>
     </div>
     <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Kanji
       </div>
-      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.kanji?.percentage || 0} />
+      <Progress className="h-[8px] basis-3/5" value={Math.ceil(matchedCourse?.progress?.kanji?.percentage || 0)} />
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
-        {matchedCourse?.progress?.kanji?.percentage || 0}%
+        {Math.ceil(matchedCourse?.progress?.kanji?.percentage || 0)}%
       </div>
     </div>
     <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Ngữ pháp
       </div>
-      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.grammar?.percentage || 0} />
+      <Progress className="h-[8px] basis-3/5" value={Math.ceil(matchedCourse?.progress?.grammar?.percentage || 0)} />
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
-        {matchedCourse?.progress?.grammar?.percentage || 0}%
+        {Math.ceil(matchedCourse?.progress?.grammar?.percentage || 0)}%
       </div>
     </div>
     <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Video
       </div>
-      <Progress className="h-[8px] basis-3/5" value={matchedCourse?.progress?.video?.percentage || 0} />
+      <Progress className="h-[8px] basis-3/5" value={Math.ceil(matchedCourse?.progress?.video?.percentage || 0)} />
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
-        {matchedCourse?.progress?.video?.percentage || 0}%
+        {Math.ceil(matchedCourse?.progress?.video?.percentage || 0)}%
       </div>
     </div>
   </div>

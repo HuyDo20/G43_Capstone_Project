@@ -199,7 +199,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.vocabulary?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickVocab(day)}
-                className={`${getBackgroundColor(dayData[day.day_id]?.vocabulary?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>
@@ -243,7 +243,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.video?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickVideo(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>

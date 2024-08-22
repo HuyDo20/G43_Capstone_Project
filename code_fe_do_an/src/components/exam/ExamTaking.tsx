@@ -141,9 +141,11 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
       )}
 <div className="questions-container">
   <div className="multi-choice-section mb-8">
-    <h3 className="text-2xl font-semibold mb-4">Câu hỏi nhiều lựa chọn</h3>
-    {multiChoiceQuestions.map((question, index) => (
-      <div key={question.id}>
+ 
+          {multiChoiceQuestions.map((question, index) => (
+            <>
+        <h3 className="text-2xl font-semibold mb-4">Câu hỏi nhiều lựa chọn</h3>
+        <div key={question.id}>
         <p>{`Câu hỏi ${index + 1}`}</p> 
         <VocabularyTestItem
           question={question.content}
@@ -157,12 +159,14 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
           mode={mode}
         />
       </div>
+      </>
     ))}
   </div>
   <div className="reading-section mb-8">
-    <h3 className="text-2xl font-semibold mb-4">Bài đọc</h3>
-    {readingQuestions.map((question, index) => (
-      <div key={question.id}>
+        {readingQuestions.map((question, index) => (
+        <>
+        <h3 className="text-2xl font-semibold mb-4">Bài đọc</h3>
+        <div key={question.id}>
         <p>{`Câu hỏi  ${index + 1}`}</p> {/* Display the question index */}
         <ReadingTestItem
           content={question.content}
@@ -174,13 +178,15 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
           selectedAnswers={selectedAnswers}
           mode={mode}
         />
-      </div>
+        </div>
+        </>
     ))}
   </div>
   <div className="listening-section mb-8">
-    <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
-    {listeningQuestions.map((question, index) => (
-      <div key={question.id}>
+        {listeningQuestions.map((question, index) => (
+          <>
+        <h3 className="text-2xl font-semibold mb-4">Bài nghe</h3>
+        <div key={question.id}>
         <p>{`Câu hỏi  ${index + 1}`}</p> 
         <ListeningTestItem
           audioUrl={question.audioUrl}
@@ -191,7 +197,8 @@ const ExamTaking = ({ examTitle, questions, mode, onSubmit, score }) => {
           selectedAnswers={selectedAnswers}
           mode={mode}
         />
-      </div>
+        </div>
+        </>
     ))}
   </div>
 </div>
