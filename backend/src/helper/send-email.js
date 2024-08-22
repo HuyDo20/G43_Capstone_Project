@@ -1,36 +1,43 @@
-// helpers/emailHelper.js
 require('dotenv').config();
-const nodemailer = require('nodemailer');
+const AWS = require('aws-sdk');
 
-// Create a transporter object using the SMTP transport
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: false, 
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-    }
+// Configure AWS SDK with the provided credentials
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION // Make sure to set the correct AWS region
 });
 
+// Create a new SES object
+const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+
 /**
- * Sends an OTP email using SMTP.
+ * Sends an email using AWS SES.
  * @param {string} email - The recipient's email address.
  * @param {string} otp - The OTP code to send.
  * @returns {Promise} - A promise that resolves when the email is sent.
  */
 async function sendOtpEmail(email, otp) {
-    const mailOptions = {
-        from: `nguyenmanhsonbg@gmail.com`, // Sender address
-        to: email, // Recipient address
-        subject: 'Your OTP Code', // Subject line
-        text: `Your OTP code is: ${otp}. It will expire in 60 seconds.`, // Plain text body
+    const params = {
+        Source: 'manhnguyen3122@gmail.com', // Verified sender email address
+        Destination: {
+            ToAddresses: [email] // Recipient address
+        },
+        Message: {
+            Subject: {
+                Data: 'Mã OTP đăng kí tài khoản'
+            },
+            Body: {
+                Text: {
+                    Data: `Mã otp của bạn là: ${otp}. Nó sẽ hết hiệu lực trong vòng 60 giây kể từ bây giờ`
+                }
+            }
+        }
     };
 
     try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('OTP email sent successfully: %s', info.messageId);
-        return info;
+        const result = await ses.sendEmail(params).promise();
+        return result;
     } catch (err) {
         console.error('Error sending OTP email:', err);
         throw new Error('Email sending failed');
