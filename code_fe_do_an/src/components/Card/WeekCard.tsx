@@ -89,6 +89,7 @@ function WeekCard({
   };
 
   const handleTopicClick = () => {
+    if(mode !== "view")
     setIsEditing(true);
   };
 
