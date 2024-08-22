@@ -87,8 +87,15 @@ export default function DaySchedule({ weekSelected, id = null }) {
         headers: { Authorization: token },
       });
       const responseExam = requestExam.data;
-      setWeeklyExamId(responseExam.statusCode === 200 ? responseExam.data.data.exam_id : 0);
-      await fetchExamHistories();
+      if (responseExam.statusCode === 200) {
+        console.log(responseExam);
+        if (responseExam.data.data?.exam_id) {
+          setWeeklyExamId(responseExam.data.data.exam_id);
+        } else {
+          setWeeklyExamId(0);
+        }
+          await fetchExamHistories();
+      }
     }
   };
   
