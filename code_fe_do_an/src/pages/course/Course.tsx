@@ -19,7 +19,7 @@ export default function Course() {
         const userDecode = JSON.parse(userEncode);
         token = userDecode?.token;
         accountId = userDecode?.account_id;
-       }
+      }
       const request = await axios.post("/all_course_extend", { accountId }, {
         headers: {
           Authorization: token,
@@ -27,6 +27,7 @@ export default function Course() {
       });
       const response = request.data;
       if (response.statusCode === 200) {
+        console.log(response.data);
         setCourseList(response.data);
       }
     };
@@ -51,16 +52,20 @@ export default function Course() {
             <div className="text-2xl font-semibold text-[#78b24d]">
               KHÓA HỌC
             </div>
-            {courseList.map((courseData: any, index) => (
-              <CourseItem
-                key={index}
-                course_name={courseData.course_name}
-                course_id={courseData.course_id}
-                course_image={courseData.course_image}
-                description={courseData.description}
-                week={courseData.week}
-                totalProgress={courseData.progress.progressPercentage}
-              />
+           {courseList
+          .filter((courseData: any) => courseData.course_status_id === 2)
+          .map((courseData: any, index) => (
+          <CourseItem
+           key={index}
+           course_name={courseData.course_name}
+           course_id={courseData.course_id}
+           course_image={courseData.course_image}
+           description={courseData.description}
+           week={courseData.week}
+           course_level={courseData.course_level}
+           course_skill={courseData.course_skill}
+           totalProgress={courseData.progress.totalProgress}
+           />
             ))}
           </div>
         </div>

@@ -39,7 +39,7 @@ class ExamHistoryController {
     }
   }
 
-    async getExamHistoryById(req, res) {
+  async getExamHistoryById(req, res) {
     try {
       const { examHistoryId } = req.params;
       const examHistory = await getExamHistoryById(examHistoryId);

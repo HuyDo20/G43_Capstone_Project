@@ -54,16 +54,27 @@ async function getExamWithoutAnswerById(examId) {
 }
 
 
-  async function updateExam(examId, updatedData) {
-    const exam = await Exam.findOne({
-			where: { exam_id },
-		});
-    if (!exam) {
-      throw new Error('Exam not found');
-    }
-    await exam.update(updatedData);
-    return exam;
+async function updateExam(examId, updatedData) {
+  console.log("Updating exam for exam ID:", examId);
+  console.log("Updated Data:", JSON.stringify(updatedData));
+
+  // Find the exam by the correct exam_id key
+  const exam = await Exam.findOne({
+    where: { exam_id: examId },
+  });
+
+  if (!exam) {
+    throw new Error('Exam not found');
   }
+
+  // Update both exam_name and questions fields
+  await exam.update({
+    exam_name: updatedData.exam_data.exam_name,
+    questions: updatedData.exam_data.questions,
+  });
+  
+  return exam;
+}
 
   async function deleteExam(examId) {
     try {

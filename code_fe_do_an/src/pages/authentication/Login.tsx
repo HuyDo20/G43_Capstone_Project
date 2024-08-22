@@ -202,8 +202,8 @@ export default function Login() {
           >
             Đăng nhập
           </Button>
-          <div className="text-center">Hoặc</div>
-          <GoogleButton />
+          {/* <div className="text-center">Hoặc</div>
+          <GoogleButton /> */}
         </div>
       </div>
       <div className="basis-3/6">

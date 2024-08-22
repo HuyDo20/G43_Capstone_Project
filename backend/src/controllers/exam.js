@@ -1,6 +1,6 @@
 const {createExam,
   getAllExams,
-   getExamWithAnswerById,
+  getExamWithAnswerById,
   getExamWithoutAnswerById,
   updateExam,
   deleteExam,
@@ -58,10 +58,11 @@ class ExamController {
 
   async updateExam(req, res) {
     try {
-      const exam = await examService.updateExam(req.params.examId, req.body);
+      const exam = await updateExam(req.params.examId, req.body);
       if (!exam) {
         return notfound(res, 'Exam not found');
       }
+      console.log(exam);
       return ok(res, exam);
     } catch (err) {
       return badRequest(res, err.message);

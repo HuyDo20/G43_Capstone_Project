@@ -87,8 +87,15 @@ export default function DaySchedule({ weekSelected, id = null }) {
         headers: { Authorization: token },
       });
       const responseExam = requestExam.data;
-      setWeeklyExamId(responseExam.statusCode === 200 ? responseExam.data.data.exam_id : 0);
-      await fetchExamHistories();
+      if (responseExam.statusCode === 200) {
+        console.log(responseExam);
+        if (responseExam.data.data?.exam_id) {
+          setWeeklyExamId(responseExam.data.data.exam_id);
+        } else {
+          setWeeklyExamId(0);
+        }
+          await fetchExamHistories();
+      }
     }
   };
   
@@ -199,7 +206,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.vocabulary?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickVocab(day)}
-                className={`${getBackgroundColor(dayData[day.day_id]?.vocabulary?.percentage)} pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>
@@ -243,7 +250,7 @@ export default function DaySchedule({ weekSelected, id = null }) {
             {dayData[day.day_id]?.video?.total !== 0 && (
               <AccordionContent
                 onClick={() => handleClickVideo(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                className={`bg-green-100bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div>

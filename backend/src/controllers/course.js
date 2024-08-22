@@ -34,6 +34,9 @@ const {
 } = require("../messages/course");
 const { transformCourseData } = require("../helper/course");
 const { Op, where } = require("sequelize");
+const { getExamWithoutAnswerById } = require('../services/examService');
+const { getExamByCourseAndWeek, assignExamToCourse } = require('../services/courseExamService');
+
 
 const getAllCourse = async (req, res) => {
 	try {
@@ -60,7 +63,8 @@ const getAllCourseExtend = async (req, res) => {
       where: {
         [Op.or]: [
           { course_status_id: 1 },
-          { course_status_id: 2 }
+          { course_status_id: 2 },
+          { course_status_id: 3 }
         ]
       },
       include: {
@@ -185,7 +189,8 @@ const getCourseById = async (req, res) => {
 				course_id,
 			},
 		});
-		if (course) {
+    if (course) {
+   
 			return responseWithData(res, 200, course);
 		} else {
 			return notfound(res);
@@ -197,65 +202,77 @@ const getCourseById = async (req, res) => {
 };
 
 const getCourseDetailById = async (req, res) => {
-	try {
-		const { course_id } = req.params;
+    try {
+        const { course_id } = req.params;
 
-		const courseDetails = await Course.findOne({
-			where: {
-				course_id: course_id,
-				course_status_id: { [Op.or]: [1, 2, 3] }
-			},
-			include: [
-				{
-					model: Week,
-					include: [
-						{
-							model: Day,
-							include: [
-								{
-									model: Grammar,
-									include: [
-										{
-											model: GrammarExample,
-										}
-									],
-								},
-								{
-									model: Kanji,
-									include: [
-										{
-											model: KanjiWord,
-										},
-									],
-								},
-								{
-									model: Video,
-								},
-								{
-									model: Vocabulary,
-								},
-							],
-						},
-					],
-				},
-			],
-		});
-		if (courseDetails) {
-			const data = transformCourseData(courseDetails);
-			return responseWithData(res, 200, data);
-		} else {
-			return notfound(res);
-		}
-	} catch (e) {
-		console.log("getCourseDetailById", e);
-		return error(res);
-	}
+        const courseDetails = await Course.findOne({
+            where: {
+                course_id: course_id,
+                course_status_id: { [Op.or]: [1, 2, 3] }
+            },
+            include: [
+                {
+                    model: Week,
+                    include: [
+                        {
+                            model: Day,
+                            include: [
+                                {
+                                    model: Grammar,
+                                    include: [
+                                        {
+                                            model: GrammarExample,
+                                        }
+                                    ],
+                                },
+                                {
+                                    model: Kanji,
+                                    include: [
+                                        {
+                                            model: KanjiWord,
+                                        },
+                                    ],
+                                },
+                                {
+                                    model: Video,
+                                },
+                                {
+                                    model: Vocabulary,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+
+      if (courseDetails) {
+            const transformedCourseData = transformCourseData(courseDetails);
+            // Iterate directly over weekData
+            transformedCourseData.weekData = transformedCourseData.weekData || []; 
+
+            for (const week of transformedCourseData.weekData) {
+                // Fetch exam ID based on course_id and week_id
+                const exam = await getExamByCourseAndWeek(course_id, week.week_id);
+                if (exam) {
+                    week.exam_id = exam.exam_id;
+                } else { 
+                    week.exam_id = null; 
+                }
+            }
+            return responseWithData(res, 200, transformedCourseData);
+        } else {
+            return notfound(res);
+        }
+    } catch (e) {
+        console.log("getCourseDetailById", e);
+        return error(res);
+    }
 };
 
 const getProgressByWeekId = async (req, res) => {
   try {
 	  const { accountId, weekId } = req.body;
-	  //console.log("get progress for week id: " + weekId);
 
     // Fetch the week with associated days, each including vocabulary, kanji, grammar, and video records
     const week = await Week.findOne({
@@ -443,6 +460,8 @@ const updateCourseDetail = async (req, res) => {
         course_image,
         course_status_id = 1,
         week,
+        course_level,
+        course_skill
     } = courseData;
 
     try {
@@ -453,18 +472,26 @@ const updateCourseDetail = async (req, res) => {
             course_image,
             course_status_id,
             week,
+            course_level,
+            course_skill
         });
 
-        console.log({ weeksData });
-
         for (const week of weeksData) {
-            const { week_id, week_name, week_topic, week_status_id = 1, days } = week;
-            console.log({ week });
+            const { week_id, week_name, week_topic, week_status_id = 1, days, exam_id } = week;
 
             const [weekRecord] = await Week.upsert(
                 { week_id, week_name, week_topic, week_status_id, course_id },
                 { returning: true }
             );
+
+            // Assign or update the exam_id for the course and week
+            if (exam_id) {
+                await assignExamToCourse({
+                    course_id,
+                    exam_id,
+                    week_id: weekRecord.week_id
+                });
+            }
 
             for (const day of days) {
                 const { day_id, day_name, day_status_id = 1, lessons, repeat_lesson } = day;
@@ -544,25 +571,25 @@ const updateCourseDetail = async (req, res) => {
                                 },
                                 { returning: true }
                             );
-                            await Promise.all(lesson.questions?.map(async question => {
-                                const [questionRecord] = await VideoQuestion.upsert(
-                                    {
-                                        video_question_id: question.video_question_id,
-                                        ...question,
-                                        video_question_status_id: question.video_question_status_id || lessonDefaults.video_status_id,
-                                        video_id: videoRecord.video_id,
-                                    },
-                                    { returning: true }
-                                );
-                                await Promise.all(question.options?.map(option =>
-                                    VideoOption.upsert({
-                                        option_id: option.option_id,
-                                        ...option,
-                                        video_option_status_id: option.video_option_status_id || lessonDefaults.video_status_id,
-                                        video_question_id: questionRecord.video_question_id,
-                                    })
-                                ));
-                            }));
+                            // await Promise.all(lesson.questions?.map(async question => {
+                            //     const [questionRecord] = await VideoQuestion.upsert(
+                            //         {
+                            //             video_question_id: question.video_question_id,
+                            //             ...question,
+                            //             video_question_status_id: question.video_question_status_id || lessonDefaults.video_status_id,
+                            //             video_id: videoRecord.video_id,
+                            //         },
+                            //         { returning: true }
+                            //     );
+                            //     await Promise.all(question.options?.map(option =>
+                            //         VideoOption.upsert({
+                            //             option_id: option.option_id,
+                            //             ...option,
+                            //             video_option_status_id: option.video_option_status_id || lessonDefaults.video_status_id,
+                            //             video_question_id: questionRecord.video_question_id,
+                            //         })
+                            //     ));
+                            // }));
                             break;
                         default:
                             console.error('Unknown lesson type:', lesson.type);
@@ -571,14 +598,12 @@ const updateCourseDetail = async (req, res) => {
                 }));
             }
         }
-
         return ok(res, COURSE_UPDATED);
     } catch (e) {
         console.error(e);
         return error(res);
     }
 };
-
 
 
 const createNewCourse = async (req, res) => {
@@ -589,7 +614,6 @@ const createNewCourse = async (req, res) => {
 		if (accountId && accountId?.toString() !== account_id?.toString()) {
 			return forbidden(res);
 		}
-		console.log(req.body);
 		const course = await Course.create(req.body);
 		if (course) {
 			return responseWithData(res, 201, {
@@ -606,7 +630,6 @@ const createNewCourse = async (req, res) => {
 };
 
 const updateCourseById = async (req, res) => {
-  console.log("Update course request received");
   try {
     const { accountId } = req;
     const { course_status_id, course_name, description, week, course_image, note } = req.body;

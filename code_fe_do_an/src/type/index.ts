@@ -14,7 +14,8 @@ export type CourseResponse = {
     course_image: string;
     week: number;
     totalProgress: number;
-    
+    course_level: string;
+    course_skill: string;
 };
 export type WeekResponse = {
     week_id: number;

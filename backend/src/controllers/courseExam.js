@@ -1,4 +1,4 @@
-const { assignExamToCourse, removeExamFromCourse, getAllExamsByCourse, getAllCoursesByExam, getExamByCourseAndWeek } = require('../services/courseExamService');
+const { assignExamToCourse, removeExamFromCourse, getAllExamsByCourse, getAllCoursesByExam, getExamByCourseAndWeek , updateCourseExam} = require('../services/courseExamService');
 const { ok, badRequest, notFound, error, responseWithData } = require('../handlers/response_handler');
 
 class CourseExamController {
@@ -22,6 +22,28 @@ class CourseExamController {
       return badRequest(res, err.message);
     }
   }
+
+async updateCourseExam(req, res) {
+  try {
+    const { course_id, exam_id, week_id } = req.body;
+
+    if (!course_id || !exam_id || !week_id) {
+      return badRequest(res, "Course ID, Exam ID, and Week ID are required");
+    }
+
+    const updatedCourseExam = await updateCourseExam({
+      course_id,
+      exam_id,
+      week_id
+    });
+
+    return ok(res, updatedCourseExam);
+  } catch (err) {
+    return badRequest(res, err.message);
+  }
+}
+
+
 
   async removeExamFromCourse(req, res) {
     try {
