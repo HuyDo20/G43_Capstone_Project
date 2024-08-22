@@ -19,7 +19,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
  */
 async function sendOtpEmail(email, otp) {
     const params = {
-        Source: 'manhnguyen3122@gmail.com', // Verified sender email address
+        Source: 'quangdk98lhp@gmail.com', // Verified sender email address
         Destination: {
             ToAddresses: [email] // Recipient address
         },
