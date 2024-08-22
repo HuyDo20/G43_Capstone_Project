@@ -668,7 +668,7 @@ function AddLessonModal({
             <Form.Item
               name="grammar_name"
               label="Tên ngữ pháp"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message:"Hãy nhập kanji!" }]}
             >
               <Input
                 readOnly={mode === "view"}
@@ -811,7 +811,7 @@ function AddLessonModal({
             <Form.Item
               name="video_name"
               label="Tên video"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message : "Hãy nhập tiêu đề video !" }]}
             >
               <Input readOnly={mode === "view"} placeholder="Tiêu đề video" />
             </Form.Item>
@@ -854,7 +854,7 @@ function AddLessonModal({
             <Form.Item
               name="day_id"
               label="Chọn ngày"
-              rules={[{ required: true, message: "Please select the day!" }]}
+              rules={[{ required: true, message: "Hãy chọn ngày!" }]}
             >
               <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (

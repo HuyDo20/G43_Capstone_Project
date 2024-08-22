@@ -182,7 +182,7 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({
               showDownloadIcon: false,
             }}
           >
-            {fileList.length < 1 && '+ Upload Audio'}
+            {fileList.length < 1 && '+ Tải lên file nghe'}
           </Upload>
         </>
       )}
@@ -209,10 +209,10 @@ const ListeningQuestionCreating: React.FC<ListeningQuestionProps> = ({
       {isEditing && (
         <ButtonContainer>
           <ConfirmButton type="primary" onClick={handleConfirm}>
-            Confirm
+            Xong
           </ConfirmButton>
           <CancelButton type="default" onClick={handleCancel}>
-            Cancel
+            Hủy
           </CancelButton>
         </ButtonContainer>
       )}

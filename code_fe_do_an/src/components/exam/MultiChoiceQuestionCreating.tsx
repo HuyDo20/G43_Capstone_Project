@@ -171,7 +171,7 @@ const handleImageUpload = (info: UploadChangeParam) => {
         </QuestionActions>
       </QuestionHeader>
       <Input
-        placeholder="Question"
+        placeholder="Câu hỏi"
         value={questionContent}
         onChange={(e) => setQuestionContent(e.target.value)}
         disabled={!isEditing}
@@ -179,7 +179,7 @@ const handleImageUpload = (info: UploadChangeParam) => {
       {questionOptions.map((option) => (
         <OptionContainer key={option.id}>
           <Input
-            placeholder="Option"
+            placeholder="Đáp án ..."
             value={option.content}
             onChange={(e) => {
               const updatedOptions = questionOptions.map(o =>
@@ -201,7 +201,7 @@ const handleImageUpload = (info: UploadChangeParam) => {
       ))}
       {isEditing && questionOptions.length < 4 && (
         <AddOptionButton type="dashed" onClick={handleAddOption} icon={<AiOutlinePlus />}>
-          Add Option
+          Thêm lựa chọn
         </AddOptionButton>
       )}
       {isEditing && (
@@ -221,7 +221,7 @@ const handleImageUpload = (info: UploadChangeParam) => {
                 showDownloadIcon: false,
               }}
             >
-              {fileList.length < 1 && '+ Upload'}
+              {fileList.length < 1 && '+ Tải lên'}
             </Upload>
           </ImgCrop>
         </>
@@ -229,10 +229,10 @@ const handleImageUpload = (info: UploadChangeParam) => {
       {isEditing && (
         <ButtonContainer>
           <ConfirmButton type="primary" onClick={handleConfirm}>
-            Confirm
+            Xong
           </ConfirmButton>
           <CancelButton type="default" onClick={handleCancel}>
-            Cancel
+            Hủy
           </CancelButton>
         </ButtonContainer>
       )}
