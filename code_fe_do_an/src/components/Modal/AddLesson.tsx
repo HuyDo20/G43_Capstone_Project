@@ -245,6 +245,7 @@ function AddLessonModal({
       });
     }
     setDayData(cloneDayData);
+    setFileImageList([]);
     setUserChose(0);
     onCancel();
   };
@@ -265,6 +266,7 @@ function AddLessonModal({
               }))
             : []
         );
+
         setFileImageList(
           lessonSelected.vocab_image
             ? lessonSelected.vocab_image?.split()?.map((url, index) => ({
@@ -275,6 +277,7 @@ function AddLessonModal({
               }))
             : []
         );
+
         form.setFieldsValue({
           vocab_image: lessonSelected.vocab_image,
           vocab_audio: lessonSelected.vocab_audio,
@@ -353,6 +356,7 @@ function AddLessonModal({
         });
       }
     } else {
+      console.log("not selected");
       setUserChose(0);
       form.setFieldsValue({});
       setFileImageList([]);
