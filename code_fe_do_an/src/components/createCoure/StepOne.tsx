@@ -38,7 +38,11 @@ const StepOne = ({
 
   const beforeUpload = (file) => {
     if (fileList.length >= 1) {
-      alert("Upload failed, just have one image in here");
+      //alert("Upload failed, just have one image in here");
+      notification.error({
+        message: "Tải lên thất bại",
+        description: "Chỉ được sử dụng 1 file ảnh",
+      });
       return false;
     }
     return true;
@@ -73,7 +77,7 @@ const StepOne = ({
       validateForm();
     } catch (error) {
       notification.error({
-        message: "Upload failed:",
+        message: "Tải lên thất bại",
         description: `Error: ${error.message}`,
       });
     }
@@ -120,10 +124,14 @@ const StepOne = ({
           />
         </Form.Item>
 
-         <Form.Item label="Số tuần" name="week">
+        <Form.Item
+          label="Số tuần"
+          name="week"
+          rules={[{ required: true, message: "Hãy nhập số tuần!" }]}
+        >
           <Input
             readOnly={mode === "view"}
-            placeholder="Enter number of weeks"
+            placeholder="Nhập số tuần"
             type="number"
             name="week"
             value={course.week}
@@ -199,7 +207,7 @@ const StepOne = ({
           rules={[{ required: true, message: "Hãy chọn kĩ năng" }]}
         >
           <Input
-            placeholder="Enter course skill"
+            placeholder=""
             name="course_skill"
             value={course.course_skill}
             onChange={handleChangeInput}
@@ -216,7 +224,6 @@ const StepOne = ({
               disabled={isButtonDisabled}
             >
               {mode === "view" ? "Chi tiết khóa học" : "Tiếp theo"}
-           
             </Button>
           </Tooltip>
         </Form.Item>

@@ -15,7 +15,7 @@ const { Option } = Select;
 import ImgCrop from "antd-img-crop";
 import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import type { GetProp, UploadFile, UploadProps } from "antd";
+import type { GetProp, UploadFile, UploadProps, } from "antd";
 import axios from "axios";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
@@ -137,7 +137,11 @@ function AddLessonModal({
 
   const beforeUpload = (file) => {
     if (fileImageList.length >= 1) {
-      alert("Upload failed, just have one image in here");
+      // alert("Upload failed, just have one image in here");
+      notification.error({
+        message: "Tải lên thất bại",
+        description: "Chỉ được sử dụng 1 file ảnh",
+      });
       return false;
     }
     return true;
@@ -145,7 +149,11 @@ function AddLessonModal({
 
   const beforeUploadAudioAndVideo = (file) => {
     if (fileAudioAndVideoList.length >= 1) {
-      alert("Upload failed, just have one audio/video in here");
+      // alert("Upload failed, just have one audio/video in here");
+      notification.error({
+        message: "Tải lên thất bại",
+        description: "Chỉ được sử dụng 1 file audio/video.",
+      });
       return false;
     }
     return true;
@@ -399,16 +407,16 @@ function AddLessonModal({
             <Form.Item
               name="vocab_name"
               label="Tên từ vựng: "
-              rules={[{ required: true }]}
+              rules={[{ required: true, message:"Hãy nhập từ vựng" }]}
             >
               <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
               name="day_id"
-              label="Select Day"
-              rules={[{ required: true, message: "Please select the day!" }]}
+              label="Chọn ngày"
+              rules={[{ required: true, message: "Hãy chọn ngày" }]}
             >
-              <Select disabled={mode === "view"} placeholder="Select a day">
+              <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (
                   <Option
                     key={index}
@@ -422,10 +430,10 @@ function AddLessonModal({
             <Form.Item name="vocab_kanji" label="Kanji">
               <Input readOnly={mode === "view"} />
             </Form.Item>
-            <Form.Item name="vocab_meaning" label="Meaning">
+            <Form.Item name="vocab_meaning" label="Nghĩa">
               <Input readOnly={mode === "view"} />
             </Form.Item>
-            <Form.Item name="vocab_example" label="Example">
+            <Form.Item name="vocab_example" label="Ví dụ">
               <Input readOnly={mode === "view"} />
             </Form.Item>
             <Form.Item
@@ -438,7 +446,7 @@ function AddLessonModal({
             {/* <Form.Item name="vocab_image" label="Image URL">
               <Input readOnly={mode==="view"} />
             </Form.Item> */}
-            <Form.Item label="Image" name="vocab_image">
+            <Form.Item label="Ảnh" name="vocab_image">
               <ImgCrop rotationSlider>
                 <Upload
                   disabled={mode === "view"}
@@ -456,14 +464,14 @@ function AddLessonModal({
                     showDownloadIcon: false,
                   }}
                 >
-                  {fileImageList.length < 5 && "+ Upload"}
+                  {fileImageList.length < 5 && "+ Tải lên"}
                 </Upload>
               </ImgCrop>
             </Form.Item>
             {/* <Form.Item name="vocab_audio" label="Audio URL">
               <Input readOnly={mode==="view"} />
             </Form.Item> */}
-            <Form.Item label="Audio" name="vocab_audio">
+            <Form.Item label="Âm thanh" name="vocab_audio">
               <Upload
                 disabled={mode === "view"}
                 customRequest={handleAudioOrVideoUpload}
@@ -481,7 +489,7 @@ function AddLessonModal({
                   showDownloadIcon: false,
                 }}
               >
-                {fileAudioAndVideoList.length < 5 && "+ Upload"}
+                {fileAudioAndVideoList.length < 5 && "+ Tải lên"}
               </Upload>
             </Form.Item>
             <Form.Item>
@@ -495,10 +503,10 @@ function AddLessonModal({
                       setUserChose(0);
                     }}
                   >
-                    Return
+                    Quay lại
                   </Button>
                   <Button type="primary" htmlType="submit">
-                    Submit Vocabulary
+                    Xong
                   </Button>
                 </Flex>
               )}
@@ -673,7 +681,7 @@ function AddLessonModal({
             <Form.Item
               name="day_id"
               label="Chọn ngày"
-              rules={[{ required: true, message: "Please select the day!" }]}
+              rules={[{ required: true, message: "Hãy chọn ngày!" }]}
             >
               <Select disabled={mode === "view"} placeholder="Chọn ngày">
                 {dayData.map((day, index) => (

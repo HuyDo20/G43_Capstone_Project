@@ -368,7 +368,7 @@ const deactivatedColumns = [
         </Tabs.TabPane>
       </Tabs>
       <Modal
-        title={confirmAction?.action === "reject" ? "Reject Course" : "Activate Course"}
+        title={confirmAction?.action === "reject" ? "Từ chối" : "Kích hoạt"}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -377,7 +377,7 @@ const deactivatedColumns = [
           <Input.TextArea
             value={deactivationReason}
             onChange={(e) => setDeactivationReason(e.target.value)}
-            placeholder="Please provide a reason for deactivation"
+            placeholder="Nhập lý do từ chối khóa học"
             rows={4}
           />
         ) : (
