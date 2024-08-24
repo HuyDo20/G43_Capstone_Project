@@ -62,9 +62,9 @@ const getAllCourseExtend = async (req, res) => {
     const courses = await Course.findAll({
       where: {
         [Op.or]: [
-          { course_status_id: 1 },
+          //{ course_status_id: 1 },
           { course_status_id: 2 },
-          { course_status_id: 3 }
+          //{ course_status_id: 3 }
         ]
       },
       include: {
@@ -138,7 +138,9 @@ const getAllCourseExtend = async (req, res) => {
         const totalItems = totalVocabulary + totalKanji + totalGrammar + totalVideo;
         const totalProgress = learnedVocabulary + learnedKanji + learnedGrammar + learnedVideo;
         const progressPercentage = totalItems > 0 ? (totalProgress / totalItems) * 100 : 0;
-
+        console.log(totalItems);
+        console.log(totalProgress);
+        console.log(progressPercentage);
         return {
           ...course.toJSON(),
           progress: {

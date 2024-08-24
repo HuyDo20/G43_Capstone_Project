@@ -98,7 +98,7 @@ const ExamManagementPage: React.FC = () => {
       ),
     },
     {
-      title: "Actions",
+      title: "Hành động",
       key: "actions",
       render: (_: any, record: Exam) => (
         <div className="flex flex-row gap-2">

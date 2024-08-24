@@ -42,7 +42,10 @@ export default function Course() {
   }, []);
 
   return (
-    <div className="w-full h-full bg-center bg-cover" style={{ backgroundImage: `url("/public/bg2.jpg")` }}>
+    <div
+      className="w-full h-full bg-center bg-cover"
+      style={{ backgroundImage: `url("/public/bg2.jpg")` }}
+    >
       <div className="flex flex-col w-full h-full">
         <div className="bg-[#f2fae9]">
           <Header />
@@ -52,21 +55,21 @@ export default function Course() {
             <div className="text-2xl font-semibold text-[#78b24d]">
               KHÓA HỌC
             </div>
-           {courseList
-          .filter((courseData: any) => courseData.course_status_id === 2)
-          .map((courseData: any, index) => (
-          <CourseItem
-           key={index}
-           course_name={courseData.course_name}
-           course_id={courseData.course_id}
-           course_image={courseData.course_image}
-           description={courseData.description}
-           week={courseData.week}
-           course_level={courseData.course_level}
-           course_skill={courseData.course_skill}
-           totalProgress={courseData.progress.totalProgress}
-           />
-            ))}
+            {courseList
+              .filter((courseData: any) => courseData.course_status_id === 2)
+              .map((courseData: any, index) => (
+                <CourseItem
+                  key={index}
+                  course_name={courseData.course_name}
+                  course_id={courseData.course_id}
+                  course_image={courseData.course_image}
+                  description={courseData.description}
+                  week={courseData.week}
+                  course_level={courseData.course_level}
+                  course_skill={courseData.course_skill}
+                  progressPercentage={courseData.progress.progressPercentage}
+                />
+              ))}
           </div>
         </div>
         <Footer />

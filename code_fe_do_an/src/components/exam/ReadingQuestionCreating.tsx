@@ -163,7 +163,7 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
         </ReadingActions>
       </ReadingHeader>
       <Input.TextArea
-        placeholder="Reading Content"
+        placeholder="Nội dung bài đọc"
         value={readingContent}
         onChange={(e) => setReadingContent(e.target.value)}
         disabled={!isEditing}
@@ -187,7 +187,7 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
                 showDownloadIcon: false,
               }}
             >
-              {fileList.length < 1 && '+ Upload'}
+              {fileList.length < 1 && '+ Tải lên'}
             </Upload>
           </ImgCrop>
         </>
@@ -215,10 +215,10 @@ const ReadingQuestionCreating: React.FC<ReadingQuestionProps> = ({ questionId,
       {isEditing && (
         <ButtonContainer>
           <ConfirmButton type="primary" onClick={handleConfirm}>
-            Confirm
+            Xong
           </ConfirmButton>
           <CancelButton type="default" onClick={handleCancel}>
-            Cancel
+            Hủy
           </CancelButton>
         </ButtonContainer>
       )}
