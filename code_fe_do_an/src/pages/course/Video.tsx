@@ -235,24 +235,23 @@ export default function Video() {
                                     console.error('Error loading video:', e.target.error, 'Video URL:', lesson?.video_link);
                                      }}
                                    />
-                                  {!completedVideos.has(lesson.video_id) && (
+                                  {!completedVideos.has(lesson.video_id) ? (
                                     <Button
                                       className="mt-8"
                                       onClick={() => handleCompleteVideo(lesson.video_id)}
                                     >
                                       Đánh dấu hoàn thành
                                     </Button>
-                                  )}
-                                  <Dialog>
-                                    <DialogTrigger asChild>
-                                      <Button className="mt-4">
-                                        Luyện tập
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                      <Practice data={lesson?.questions} />
-                                    </DialogContent>
-                                  </Dialog>
+                                  ) :(
+                                    <Button
+                                      className="mt-8"
+                                   
+                                    >
+                                      Đã hoàn thành
+                                    </Button>
+                                  )
+                                  }
+                              
                                 </div>
                               </div>
                             </CardContent>
