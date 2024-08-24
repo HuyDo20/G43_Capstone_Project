@@ -125,8 +125,10 @@ export default function LearningByWeek() {
     <DaySchedule weekSelected={weekSelected} id={id} />
   </div>
   <div className="basis-1/5 flex flex-col gap-4 p-6 border border-[#56a251] rounded-lg bg-[#f9f9f9] shadow-md self-start">
-    <div className="text-lg font-semibold text-[#56a251] text-center mb-2">Quá trình</div>
-    <div className="flex flex-row items-center gap-2">
+              <div className="text-lg font-semibold text-[#56a251] text-center mb-2">Quá trình</div>
+    {/* Tu vung progress */}
+  
+      {matchedCourse?.progress?.vocabulary.total !== 0 &&(  <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Từ vựng
       </div>
@@ -134,8 +136,11 @@ export default function LearningByWeek() {
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
         {Math.ceil(matchedCourse?.progress?.vocabulary?.percentage || 0)}%
       </div>
-    </div>
-    <div className="flex flex-row items-center gap-2">
+      </div>)}
+  
+              
+     {/* Kanji progress */}
+      {matchedCourse?.progress?.kanji?.total !== 0 &&( <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Kanji
       </div>
@@ -143,8 +148,11 @@ export default function LearningByWeek() {
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
         {Math.ceil(matchedCourse?.progress?.kanji?.percentage || 0)}%
       </div>
-    </div>
-    <div className="flex flex-row items-center gap-2">
+      </div>)}
+   
+
+       {/* Ngu phap progress */}
+    {matchedCourse?.progress?.grammar?.total !== 0 &&( <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Ngữ pháp
       </div>
@@ -152,8 +160,11 @@ export default function LearningByWeek() {
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
         {Math.ceil(matchedCourse?.progress?.grammar?.percentage || 0)}%
       </div>
-    </div>
-    <div className="flex flex-row items-center gap-2">
+     </div>)}
+  
+
+     {/* Video progress */}
+      {matchedCourse?.progress?.video?.total !== 0 &&( <div className="flex flex-row items-center gap-2">
       <div className="basis-2/5 text-sm text-left whitespace-nowrap min-w-[70px]">
         Video
       </div>
@@ -161,7 +172,7 @@ export default function LearningByWeek() {
       <div className="text-[#9cda58] text-xs min-w-[30px] text-right">
         {Math.ceil(matchedCourse?.progress?.video?.percentage || 0)}%
       </div>
-    </div>
+    </div>)}
   </div>
 </div>
 
