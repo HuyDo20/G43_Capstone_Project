@@ -13,9 +13,8 @@ export default function DaySchedule({ weekSelected, id = null }) {
   const [loadingDayData, setLoadingDayData] = useState(null);
   const [examHistory, setExamHistory] = useState([]);
   const [isPassedExam, setIsPassedExam] = useState(false);
-  const [isloading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
 
   const EmptyCircleIcon = () => (
     <span
@@ -29,32 +28,27 @@ export default function DaySchedule({ weekSelected, id = null }) {
     ></span>
   );
 
-  const checkPassWeeklyExam = () => {
-    const passedExam = examHistory.filter(exam => exam.score > 80);
+  const checkPassWeeklyExam = (history) => {
+    const passedExam = history.filter(exam => exam.score > 80);
     setIsPassedExam(passedExam.length > 0);
-  }
+  };
 
   const isCompletedDay = (index) => {
     const day = weekData[index];
     if (!day) return false;
-    const totalLess = day.vocabulary?.total + day.grammar?.total + day.kanji?.total + day.video?.total;
+    const totalLessons = day.vocabulary?.total + day.grammar?.total + day.kanji?.total + day.video?.total;
 
-    if (totalLess > 0) {
+    if (totalLessons > 0) {
       const totalLearned = day.vocabulary?.learned + day.grammar?.learned + day.kanji?.learned + day.video?.watched;
-      return totalLess === totalLearned;
+      return totalLessons === totalLearned;
     }
     return false;
-  };
-
-  const getBackgroundColor = (percentage) => {
-    return percentage === 100 ? "bg-[#e0f7fa]" : "bg-green-100";
   };
 
   const handleFetchDetailCourseProgressByDayId = async (dayId) => {
     if (loadingDayData === dayId) return;
 
     setLoadingDayData(dayId);
-
     try {
       const token = JSON.parse(localStorage.getItem("user"))?.token;
       const accountId = JSON.parse(localStorage.getItem("user"))?.account_id;
@@ -73,66 +67,82 @@ export default function DaySchedule({ weekSelected, id = null }) {
     }
   };
 
-  const handleFetchDetailCourseProgressByWeekId = async (weekId) => {
-    const token = JSON.parse(localStorage.getItem("user"))?.token;
-    const accountId = JSON.parse(localStorage.getItem("user"))?.account_id;
+  const fetchExamId = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+      const accountId = JSON.parse(localStorage.getItem("user"))?.account_id;
 
-    const response = await axios.post("/get_detail_course_progress_by_week", { accountId, weekId }, {
-      headers: { Authorization: token },
-    });
-
-    if (response.data.statusCode === 200) {
-      setWeekData(response.data.data);
-      const requestExam = await axios.post("/get_exam_by_course_and_week", { courseId: id, weekId }, {
+      const examResponse = await axios.post("/get_exam_by_course_and_week", { courseId: id, weekId: weekSelected.week_id }, {
         headers: { Authorization: token },
       });
-      const responseExam = requestExam.data;
-      if (responseExam.statusCode === 200) {
-        console.log(responseExam);
-        if (responseExam.data.data?.exam_id) {
-          setWeeklyExamId(responseExam.data.data.exam_id);
-        } else {
-          setWeeklyExamId(0);
-        }
-          await fetchExamHistories();
+
+      if (examResponse.data.statusCode === 200 && examResponse.data.data.data?.exam_id) {
+        setWeeklyExamId(examResponse.data.data.data?.exam_id);
+      } else {
+        setWeeklyExamId(0);
       }
+    } catch (error) {
+      console.error('Error fetching exam ID:', error);
     }
   };
-  
+
   const fetchExamHistories = async () => {
     try {
-      let token = "";
-      let accountId;
-      const userEncode = localStorage.getItem("user");
-      if (userEncode) {
-        const userDecode = JSON.parse(userEncode);
-        token = userDecode?.token;
-        accountId = userEncode ? JSON.parse(userEncode)?.account_id : null;
-      }
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+      const accountId = JSON.parse(localStorage.getItem("user"))?.account_id;
 
-      const url = `/examHistoriesByExamIdAndAccountId`;
-   
-      const request = await axios.post(url, { weekly_exam_id: weeklyExamId, accountId }, {
+      const historyResponse = await axios.post("/examHistoriesByExamIdAndAccountId", { weekly_exam_id: weeklyExamId, accountId }, {
         headers: { Authorization: token },
       });
-      
-      const response = request.data;
-      if (response.statusCode === 200) {
-        const data = response.data;
-        const tempHistory = data.data;
-        checkPassWeeklyExam();
+
+      if (historyResponse.data.statusCode === 200) {
+        const tempHistory = historyResponse.data.data.data;
+        checkPassWeeklyExam(tempHistory);
         setExamHistory(tempHistory);
       }
     } catch (error) {
       console.error('Error fetching exam histories:', error);
       navigate('/error', { state: { message: error.message } });
-    } finally { 
-      setLoading(false);
     }
   };
 
+  const fetchAllData = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("user"))?.token;
+      const accountId = JSON.parse(localStorage.getItem("user"))?.account_id;
 
-  const handleDaySelect = (day) => {
+      // Fetch week data
+      const weekResponse = await axios.post("/get_detail_course_progress_by_week", { accountId, weekId: weekSelected.week_id }, {
+        headers: { Authorization: token },
+      });
+
+      if (weekResponse.data.statusCode === 200) {
+        setWeekData(weekResponse.data.data);
+      }
+
+      // Fetch exam ID
+      await fetchExamId();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      navigate('/error', { state: { message: error.message } });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (weekSelected.week_id) {
+      fetchAllData();
+    }
+  }, [weekSelected]);
+
+  useEffect(() => {
+    if (weeklyExamId) {
+      fetchExamHistories();
+    }
+  }, [weeklyExamId]);
+
+    const handleDaySelect = (day) => {
     setDaySelected(day);
     if (!dayData[day.day_id]) {
       handleFetchDetailCourseProgressByDayId(day.day_id);
@@ -164,171 +174,170 @@ export default function DaySchedule({ weekSelected, id = null }) {
   };
 
 
-  useEffect(() => {
-    if (weekSelected.week_id) {
-      handleFetchDetailCourseProgressByWeekId(weekSelected.week_id);
-    }
-  }, [weekSelected]);
-
   return (
     <>
-    {
-      isloading?(
-          <div className = "flex justify-center items-center h-full" >
+      {isLoading ? (
+        <div className="flex justify-center items-center h-full">
           <Spin size="large" />
-          </div>
-           ) : (<>
+        </div>
+      ) : (
         <div>
-      <Accordion
-        type="single"
-        collapsible
-        className="flex flex-col w-full gap-3"
-      >
-        {weekSelected?.days?.map((day, index) => (
-          <AccordionItem
-            value={`item-${index + 1}`}
-            key={index}
-            onClick={() => handleDaySelect(day)}
+          <Accordion
+            type="single"
+            collapsible
+            className="flex flex-col w-full gap-3"
           >
-            <AccordionTrigger className='bg-[#c6edc3] pl-12 pr-6 flex items-center justify-between'>
+            {weekSelected?.days?.map((day, index) => (
+              <AccordionItem
+                value={`item-${index + 1}`}
+                key={index}
+                onClick={() => handleDaySelect(day)}
+              >
+                <AccordionTrigger className='bg-[#c6edc3] pl-12 pr-6 flex items-center justify-between'>
                   <div className="flex items-center">
-                  {isCompletedDay(index) ? (
-                  <Tooltip title="Learned">
-                  <CheckCircleOutlined style={{ color: 'green', fontSize: '25px' }} />
-                  </Tooltip>
-                  ) : (<Tooltip title="Unlearned">
-                  <EmptyCircleIcon style={{ color: 'green', fontSize: '25px' }} />
-                  </Tooltip>)}
-                <span className='ml-2'>Ngày {index + 1}: {day?.day_name}</span>
-              </div>
-            </AccordionTrigger>
-
-            {dayData[day.day_id]?.vocabulary?.total !== 0 && (
-              <AccordionContent
-                onClick={() => handleClickVocab(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div>
-                    {dayData[day.day_id]?.vocabulary?.percentage === 100 ? (
+                    {isCompletedDay(index) ? (
                       <Tooltip title="Learned">
-                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                        <CheckCircleOutlined style={{ color: 'green', fontSize: '25px' }} />
                       </Tooltip>
                     ) : (
-                      <Tooltip title="Not Learned">
-                        <EmptyCircleIcon />
+                      <Tooltip title="Unlearned">
+                        <EmptyCircleIcon style={{ color: 'green', fontSize: '25px' }} />
                       </Tooltip>
                     )}
+                    <span className='ml-2'>Ngày {index + 1}: {day?.day_name}</span>
                   </div>
-                  <span style={{ marginLeft: '8px' }}>Từ vựng</span>
-                </div>
-              </AccordionContent>
-            )}
+                </AccordionTrigger>
 
-            {dayData[day.day_id]?.grammar?.total !== 0 && (
-              <AccordionContent
-                onClick={() => handleClickGrammar(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div>
-                    {dayData[day.day_id]?.grammar?.percentage === 100 ? (
-                      <Tooltip title="Learned">
-                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title="Not Learned">
-                        <EmptyCircleIcon />
-                      </Tooltip>
-                    )}
-                  </div>
-                  <span style={{ marginLeft: '8px' }}>Ngữ pháp</span>
-                </div>
-              </AccordionContent>
-            )}
+                {dayData[day.day_id]?.vocabulary?.total !== 0 && (
+                  <AccordionContent
+                    onClick={() => handleClickVocab(day)}
+                    className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div>
+                        {dayData[day.day_id]?.vocabulary?.percentage === 100 ? (
+                          <Tooltip title="Learned">
+                            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Not Learned">
+                            <EmptyCircleIcon />
+                          </Tooltip>
+                        )}
+                      </div>
+                      <span style={{ marginLeft: '8px' }}>Từ vựng</span>
+                    </div>
+                  </AccordionContent>
+                )}
 
-            {dayData[day.day_id]?.video?.total !== 0 && (
-              <AccordionContent
-                onClick={() => handleClickVideo(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div>
-                    {dayData[day.day_id]?.video?.percentage === 100 ? (
-                      <Tooltip title="Learned">
-                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title="Not Learned">
-                        <EmptyCircleIcon />
-                      </Tooltip>
-                    )}
-                  </div>
-                  <span style={{ marginLeft: '8px' }}>Video bổ trợ</span>
-                </div>
-              </AccordionContent>
-            )}
+                {dayData[day.day_id]?.grammar?.total !== 0 && (
+                  <AccordionContent
+                    onClick={() => handleClickGrammar(day)}
+                    className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div>
+                        {dayData[day.day_id]?.grammar?.percentage === 100 ? (
+                          <Tooltip title="Learned">
+                            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Not Learned">
+                            <EmptyCircleIcon />
+                          </Tooltip>
+                        )}
+                      </div>
+                      <span style={{ marginLeft: '8px' }}>Ngữ pháp</span>
+                    </div>
+                  </AccordionContent>
+                )}
 
-            {dayData[day.day_id]?.kanji?.total !== 0 && (
-              <AccordionContent
-                onClick={() => handleClickKanji(day)}
-                className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
-              >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div>
-                    {dayData[day.day_id]?.kanji?.percentage === 100 ? (
-                      <Tooltip title="Learned">
-                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title="Not Learned">
-                        <EmptyCircleIcon />
-                      </Tooltip>
-                    )}
-                  </div>
-                  <span style={{ marginLeft: '8px' }}>Kanji</span>
-                </div>
-              </AccordionContent>
-            )}
-          </AccordionItem>
-        ))}
+                {dayData[day.day_id]?.video?.total !== 0 && (
+                  <AccordionContent
+                    onClick={() => handleClickVideo(day)}
+                    className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div>
+                        {dayData[day.day_id]?.video?.percentage === 100 ? (
+                          <Tooltip title="Learned">
+                            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Not Learned">
+                            <EmptyCircleIcon />
+                          </Tooltip>
+                        )}
+                      </div>
+                      <span style={{ marginLeft: '8px' }}>Video bổ trợ</span>
+                    </div>
+                  </AccordionContent>
+                )}
 
-        {weeklyExamId !== 0 ? (
-          <AccordionItem value="item-7">
-            <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div>
-                  {isPassedExam === true &&(
-                      <Tooltip title="Learned">
-                        <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
-                      </Tooltip>
-                  )}
+                {dayData[day.day_id]?.kanji?.total !== 0 && (
+                  <AccordionContent
+                    onClick={() => handleClickKanji(day)}
+                    className={`bg-green-100 pt-4 pl-20 mt-1 cursor-pointer`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div>
+                        {dayData[day.day_id]?.kanji?.percentage === 100 ? (
+                          <Tooltip title="Learned">
+                            <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Not Learned">
+                            <EmptyCircleIcon />
+                          </Tooltip>
+                        )}
+                      </div>
+                      <span style={{ marginLeft: '8px' }}>Kanji</span>
+                    </div>
+                  </AccordionContent>
+                )}
+              </AccordionItem>
+            ))}
+
+            {weeklyExamId !== 0 ? (
+              <AccordionItem value="item-7">
+                <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                   </div>
                   <span style={{ marginLeft: '8px' }}>Kiểm tra tổng hợp</span>
-              </div>
-              
-            </AccordionTrigger>
-            <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExam}>
-              Kiểm tra
-            </AccordionContent>
-            <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExamHistory}>
-              Lịch sử kiểm tra
-            </AccordionContent>
-          </AccordionItem>
-        ) : (
-          <AccordionItem value="item-7">
-            <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
-              Kiểm tra tổng hợp
-            </AccordionTrigger>
-            <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer">
-              Trống
-            </AccordionContent>
-          </AccordionItem>
-        )}
-      </Accordion>
-    </div>
-  </>)
-}
-     </>
+                </AccordionTrigger>
+                <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExam}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div>
+                      {isPassedExam === true ? (
+                        <Tooltip title="Learned">
+                          <CheckCircleOutlined style={{ color: 'green', fontSize: '24px' }} />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="Not Learned">
+                          <EmptyCircleIcon />
+                        </Tooltip>
+                      )}
+                    </div>
+                    <span style={{ marginLeft: '8px' }}>Kiểm tra</span>
+                  </div>
+                </AccordionContent>
+                <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer" onClick={handleClickExamHistory}>
+                  Lịch sử kiểm tra
+                </AccordionContent>
+              </AccordionItem>
+            ) : (
+              <AccordionItem value="item-7">
+                <AccordionTrigger className="bg-[#c6edc3] pl-12 pr-6">
+                  Kiểm tra tổng hợp
+                </AccordionTrigger>
+                <AccordionContent className="bg-[#effdee] pt-4 pl-20 mt-1 cursor-pointer">
+                  Trống
+                </AccordionContent>
+              </AccordionItem>
+            )}
+          </Accordion>
+        </div>
+      )}
+    </>
   );
 }

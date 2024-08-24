@@ -75,14 +75,12 @@ async updateCourseExam(req, res) {
   async getExamByCourseAndWeek(req, res) {
     try {
       const { courseId, weekId } = req.body;
-
       if (courseId == null || weekId == null) {
         console.log("One or more required fields are null");
         return badRequest(res, "Course ID and Week ID are required");
       }
 
       const exam = await getExamByCourseAndWeek(courseId, weekId);
-   
       return ok(res, exam);
     } catch (err) {
       return responseWithData(res, 202, "Not have any exam");
