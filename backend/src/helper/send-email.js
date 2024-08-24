@@ -1,6 +1,12 @@
 require('dotenv').config();
 const AWS = require('aws-sdk');
 
+AWS.config.update({
+    logger: {
+        log: () => {} // Empty function to suppress logs
+    }
+});
+
 // Configure AWS SDK with the provided credentials
 AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
