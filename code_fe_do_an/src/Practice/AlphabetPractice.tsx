@@ -47,6 +47,9 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [data, setData] = useState([]);
 
+  const amountQuestionTypeCharacter = 104;
+  const amountQuestionTypeNumber = 45;
+
   const openNotification = (message, description, status) => {
     api.open({
       message: message,
@@ -116,6 +119,17 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
     handleFetchData();
   }, []);
 
+  const handleChangeInput = (e) => {
+    const { value } = e.target;
+    let validatedValue = value;
+    if (type == 8 || type == 9) {
+      validatedValue = value > amountQuestionTypeCharacter ? amountQuestionTypeCharacter : value
+    } else {
+      validatedValue = value > amountQuestionTypeNumber ? amountQuestionTypeNumber : value
+    }
+
+    setNumQuestions(Number(validatedValue));
+  }
   return (
     <Card className="rounded-md shadow-md">
       <div className="w-full h-full">
@@ -129,7 +143,7 @@ const AlphabetPracticeComponent = ({ type = 1 }) => {
               <Input className="hover:border-[#7db660]"
                 type="number"
                 value={numQuestions}
-                onChange={(e) => setNumQuestions(Number(e.target.value))}
+                onChange={handleChangeInput}
                 min={0}
                 max={data.length}
               />

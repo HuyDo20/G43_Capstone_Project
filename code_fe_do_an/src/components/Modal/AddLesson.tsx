@@ -538,7 +538,7 @@ function AddLessonModal({
                     key={index}
                     value={id && lessonSelected ? day.day_id : index}
                   >
-                    Day {index + 1}: {day.day_name}
+                    Ngày {index + 1}: {day.day_name}
                   </Option>
                 ))}
               </Select>

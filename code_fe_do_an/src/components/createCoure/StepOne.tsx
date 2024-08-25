@@ -85,7 +85,13 @@ const StepOne = ({
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    setCourse({ ...course, [name]: value });
+    let validateValue = value
+
+    //set maximum value week
+    if (name === "week") {
+      validateValue = value > 12 ? 12 : value
+    }
+    setCourse({ ...course, [name]: validateValue });
     validateForm();
   };
 
