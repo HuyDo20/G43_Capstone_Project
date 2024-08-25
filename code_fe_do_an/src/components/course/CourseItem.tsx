@@ -139,13 +139,13 @@ const CourseItem: React.FC<CourseResponse> = (course: CourseResponse) => {
       </div>
     </div>
     <div className="flex flex-col w-1/2 gap-3 p-4 items-center">
-      {course.course_image && (
+
         <img
           className="w-full h-auto rounded-2xl"
-          src={course.course_image}
+          src={course.course_image ? course.course_image : "https://github.com/shadcn.png"}
           alt={course.course_name}
         />
-      )}
+
     </div>
   </div>
   <div className="w-full flex justify-center mt-auto">

@@ -62,7 +62,7 @@ export default function Course() {
                   key={index}
                   course_name={courseData.course_name}
                   course_id={courseData.course_id}
-                  course_image={courseData.course_image}
+                  course_image={courseData.course_image ? courseData.course_image  :  "https://github.com/shadcn.png"}
                   description={courseData.description}
                   week={courseData.week}
                   course_level={courseData.course_level}
