@@ -196,10 +196,10 @@ export default function WeeklyExamHistory() {
         <BarChart
           width={400}
           height={400}
-          data={examHistory.map(exam => ({
-          date: new Date(exam.createdTime).toLocaleDateString(),  // Use date as the key
+          data={examHistory.slice().reverse().map(exam => ({
+          date: new Date(exam.createdTime).toLocaleDateString('en-GB'),  // Use date as the key
           score: exam.score,
-         }))}
+          }))}
         margin={{ top: 5, right: 2, left: 25, bottom: 5 }}
            >
       <CartesianGrid strokeDasharray="5 5" />

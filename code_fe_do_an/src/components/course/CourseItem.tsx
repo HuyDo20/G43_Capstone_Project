@@ -98,61 +98,66 @@ const CourseItem: React.FC<CourseResponse> = (course: CourseResponse) => {
           {isEnrolled ? "Tiếp tục" : "Đăng ký"}
         </Button>
       </div>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Course Details"
-        style={{
-          content: {
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "20px",
-            width: "60%",
-            height: "60%",
-            margin: "auto",
-            borderRadius: "10px",
-            maxWidth: "800px",
-          },
-        }}
-      >
-        <div className="flex flex-col w-1/2 h-full gap-3 p-4">
-          <h2 className="font-bold text-3xl text-green-700">
-            {course.course_name}
-          </h2>
-          <div>
-            <strong>Tên khóa học:</strong> {course.course_name}
-          </div>
-          <div>
-            <strong>Miêu tả ngắn:</strong> {course.description}
-          </div>
-          <div>
-            <strong>Số tuần học:</strong> {course.week}
-          </div>
-          <div>
-            <strong>Cấp độ:</strong> {course.course_level}
-          </div>
-          <div>
-            <strong>Kĩ năng:</strong> {course.course_skill}
-          </div>
-        </div>
-        <div className="flex flex-col w-1/2 h-full gap-3 p-4 items-center">
-          <img
-            className="w-full h-auto rounded-2xl"
-            src={course.course_image}
-            alt={course.course_name}
-          />
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <Button
-              className="bg-green-600 text-white font-bold py-4 px-6 rounded hover:bg-green-700 flex flex-col items-center p-6"
-              onClick={handleConfirmEnroll}
-            >
-              <span className="text-lg font-bold leading-none">Đăng ký</span>
-            </Button>
-          </div>
-        </div>
-      </Modal>
+     <Modal
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="Course Details"
+  style={{
+    content: {
+      display: "flex",
+      flexDirection: "column", 
+      justifyContent: "space-between", 
+      alignItems: "center",
+      padding: "20px",
+      width: "55%",
+      height: "55%", 
+      margin: "auto",
+      borderRadius: "10px",
+      maxWidth: "800px",
+    },
+  }}
+>
+  <div className="flex flex-row w-full h-full gap-3">
+    <div className="flex flex-col w-1/2 gap-3 p-4">
+      <h2 className="font-bold text-3xl text-green-700">
+        {course.course_name}
+      </h2>
+      <div>
+        <strong>Tên khóa học:</strong> {course.course_name}
+      </div>
+      <div>
+        <strong>Miêu tả ngắn:</strong> {course.description}
+      </div>
+      <div>
+        <strong>Số tuần học:</strong> {course.week}
+      </div>
+      <div>
+        <strong>Cấp độ:</strong> {course.course_level}
+      </div>
+      <div>
+        <strong>Kĩ năng:</strong> {course.course_skill}
+      </div>
+    </div>
+    <div className="flex flex-col w-1/2 gap-3 p-4 items-center">
+      {course.course_image && (
+        <img
+          className="w-full h-auto rounded-2xl"
+          src={course.course_image}
+          alt={course.course_name}
+        />
+      )}
+    </div>
+  </div>
+  <div className="w-full flex justify-center mt-auto">
+    <Button
+      className="bg-green-600 text-white font-bold py-4 px-6 rounded hover:bg-green-700"
+      onClick={handleConfirmEnroll}
+    >
+      <span className="text-lg font-bold leading-none">Đăng ký</span>
+    </Button>
+  </div>
+</Modal>
+
     </div>
   );
 };
