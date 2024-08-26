@@ -137,7 +137,7 @@ export default function WeeklyExamHistory() {
                 </BreadcrumbPage>
                 <BreadcrumbSeparator />
                 <BreadcrumbPage className="text-2xl font-semibold">
-                  Exam History
+                  Lịch sử kiểm tra
                 </BreadcrumbPage>
               </BreadcrumbList>
             </Breadcrumb>
@@ -146,39 +146,39 @@ export default function WeeklyExamHistory() {
           <div className="flex justify-center w-full mt-7">
             <div className="w-full max-w-6xl max-h-[800px] overflow-y-auto bg-white rounded-lg shadow-lg p-6 border-2">
               {loading ? (
-                <div className="flex justify-center items-center h-full">
+                <div className="flex items-center justify-center h-full">
                   <Spin size="large" />
                 </div>
               ) : (
                   <>
                       {examHistory.length === 0 && (
                         <>
-                          <div className="text-1xl  mb-4">
+                          <div className="mb-4 text-1xl">
                             <h1>Không có dữ liệu lịch sử kiểm tra</h1>
                           </div>
                         </>
                       )}
          {/* Main Container */}
-          <div className="mt-8 flex flex-col space-y-6">
+          <div className="flex flex-col mt-8 space-y-6">
           {/* Top Row: Section 1 and Section 3 Horizontally Aligned */}
           <div className="flex flex-row space-x-8">
            {/* Section 1: Latest Exam History */}
             <div className="w-1/2">
             {examHistory.length > 0 && (
            <div>
-            <h2 className="text-2xl font-semibold mb-4">Bài kiểm tra gần đây nhất:</h2>
+            <h2 className="mb-4 text-2xl font-semibold">Bài kiểm tra gần đây nhất:</h2>
             <Card className="m-8">
            <CardContent className="p-8 bg-white rounded-lg shadow-md">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
           <div>
-            <div className="text-xl font-bold mb-2">{examHistory[0].examTitle}</div>
-            <div className="text-md mb-2">Ngày làm: {new Date(examHistory[0].createdTime).toLocaleString()}</div>
-            <div className="text-lg mb-2">Câu hỏi nhiều lựa chọn: {examHistory[0].multiChoice.correct} / {examHistory[0].multiChoice.total}</div>
-            <div className="text-lg mb-2">Bài đọc: {examHistory[0].reading.correct} / {examHistory[0].reading.total}</div>
-            <div className="text-lg mb-2">Bài nghe: {examHistory[0].listening.correct} / {examHistory[0].listening.total}</div>
-            <div className="text-md font-bold mb-2">Điểm: {examHistory[0].score}%</div>
-           <button className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-all duration-300" onClick={()=>handleViewDetailExamHistory(examHistory[0].examHistoryId)}>
-            View Detailed
+            <div className="mb-2 text-xl font-bold">{examHistory[0].examTitle}</div>
+            <div className="mb-2 text-md">Ngày làm: {new Date(examHistory[0].createdTime).toLocaleString()}</div>
+            <div className="mb-2 text-lg">Câu hỏi nhiều lựa chọn: {examHistory[0].multiChoice.correct} / {examHistory[0].multiChoice.total}</div>
+            <div className="mb-2 text-lg">Bài đọc: {examHistory[0].reading.correct} / {examHistory[0].reading.total}</div>
+            <div className="mb-2 text-lg">Bài nghe: {examHistory[0].listening.correct} / {examHistory[0].listening.total}</div>
+            <div className="mb-2 font-bold text-md">Điểm: {examHistory[0].score}%</div>
+           <button className="p-2 mt-4 text-white transition-all duration-300 bg-blue-500 rounded-lg hover:bg-blue-700" onClick={()=>handleViewDetailExamHistory(examHistory[0].examHistoryId)}>
+            Xem chi tiết
           </button>
           </div>
         </div>
@@ -192,13 +192,13 @@ export default function WeeklyExamHistory() {
        <div className="w-1/2">
         {examHistory.length > 0 && (
         <>
-        <h2 className="text-2xl font-semibold mb-5">Lịch sử kiểm tra</h2>
+        <h2 className="mb-5 text-2xl font-semibold">Lịch sử kiểm tra</h2>
         <BarChart
           width={400}
           height={400}
           data={examHistory.slice().reverse().map(exam => ({
           date: new Date(exam.createdTime).toLocaleDateString('en-GB'),  // Use date as the key
-          score: exam.score,
+          Điểm: exam.score,
           }))}
         margin={{ top: 5, right: 2, left: 25, bottom: 5 }}
            >
@@ -207,7 +207,7 @@ export default function WeeklyExamHistory() {
       <YAxis />
       <Tooltip formatter={(value, name, props) => [`Score: ${value}`, `Date: ${props.payload.date}`]} /> {/* Tooltip shows date and score */}
       <Legend />
-      <Bar dataKey="score" fill="#82ca9d" />
+      <Bar dataKey="Điểm" fill="#82ca9d" />
       </BarChart>
       </>
        )}
@@ -217,7 +217,7 @@ export default function WeeklyExamHistory() {
   <div className="flex flex-col w-full">
     {examHistory.length > 1 && (
       <div>
-        <h2 className="text-2xl font-semibold mb-4">Các bài trước đây:</h2>
+        <h2 className="mb-4 text-2xl font-semibold">Các bài trước đây:</h2>
         <div className="overflow-y-auto max-h-[800px]">
           {examHistory.slice(1).map((exam, index) => (
             <ExamHistoryItem key={index} exam={exam} onClickDetail={() => handleViewDetailExamHistory(exam.examHistoryId)}/>
