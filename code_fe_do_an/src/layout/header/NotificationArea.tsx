@@ -36,7 +36,7 @@ export function NotificationArea ({userId} : Props) {
       next_page,
       limit,
     }
-    return await axios.post('/noti/findById', fetchNotiPayload)
+    return await axios.post('/getNoti', fetchNotiPayload)
       .then(res => {
         const data : NofiFetchResponse = res.data.data.data
         switch (currentNotiTargetType) {
@@ -51,6 +51,7 @@ export function NotificationArea ({userId} : Props) {
           default:
             break
         }
+   
         return data.data
       }).catch(err => {
         console.error('Can not get notifications: ', err)
