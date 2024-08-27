@@ -119,6 +119,7 @@ export default function Video() {
       const request = await axios.post('/update-video-learned', {
         accountId: accountId,
         videoId: video_id,
+        dayId: day_id
       }, {
         headers: {
           Authorization: token,

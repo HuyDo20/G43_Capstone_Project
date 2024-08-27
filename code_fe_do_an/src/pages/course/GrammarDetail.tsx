@@ -127,6 +127,7 @@ export default function GrammarDetail() {
       const request = await axios.post('/update-grammar-learned', {
         accountId: accountId,
         grammarId: grammar_id,
+        dayId: day_id
       }, {
         headers: {
           Authorization: token,

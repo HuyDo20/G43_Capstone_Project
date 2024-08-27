@@ -131,6 +131,7 @@ export default function Kanji() {
         await axios.post('/update-all-kanji-learned', {
           accountId: JSON.parse(userEncode)?.account_id,
           kanjiIds: currentDayKanjiIds,
+          dayId: day_id
         }, {
           headers: {
             Authorization: token,

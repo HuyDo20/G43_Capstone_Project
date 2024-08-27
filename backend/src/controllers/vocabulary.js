@@ -133,7 +133,7 @@ async function deleteVocabById(req, res) {
 async function generatePracticeData(req, res) {
     try {
 		const { vocabularyIds } = req.body;
-		console.log("fetch practical data for vocab: " + vocabularyIds);
+
 
         // Fetch vocabulary entries based on provided IDs
         let vocabEntries = await Vocabulary.findAll({
@@ -185,7 +185,6 @@ async function generatePracticeData(req, res) {
             return question;
 		}).filter(question => question);
 	
-
         // Ensure the number of questions matches the number of vocabulary entries
         if (questions.length < vocabularyIds.length) {
             return notfound(res, 500, "Failed to generate sufficient questions");

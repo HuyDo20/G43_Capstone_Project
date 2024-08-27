@@ -61,8 +61,8 @@ const updateAllVocabularyProgress = async (req, res) => {
 
     // Create a notification object
     const notificationData = {
-      title: `Bạn đã hoàn thành phần từ vựng của ${day.day_name} - ${week.week_name} in ${course.course_name}`,
-      content: `Your vocabulary progress for the day ${day.day_name} in the week ${week.week_name} of the course ${course.course_name} has been updated.`,
+      title: `Bạn đã hoàn thành phần từ vựng của ${day.day_name} - ${week.week_name} của khóa học ${course.course_name}`,
+      content: `Từ vựng của ${day.day_name} của ${week.week_name} của khóa học ${course.course_name} đã hoàn thành.`,
       is_read: false,
       action: 'vocabulary_updated',
       target_id: accountId,
