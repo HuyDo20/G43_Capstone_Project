@@ -292,4 +292,5 @@ module.exports = {
 	createNoti,
 	updateNoti,
 	deleteNoti,
+	createOneNoti
 };

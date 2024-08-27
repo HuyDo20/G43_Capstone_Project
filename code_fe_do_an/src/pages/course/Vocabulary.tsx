@@ -87,7 +87,6 @@ export default function Vocabulary() {
         const vocabularyIds = _dayCurrent?.lessons
           ?.filter((lesson) => lesson.vocab_id !== undefined)
           ?.map((lesson) => lesson.vocab_id);
-
         setDayCurrent(_dayCurrent);
         setCurrentDayVocabularyIds(vocabularyIds);
       }
@@ -132,6 +131,7 @@ export default function Vocabulary() {
       await axios.post('/update-all-vocabulary-learned', {
         accountId: JSON.parse(userEncode)?.account_id,
         vocabularyIds: currentDayVocabularyIds,
+        dayId: day_id
       }, {
         headers: {
           Authorization: token,
@@ -191,6 +191,7 @@ export default function Vocabulary() {
     };
 
     const fetchPracticalData = async () => {
+      console.log("fetch practical data for:" + currentDayVocabularyIds);
       try {
         const userEncode = localStorage.getItem("user");
         const token = userEncode ? JSON.parse(userEncode)?.token : '';
