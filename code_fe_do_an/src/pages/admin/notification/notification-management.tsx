@@ -58,7 +58,7 @@ export default function NotiManagementPage() {
 
   const [toast, contextHolder] = notification.useNotification() // TODO: update this notification for global use later
 
-  const PAGE_LIMIT = 2
+  const PAGE_LIMIT = 5
   const columns = [
     {
       title: "Id",

@@ -26,6 +26,7 @@ import AboutTextbook from "./pages/about/AboutTextbook";
 import DetailTextbook from "./pages/about/DetailTextbook";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import ErrorPage from "./components/ui/errorPage";
+import RoleProtectedRoute from "./router/protectedRoute"
 import React from 'react';
 const contentStyle = {
   padding: 50,
@@ -82,9 +83,22 @@ function App() {
             <Route path="/weeklyExam/:id/:week_id/:examHistoryId/reviewing" element={<WeeklyExamReviewing />} />
             <Route path="/:id/:week_id/:weekly_exam_id/examsHistory" element={<WeeklyExamHistory />} /> 
             
-            <Route path="/admin/*" element={<AdminRoutes />} />
-            <Route path="/contentCreator/*" element={<ContentCreatorRoutes />} />
-            <Route path="/contentManager/*" element={<ContentManagerRoutes />} />
+             <Route path="/admin/*" element={
+              <RoleProtectedRoute roles={['1']}>
+                <AdminRoutes />
+              </RoleProtectedRoute>
+            }/>
+            <Route path="/contentCreator/*" element={
+              <RoleProtectedRoute roles={['3']}>
+                <ContentCreatorRoutes />
+              </RoleProtectedRoute>
+            }/>
+            <Route path="/contentManager/*" element={
+              <RoleProtectedRoute roles={['2']}>
+                <ContentManagerRoutes />
+              </RoleProtectedRoute>
+            } />
+            
             <Route path="/error" element={<ErrorPage />}/>
             <Route path="*" element={<ErrorPage />}/>
           </Routes>

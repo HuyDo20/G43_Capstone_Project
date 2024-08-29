@@ -455,7 +455,7 @@ const getProgressByDayId = async (req, res) => {
 
 const updateCourseDetail = async (req, res) => {
     const { courseData, weeksData } = req.body;
-    const {
+    let {
         course_id,
         course_name,
         description,
@@ -464,7 +464,10 @@ const updateCourseDetail = async (req, res) => {
         week,
         course_level,
         course_skill
-    } = courseData;
+  } = courseData;
+  //after edit will change to status pending
+  course_status_id = 1;
+
 
     try {
         await Course.upsert({
